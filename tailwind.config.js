@@ -12,6 +12,28 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontFamily: {
+        'sans': ['Poppins', 'ui-sans-serif', 'system-ui'],
+        'serif': ['ui-serif', 'Georgia'],
+        'mono': ['ui-monospace', 'SFMono-Regular'],
+        'display': ['Oswald'],
+        'body': ['"Open Sans"'],
+      },
+      textColor: {
+      },
+      colors: {
+        foreground: 'rgb(20, 90, 90)',
+        backgroundStart: 'rgb(245, 245, 245)',
+        backgroundEnd: 'rgb(245, 245, 245)',
+      },
+      backgroundImage:{
+        'customGradient': 'linear-gradient(rgb(20, 90, 90), rgb(245, 245, 245), rgb(245, 245, 245))',
+      },
+    },
+  },
+  variants: {
+    extend: {
+      textTransform: ['hover', 'focus'],
     },
   },
   plugins: [],
