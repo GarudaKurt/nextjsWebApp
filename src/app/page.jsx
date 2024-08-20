@@ -107,7 +107,9 @@ const Home = () => {
             >
               Book Now
             </AddButton>
-            <div className="flex flex-wrap justify-center gap-4 mt-4">
+            </form>
+            <div className="flex flex-wrap max-w rounded flex-left gap-2 bg-white">
+              <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black">Client Reviews</h1>
               <CardComments
                 image={"/images/profile/profile_1.png"}
                 feedback={"We were skeptical but they were very patient in sending me documents to fill out. On day of arrival we met in easy location and pick up was easy. Definitely will use them again. Parents first refused but after walking and using scooters there loved them. Easy breezy"}
@@ -121,8 +123,6 @@ const Home = () => {
                 />
                 
             </div>
-            
-            </form>
           </>
           
         );

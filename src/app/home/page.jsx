@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import AddButton from "@/components/buttons/addButton";
 import CardComments from "@/components/cards/commentCard";
+import CardLabel from "@/components/cards/labelCard";
 import Layout from "@/components/layout";
 
 const Home = () => { 
@@ -52,7 +53,7 @@ const Home = () => {
               Along the way, attempt to make contact with infamous outlaws and long-gone gangsters! The only question: are you brave enough to roll the dice?
               <br />
               <br />
-              Tours are offered most Thursday, Friday, and Saturday Nights*******. To book, reach out at vivalocalvegas@gmail.com for availability!
+              Tours are offered most Thursday, Friday, and Saturday Nigths. To book, reach out at vivalocalvegas@gmail.com for availability!
             </p>
               <AddButton
                 bcolor={"#FF5C83"}
@@ -67,7 +68,8 @@ const Home = () => {
         );
       case "Hunt Gear":
         return (
-            <form className="bg-gray-800 shadow-md rounded px-6 py-8 mb-4 mx-auto max-w-4xl">
+          <>
+            <form className="bg-gray-800 shadow-md rounded px-6 py-8 mb-1 mx-auto max-w-4xl">
               <p className="text-base text-gray-300 leading-relaxed">
                 Explore our collection of high-quality hunt gear designed for all your ghost-hunting adventures. From protective equipment to advanced tools, we have everything you need to enhance your experience and stay safe.
                 <br />
@@ -84,6 +86,39 @@ const Home = () => {
                 Book Now
               </AddButton>
             </form>
+            <div className="flex flex-wrap max-w rounded gap-4 bg-white mb-2 justify-center">
+              <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black w-full text-center">Equipments</h1>
+              <CardLabel
+                image={"/images/equipments/equip_1.png"}
+                name={"Thermal Camera"}
+                title={"Thermal Camera"}
+                descriptions={
+                  "A Thermal Imaging Camera detects temperature changes, highlighting cold spots or heat fluctuations that may indicate paranormal activity, making it a crucial tool for ghost hunters"
+                }
+              />
+
+              <CardLabel
+                image={"/images/equipments/spiritbox.png"}
+                name={"Sprint box"}
+                title={"Spirit Box"}
+                descriptions={
+                  "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts."
+                } 
+              />
+
+              <CardLabel
+                image={"/images/equipments/rods.png"}
+                name={"Diving Rods"}
+                title={"Diving Rods"}
+                descriptions={
+                  "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts"
+                }
+              />
+
+            </div>
+
+          </>
+
           );
         case "Scooter Rent":
           return (
@@ -107,7 +142,9 @@ const Home = () => {
             >
               Book Now
             </AddButton>
-            <div className="flex flex-wrap justify-center gap-4 mt-4">
+            </form>
+            <div className="flex flex-wrap max-w rounded flex-left gap-2 bg-white">
+              <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black">Client Reviews</h1>
               <CardComments
                 image={"/images/profile/profile_1.png"}
                 feedback={"We were skeptical but they were very patient in sending me documents to fill out. On day of arrival we met in easy location and pick up was easy. Definitely will use them again. Parents first refused but after walking and using scooters there loved them. Easy breezy"}
@@ -121,8 +158,6 @@ const Home = () => {
                 />
                 
             </div>
-            
-            </form>
           </>
           
         );
