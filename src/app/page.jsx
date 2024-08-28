@@ -4,10 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import AddButton from "@/components/buttons/addButton";
 import CardComments from "@/components/cards/commentCard";
+import CardLabel from "@/components/cards/labelCard";
 import Layout from "@/components/layout";
 
-const Home = () => { 
-
+const Home = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [selectedTab, setSelectedTab] = useState("Gallery");
 
@@ -40,56 +40,76 @@ const Home = () => {
     switch (selectedTab) {
       case "Ghost of Fremont":
         return (
-          <form className="bg-gray-800 shadow-md rounded px-6 py-8 mb-4 mx-auto max-w-4xl relative z-10">
-            <p className="text-base text-gray-300 leading-relaxed">
-              What goes <strong>bump</strong> in the night? Join us and find out! 
-              <br />
-              <br />
-              Seasoned Paranormal Researches take you down the strange, macabre rabbit hole of Las Vegas’s haunted
-              past. This informative, meticulously researched tour combines local history, folklore, and ghost stories for a truly unique experience!
-              <br />
-              <br />
-              Along the way, attempt to make contact with infamous outlaws and long-gone gangsters! The only question: are you brave enough to roll the dice?
-              <br />
-              <br />
-              Tours are offered most Thursday, Friday, and Saturday Nights*******. To book, reach out at vivalocalvegas@gmail.com for availability!
-            </p>
-              <AddButton
-                bcolor={"#FF5C83"}
-                top={"2"}
-                paddingX={"px-5"}
-                paddingY={"py-2"}
-                size={"xl"}
-              >
-                Book Now
-              </AddButton>
-          </form>
+          <>
+            <form className="card bg-white shadow-md rounded-lg p-8 mb-1 mx-auto max-w-4xl">
+              <p className="text-base text-black leading-relaxed">
+                What goes <strong>bump</strong> in the night? Join us and find out! 
+                <br />
+                <br />
+                Seasoned Paranormal Researches take you down the strange, macabre rabbit hole of Las Vegas’s haunted
+                past. This informative, meticulously researched tour combines local history, folklore, and ghost stories for a truly unique experience!
+                <br />
+                <br />
+                Along the way, attempt to make contact with infamous outlaws and long-gone gangsters! The only question: are you brave enough to roll the dice?
+                <br />
+                <br />
+                Tours are offered most Thursday, Friday, and Saturday Nigths. To book, reach out at vivalocalvegas@gmail.com for availability!
+              </p>
+                <AddButton align={"center"}>Book Now</AddButton>
+            </form>
+          </>
         );
       case "Hunt Gear":
         return (
-            <form className="bg-gray-800 shadow-md rounded px-6 py-8 mb-4 mx-auto max-w-4xl">
-              <p className="text-base text-gray-300 leading-relaxed">
+          <>
+            <form className="card bg-white shadow-md rounded-lg p-8 mb-1 mx-auto max-w-4xl">
+              <p className="text-base text-black leading-relaxed">
                 Explore our collection of high-quality hunt gear designed for all your ghost-hunting adventures. From protective equipment to advanced tools, we have everything you need to enhance your experience and stay safe.
                 <br />
                 <br />
                 Our gear is meticulously tested to ensure reliability and effectiveness in the most challenging conditions. Whether you're a seasoned ghost hunter or a curious beginner, our selection of hunt gear will support you in your quest to uncover the unknown.
               </p>
-              <AddButton
-                bcolor={"#FF5C83"}
-                top={"2"}
-                paddingX={"px-5"}
-                paddingY={"py-2"}
-                size={"xl"}
-              >
-                Book Now
-              </AddButton>
+              <AddButton align={"center"}>Book Now</AddButton>
             </form>
+            <div className="flex flex-wrap max-w rounded gap-4 bg-white mb-2 justify-center">
+              <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black w-full text-center">Equipments</h1>
+              <CardLabel
+                image={"/images/equipments/equip_1.png"}
+                name={"Thermal Camera"}
+                title={"Thermal Camera"}
+                descriptions={
+                  "A Thermal Imaging Camera detects temperature changes, highlighting cold spots or heat fluctuations that may indicate paranormal activity, making it a crucial tool for ghost hunters"
+                }
+              />
+
+              <CardLabel
+                image={"/images/equipments/spiritbox.png"}
+                name={"Sprint box"}
+                title={"Spirit Box"}
+                descriptions={
+                  "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts."
+                } 
+              />
+
+              <CardLabel
+                image={"/images/equipments/rods.png"}
+                name={"Diving Rods"}
+                title={"Diving Rods"}
+                descriptions={
+                  "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts"
+                }
+              />
+
+            </div>
+
+          </>
+
           );
         case "Scooter Rent":
           return (
             <>
-            <form className="bg-gray-800 shadow-md rounded px-6 py-8 mb-4 mx-auto max-w-4xl">
-              <p className="text-base text-gray-300 leading-relaxed">
+            <form className="card bg-white shadow-md rounded-lg p-8 mb-4 mx-auto max-w-4xl">
+              <p className="text-base text-black leading-relaxed">
                 Equipment is moving quick! Rent today!!!
                 <br />
                 Whether you’re looking for a leisurely exploration or an adventurous journey.
@@ -98,17 +118,9 @@ const Home = () => {
                 <br />
                 We keep our rental system as fast and simple as possible; we meet up, go over our contract, and get you rolling away in less than 10 minutes!
               </p>
-              <AddButton
-              bcolor={"#FF5C83"}
-              top={"2"}
-              paddingX={"px-5"}
-              paddingY={"py-2"}
-              size={"xl"}
-            >
-              Book Now
-            </AddButton>
+              <AddButton align={"center"}>Book Now</AddButton>
             </form>
-            <div className="flex flex-wrap max-w rounded flex-left gap-2 bg-white">
+            <div className="flex flex-wrap max-w rounded flex-left gap-2 bg-base-100">
               <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black">Client Reviews</h1>
               <CardComments
                 image={"/images/profile/profile_1.png"}
@@ -179,20 +191,12 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
+    <div className=" text-white min-h-screen bg-main">
       <Layout>
         <div className="container mx-auto text-white mt-20 flex flex-col md:flex-row items-center">
           <div className="ml-5 md:ml-20">
             {landingCorousel()}
-            <AddButton
-              bcolor={"#FF5C83"}
-              top={"mt-x"}
-              paddingX={"px-5"}
-              paddingY={"py-2"}
-              size={"xl"}
-            >
-              Book Now
-            </AddButton>
+            <AddButton>Book Now</AddButton>
           </div>
           <div className="mt-8 ml-auto mr-auto md:mr-40 relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
             <div className="relative">
@@ -206,13 +210,13 @@ const Home = () => {
               />
               <button
                 onClick={prevImage}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2"
+                className="btn btn-circle absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white"
               >
                 &#8249;
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2"
+                className="btn btn-circle absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white"
               >
                 &#8250;
               </button>
@@ -220,17 +224,17 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="bg-gray-800 ">
+        <div className="bg-main">
           <div className="container mx-auto mt-8 text-lg flex justify-center">
-            <div className="flex space-x-4 rounded-full shadow-md bg-gray-700">
+            <div className="tabs tabs-boxed bg-white rounded-lg shadow-md">
               {tabs.map((tab, index) => (
                 <button
                   key={index}
-                  className={`${
+                  className={`tab ${
                     selectedTab === tab
-                      ? "bg-gray-900 text-blue-400"
-                      : "text-gray-400 hover:bg-gray-600"
-                  } px-4 py-2 font-semibold rounded-full transition duration-300`}
+                      ? "tab-active text-blue-400"
+                      : "text-gray-400"
+                  }`}
                   onClick={() => setSelectedTab(tab)}
                 >
                   {tab}
@@ -243,11 +247,9 @@ const Home = () => {
             {renderTabContent()}
           </div>
         </div>
-
       </Layout>
     </div>
   );
-}
+};
 
-export default Home
-
+export default Home;

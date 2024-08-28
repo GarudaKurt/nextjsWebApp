@@ -2,7 +2,7 @@ import { FaEnvelope, FaWhatsapp, FaPhone, FaInstagram, FaTwitter, FaFacebookF } 
 
 const AddFooter = () => {
   return (
-    <footer style={{ background: "#2C2C2C" }} className="text-white pt-8 pb-4 mt-12">
+    <footer style={{ background: "#2C2C2C" }} className="text-white pt-8 pb-4 ">
       <div className="container mx-auto px-4 md:flex md:justify-between">
         <div className="flex flex-col items-center mb-4 md:mb-0">
           <FaEnvelope className="mb-2 text-white" />

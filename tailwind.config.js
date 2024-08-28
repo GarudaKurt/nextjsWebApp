@@ -31,6 +31,12 @@ module.exports = {
         foreground: 'rgb(20, 90, 90)',
         backgroundStart: 'rgb(245, 245, 245)',
         backgroundEnd: 'rgb(245, 245, 245)',
+        primary: "#0B1F35",
+        main: "#1F1F29",
+        secondary: "#DF6951",
+        grayScale: "#CCD4DD",
+        pinkRed: "#FF5C83",
+        grayGreen: "#446063",
       },
       backgroundImage:{
         'customGradient': 'linear-gradient(rgb(20, 90, 90), rgb(245, 245, 245), rgb(245, 245, 245))',
@@ -42,5 +48,5 @@ module.exports = {
       textTransform: ['hover', 'focus'],
     },
   },
-  plugins: [],
+  plugins: [require('daisyui')],
 };
