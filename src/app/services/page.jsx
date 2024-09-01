@@ -1,5 +1,6 @@
 "use client"
 
+import AddButton from "@/components/buttons/addButton";
 import Layout from "@/components/layout";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -63,6 +64,7 @@ const AboutUS = () => {
                             <p className="text-offWhite text-lg leading-8 mt-4">
                                 Discover our unique offerings designed to provide thrilling adventures, equip you with top-notch ghost hunting tools, and make your exploration of the city convenient and enjoyable.
                             </p>
+                            <AddButton align={"center"} bcolor={"bg-clearGreen"}>Book Now</AddButton>
                         </div>
 
                         <div className="flex flex-col sm:flex-row justify-between items-center gap-8">
