@@ -8,15 +8,15 @@ const AddNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed left-0 top-0 w-full pb-6 pt-8 backdrop-blur-2xl z-10 bg-primary">
+    <nav  className="fixed left-0 top-0 w-full pb-6 pt-8 z-10 bg-forestGreen">
       <div className="container mx-auto flex items-center justify-between px-4">
         {!isOpen && (
           <div className="flex items-center">
             <Image
               className="rounded"
-              src={"/images/fbg.JPG"}
-              width={100}
-              height={100}
+              src={"/images/landing-page/logo.png"}
+              width={80}
+              height={80}
               alt="Logo"
             />
           </div>
@@ -51,19 +51,16 @@ const AddNavbar = () => {
             isOpen ? "block" : "hidden"
           } w-full md:flex md:items-center md:w-auto md:space-x-8`}
         >
-          <Link href="/" className="block px-3 py-2 text-base-300 hover:text-white">
+          <Link href="/" className="block px-3 py-2 text-white hover:text-clearGreen">
             Home
           </Link>
-          <Link href="/gallery" className="block px-3 py-2 text-base-300 hover:text-white">
+          <Link href="/gallery" className="block px-3 py-2 text-white hover:text-clearGreen">
             Gallery
           </Link>
-          <Link href="#" className="block px-3 py-2 text-base-300 hover:text-white">
+          <Link href="/services" className="block px-3 py-2 text-white hover:text-clearGreen">
             Services
           </Link>
-          <Link href="/know-more" className="block px-3 py-2 text-base-300 hover:text-white">
-            Know More
-          </Link>
-          <Link href="/login" className="block px-3 py-2 text-base-300 hover:text-white">
+          <Link href="/login" className="block px-3 py-2 text-white hover:text-clearGreen">
             Sign Up
           </Link>
         </div>

@@ -1,19 +1,25 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation"
 
-const SignIn = () => {
-    const router = useRouter()
-
-    const gotoRegister = () => {
-        router.push("/register")
-    }
-
+const Register = () => {
     return (
         <>
             <div className="min-h-screen flex justify-center items-center bg-forestGreen">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body">
+                        <h2 className="mb-2 text-xl font-sans text-center">Create Account</h2>
+                        <div className="form-control mb-1">
+                            <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 16 16"
+                                    fill="currentColor"
+                                    className="h-4 w-4 opacity-70">
+                                    <path
+                                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                                </svg>
+                                <input type="text" className="grow" placeholder="Username" required/>
+                            </label>
+                        </div>
                         <div className="form-control mb-1">
                             <label className="input input-bordered flex items-center gap-2">
                                 <svg
@@ -43,17 +49,11 @@ const SignIn = () => {
                                 </svg>
                                 <input type="password" className="grow" placeholder="Password" required />
                             </label>
-                            <label className="label">
-                                <Link href="/forgot-password" className="label-text-alt link link-hover text-offBlue">Forgot password?</Link>
-                            </label>
+
                         </div>
                         <div className="form-control mt-2">
-                            <button className="btn bg-darkBlack text-offWhite hover:bg-black w-full">Login</button>
+                            <button className="btn bg-darkBlack text-offWhite hover:bg-black w-full">Submit</button>
                         </div>
-                        <h2 className="text-md mt-2 text-center divider">OR</h2>
-                        <label className="label flex justify-center">
-                                <Link href="/register" className="label-text-alt link link-hover text-offBlue">Don't have account yet? Create One!</Link>
-                        </label>
                     </form>
                 </div>
             </div>
@@ -61,4 +61,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default Register;

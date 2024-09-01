@@ -13,15 +13,15 @@ const Home = () => {
 
   const images = [
     {
-      src: "/images/profile.jpg",
+      src: "/images/landing-page/profile.png",
       alt: "Profile image",
     },
     {
-      src: "/images/ghost.png",
+      src: "/images/landing-page/ghost.png",
       alt: "Main image",
     },
     {
-      src: "/images/bike.png",
+      src: "/images/landing-page/bike.png",
       alt: "Scooter image",
     },
   ];
@@ -120,21 +120,28 @@ const Home = () => {
               </p>
               <AddButton align={"center"}>Book Now</AddButton>
             </form>
-            <div className="flex flex-wrap max-w rounded flex-left gap-2 bg-base-100">
-              <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black">Client Reviews</h1>
+            <div className="flex flex-wrap max-w rounded gap-2 bg-base-100">
+            <div className="w-full flex justify-center">
+              <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-black font-LuckiestGuy">
+                What Our Clients Say
+              </h1>
+            </div>
+            
+            <div className="w-full flex justify-center gap-4">
               <CardComments
                 image={"/images/profile/profile_1.png"}
                 feedback={"We were skeptical but they were very patient in sending me documents to fill out. On day of arrival we met in easy location and pick up was easy. Definitely will use them again. Parents first refused but after walking and using scooters there loved them. Easy breezy"}
                 name={"Claudia M."}
-                />
-                
-                <CardComments
+              />
+              
+              <CardComments
                 image={"/images/profile/profile_2.png"}
                 feedback={"The owner is very approachable. Scooter is easy to use and it is sanitized and cleaned before the owner drops it off"}
                 name={"Tommy G."}
-                />
-                
+              />
             </div>
+          </div>
+
           </>
           
         );
@@ -148,11 +155,11 @@ const Home = () => {
       case 0:
         return (
           <>
-            <h1 className="text-5xl font-sans font-bold leading-tight tracking-wide text-white">
+            <h1 className="text-5xl font-sans font-bold leading-tight tracking-wide text-clearGreen">
               Visiting Vegas? <br />
               Let us help!<br />
             </h1>
-            <p className="text-md font-sans mt-2 mb-2 font-semibold leading-tight tracking-wide text-gray-400">
+            <p className="text-md font-sans mt-2 mb-2 font-semibold leading-tight tracking-wide text-canvasGreen">
               There are only 24 hours in the day! Seasoned <br />
               tour guides and well-versed locals take all the <br />
               guesswork out of Vegas, ensuring your <br />
@@ -191,12 +198,12 @@ const Home = () => {
   };
 
   return (
-    <div className=" text-white min-h-screen bg-main">
+    <div  className=" text-white min-h-screen bg-forestGreen ">
       <Layout>
         <div className="container mx-auto text-white mt-20 flex flex-col md:flex-row items-center">
           <div className="ml-5 md:ml-20">
             {landingCorousel()}
-            <AddButton>Book Now</AddButton>
+            <AddButton bcolor={"bg-clearGreen"}>Book Now</AddButton>
           </div>
           <div className="mt-8 ml-auto mr-auto md:mr-40 relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
             <div className="relative">
@@ -224,7 +231,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="bg-main">
+        <div className="bg-forestGreen">
           <div className="container mx-auto mt-8 text-lg flex justify-center">
             <div className="tabs tabs-boxed bg-white rounded-lg shadow-md">
               {tabs.map((tab, index) => (
