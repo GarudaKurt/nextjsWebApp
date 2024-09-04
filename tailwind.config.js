@@ -18,6 +18,7 @@ module.exports = {
         'mono': ['ui-monospace', 'SFMono-Regular'],
         'display': ['Oswald'],
         'body': ['"Open Sans"'],
+        'yesteryear': ['Yesteryear', 'cursive'],
       },
       fontSize: {
         sm: ['14px', '20px'],
@@ -35,9 +36,12 @@ module.exports = {
         yellowOrange: "#E6A676",
         forestGreen: "#9CCFCE",
         clearGreen: "#1A946F",
+        offGreen: "#5DB075",
+        relaxGreen: "#4B9460",
         offWhite: "#F3F3F3",
         darkBlack: "#2C2C2C",
         offBlue: "#007AFF",
+        relaxBlack: "#2C2C2C",
       },
       backgroundImage:{
         'customGradient': 'linear-gradient(rgb(20, 90, 90), rgb(245, 245, 245), rgb(245, 245, 245))',

@@ -1,17 +1,15 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation"
+import AddNavbar from "@/components/navbar/addNavbar";
 
 const SignIn = () => {
     const router = useRouter()
 
-    const gotoRegister = () => {
-        router.push("/register")
-    }
-
     return (
         <>
-            <div className="min-h-screen flex justify-center items-center bg-forestGreen">
+            <AddNavbar/>
+            <div className="min-h-screen flex justify-center items-center mt-2 bg-clearGreen">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body">
                         <div className="form-control mb-1">

@@ -1,9 +1,12 @@
 "use client";
 
+import AddNavbar from "@/components/navbar/addNavbar";
+
 const Register = () => {
     return (
         <>
-            <div className="min-h-screen flex justify-center items-center bg-forestGreen">
+            <AddNavbar/>
+            <div className="min-h-screen flex justify-center items-center bg-clearGreen">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body">
                         <h2 className="mb-2 text-xl font-sans text-center">Create Account</h2>

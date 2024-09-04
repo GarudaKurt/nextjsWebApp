@@ -8,17 +8,11 @@ const AddNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav  className="fixed left-0 top-0 w-full pb-6 pt-8 z-10 bg-forestGreen">
+    <nav  className="fixed left-0 top-0 w-full pb-6 pt-8 z-10 bg-offGreen">
       <div className="container mx-auto flex items-center justify-between px-4">
         {!isOpen && (
           <div className="flex items-center">
-            <Image
-              className="rounded"
-              src={"/images/landing-page/logo.png"}
-              width={80}
-              height={80}
-              alt="Logo"
-            />
+            <h2 className="font-yesteryear text-xl text-white">Viva Local Vegas</h2>
           </div>
         )}
         <div className={`${isOpen ? "absolute right-4 top-8" : "md:hidden"}`}>

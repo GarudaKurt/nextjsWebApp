@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import AddNavbar from "@/components/navbar/addNavbar";
 
 const ForgotPassword = () => {
     const [isEmailSent, setEmailSent] = useState(false);
@@ -11,7 +12,8 @@ const ForgotPassword = () => {
 
     return (
         <>
-            <div className="min-h-screen flex justify-center items-center bg-forestGreen">
+            <AddNavbar/>
+            <div className="min-h-screen flex justify-center items-center bg-clearGreen">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body" onSubmit={handleSubmit}>
                         <h2 className="mb-2 text-md font-sans text-left">Forgot password</h2>
@@ -43,7 +45,7 @@ const ForgotPassword = () => {
                                         d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
                                         clipRule="evenodd" />
                                 </svg>
-                                <input type="text" className="grow" placeholder="Code" />
+                                <input type="text" className="grow" placeholder="Code" disabled/>
                             </label>
                         </div>
                         <div className="form-control mt-2">

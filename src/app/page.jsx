@@ -13,7 +13,7 @@ const Home = () => {
 
   const images = [
     {
-      src: "/images/landing-page/profile.png",
+      src: "/images/landing-page/profiles.png",
       alt: "Profile image",
     },
     {
@@ -159,7 +159,7 @@ const Home = () => {
               Visiting Vegas? <br />
               Let us help!<br />
             </h1>
-            <p className="text-md font-sans mt-2 mb-2 font-semibold leading-tight tracking-wide text-canvasGreen">
+            <p className="text-md font-sans mt-2 mb-2 font-semibold leading-tight tracking-wide text-gray-500">
               There are only 24 hours in the day! Seasoned <br />
               tour guides and well-versed locals take all the <br />
               guesswork out of Vegas, ensuring your <br />
@@ -174,7 +174,7 @@ const Home = () => {
 
       case 1:
         return (
-          <h1 className="text-4xl font-sans font-bold leading-tight tracking-wide text-white">
+          <h1 className="text-4xl font-sans font-bold leading-tight tracking-wide text-relaxGreen">
             DISCOVER THE <br />
             HIDDEN <br />
             <span className="italic text-indigo-400">MYSTERIES</span><br />
@@ -184,7 +184,7 @@ const Home = () => {
         );
       case 2:
         return (
-          <h1 className="text-4xl font-sans font-bold leading-tight tracking-wide text-white">
+          <h1 className="text-4xl font-sans font-bold leading-tight tracking-wide text-relaxGreen">
             EXPERIENCE THE <br />
             SIGHT OF <br />
             LAS VEGAS ON A <br />
@@ -198,7 +198,7 @@ const Home = () => {
   };
 
   return (
-    <div  className=" text-white min-h-screen bg-forestGreen ">
+    <div  className=" text-white min-h-screen bg-white ">
       <Layout>
         <div className="container mx-auto text-white mt-20 flex flex-col md:flex-row items-center">
           <div className="ml-5 md:ml-20">
@@ -231,7 +231,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="bg-forestGreen">
+        <div className="bg-relaxGreen">
           <div className="container mx-auto mt-8 text-lg flex justify-center">
             <div className="tabs tabs-boxed bg-white rounded-lg shadow-md">
               {tabs.map((tab, index) => (
@@ -250,7 +250,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="w-full px-4 mb-5 text-center">
+          <div className="w-full px-4  p-2 text-center">
             {renderTabContent()}
           </div>
         </div>
