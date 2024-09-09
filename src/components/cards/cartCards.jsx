@@ -1,29 +1,45 @@
-"use client"
-import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react";
 
 const AddCartCard = ({ images }) => {
-    const [priceRates, setPriceRates] = useState(0)
+    const [priceRates, setPriceRates] = useState(0);
+    const [qty, setQty] = useState(0);
+    const [rate, setRate] = useState(""); // Store the selected rate
 
-    const handleRateChange = (e) => {
-        const selectedRate = e.target.value;
-        switch (selectedRate) {
+    // This effect recalculates price when qty or rate changes
+    useEffect(() => {
+        let total = 0;
+        switch (rate) {
             case "24 hours":
-                setPriceRates(35); 
+                total = qty * 35;
                 break;
             case "48 hours":
-                setPriceRates(55);
+                total = qty * 55;
                 break;
             case "120 hours":
-                setPriceRates(135);
+                total = qty * 135;
                 break;
             default:
-                setPriceRates(0);
+                total = 0;
         }
-    }
+        setPriceRates(total);
+    }, [qty, rate]); // Dependency array, will run the effect when either changes
+
+    // Handles rate change
+    const handleRateChange = (e) => {
+        const selectedRate = e.target.value;
+        setRate(selectedRate); // Update rate when the user selects a new one
+    };
+
+    const handleDecrement = () => {
+        if (qty > 0) setQty(qty - 1);
+    };
+
+    const handleIncrement = () => {
+        setQty(qty + 1);
+    };
 
     return (
-        <div className="card w-80 bg-white mt-8 shadow-lg mb-2 ml-3"> 
+        <div className="card w-80 bg-white mt-8 shadow-lg mb-2 ml-3">
             <div className="card-body items-center text-center">
                 <div className="flex justify-between w-full">
                     <h2 className="card-title">Mobility Scooter</h2>
@@ -33,7 +49,7 @@ const AddCartCard = ({ images }) => {
                 </div>
 
                 <div className="w-full h-40">
-                    <Image
+                    <img
                         src={images}
                         alt="Scooter"
                         className="rounded-md mx-auto"
@@ -73,11 +89,33 @@ const AddCartCard = ({ images }) => {
                         <option>120 hours</option>
                     </select>
                     <p className="text-sm font-semibold">${priceRates}</p>
-                    <button className="btn btn-sm ml-5 text-white bg-clearGreen ">Add to Cart</button>
+                    <button className="btn btn-sm ml-5 text-white bg-clearGreen">Add to Cart</button>
+                </div>
+
+                {/* Quantity Increment/Decrement Buttons */}
+                <div className="flex justify-center items-center mt-2">
+                    {/* Decrement Button */}
+                    <button className="text-red-400" onClick={handleDecrement}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                            <circle cx="12" cy="12" r="10" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12H9" />
+                        </svg>
+                    </button>
+
+                    {/* Quantity Display */}
+                    <span className="mx-4 text-md text-gray-400">{qty}</span>
+
+                    {/* Increment Button */}
+                    <button className="text-gray-400" onClick={handleIncrement}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+                            <circle cx="12" cy="12" r="10" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v8m-4-4h8" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default AddCartCard
+export default AddCartCard;
