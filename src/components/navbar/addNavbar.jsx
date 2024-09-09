@@ -55,7 +55,7 @@ const AddNavbar = () => {
             Services
           </Link>
           <Link href="/login" className="block px-3 py-2 text-white hover:text-clearGreen">
-            Sign Up
+            Sign In
           </Link>
         </div>
       </div>

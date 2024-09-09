@@ -20,7 +20,7 @@ const CardLabel = ({image, name, title, descriptions}) => {
             {descriptions}
           </p>
         </div>
-        <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white mb-2 py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+        <button className="bg-transparent hover:bg-green-500 text-clearGreen font-semibold hover:text-white mb-2 py-2 px-4 border border-green-500 hover:border-transparent rounded">
             Add Cart
         </button>
       </div>

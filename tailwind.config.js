@@ -43,6 +43,12 @@ module.exports = {
         offBlue: "#007AFF",
         relaxBlack: "#2C2C2C",
       },
+      steps: {
+        color: "#007AFF",
+      },
+      button: {
+        fGreen: "#9CCFCE",
+      },
       backgroundImage:{
         'customGradient': 'linear-gradient(rgb(20, 90, 90), rgb(245, 245, 245), rgb(245, 245, 245))',
       },

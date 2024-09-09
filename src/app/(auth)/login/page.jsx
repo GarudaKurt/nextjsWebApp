@@ -50,7 +50,7 @@ const SignIn = () => {
                         </div>
                         <h2 className="text-md mt-2 text-center divider">OR</h2>
                         <label className="label flex justify-center">
-                                <Link href="/register" className="label-text-alt link link-hover text-offBlue">Don't have account yet? Create One!</Link>
+                                <Link href="/create-account" className="label-text-alt link link-hover text-offBlue">Don't have account yet? Create One!</Link>
                         </label>
                     </form>
                 </div>

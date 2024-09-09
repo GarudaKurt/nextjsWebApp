@@ -6,10 +6,13 @@ import AddButton from "@/components/buttons/addButton";
 import CardComments from "@/components/cards/commentCard";
 import CardLabel from "@/components/cards/labelCard";
 import Layout from "@/components/layout";
+import { useRouter } from "next/navigation"
 
 const Home = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [selectedTab, setSelectedTab] = useState("Gallery");
+
+  const routes = useRouter()
 
   const images = [
     {
@@ -55,7 +58,7 @@ const Home = () => {
                 <br />
                 Tours are offered most Thursday, Friday, and Saturday Nigths. To book, reach out at vivalocalvegas@gmail.com for availability!
               </p>
-                <AddButton align={"center"}>Book Now</AddButton>
+                <AddButton align={"center"} events={() => alert('Button Clicked!')}>Book Now</AddButton>
             </form>
           </>
         );
@@ -69,7 +72,7 @@ const Home = () => {
                 <br />
                 Our gear is meticulously tested to ensure reliability and effectiveness in the most challenging conditions. Whether you're a seasoned ghost hunter or a curious beginner, our selection of hunt gear will support you in your quest to uncover the unknown.
               </p>
-              <AddButton align={"center"}>Book Now</AddButton>
+              <AddButton align={"center"}  events={() => alert('Button Clicked!')} >Book Now</AddButton>
             </form>
             <div className="flex flex-wrap max-w rounded gap-4 bg-white mb-2 justify-center">
               <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black w-full text-center">Equipments</h1>
@@ -118,7 +121,7 @@ const Home = () => {
                 <br />
                 We keep our rental system as fast and simple as possible; we meet up, go over our contract, and get you rolling away in less than 10 minutes!
               </p>
-              <AddButton align={"center"}>Book Now</AddButton>
+              <AddButton align={"center"}  events={() => alert('Button Clicked!')}>Book Now</AddButton>
             </form>
             <div className="flex flex-wrap max-w rounded gap-2 bg-base-100">
             <div className="w-full flex justify-center">
@@ -203,7 +206,7 @@ const Home = () => {
         <div className="container mx-auto text-white mt-20 flex flex-col md:flex-row items-center">
           <div className="ml-5 md:ml-20">
             {landingCorousel()}
-            <AddButton bcolor={"bg-clearGreen"}>Book Now</AddButton>
+            <AddButton bcolor={"bg-clearGreen"} events={() => routes.push("/bookings")}>Book Now</AddButton>
           </div>
           <div className="mt-8 ml-auto mr-auto md:mr-40 relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
             <div className="relative">
