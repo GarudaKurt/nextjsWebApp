@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const AddCartCard = ({ images }) => {
+const AddCartCard = ({ images, title, bikesRates, tourRates, equipmentRates }) => {
     const [priceRates, setPriceRates] = useState(0);
     const [qty, setQty] = useState(0);
     const [rate, setRate] = useState(""); // Store the selected rate
@@ -39,10 +39,10 @@ const AddCartCard = ({ images }) => {
     };
 
     return (
-        <div className="card w-80 bg-white mt-8 shadow-lg mb-2 ml-3">
+        <div className="card w-80 bg-white mt-4 shadow-lg  ml-3">
             <div className="card-body items-center text-center">
                 <div className="flex justify-between w-full">
-                    <h2 className="card-title">Mobility Scooter</h2>
+                    <h2 className="card-title">{title}</h2>
                     <div className="rating gap-1">
                         <input type="radio" name="rating-3" className="mask mask-heart bg-red-400" />
                     </div>
@@ -92,9 +92,7 @@ const AddCartCard = ({ images }) => {
                     <button className="btn btn-sm ml-5 text-white bg-clearGreen">Add to Cart</button>
                 </div>
 
-                {/* Quantity Increment/Decrement Buttons */}
-                <div className="flex justify-center items-center mt-2">
-                    {/* Decrement Button */}
+                <div className="flex justify-center items-center p-2 rounded-full">
                     <button className="text-red-400" onClick={handleDecrement}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
                             <circle cx="12" cy="12" r="10" />
@@ -102,10 +100,8 @@ const AddCartCard = ({ images }) => {
                         </svg>
                     </button>
 
-                    {/* Quantity Display */}
                     <span className="mx-4 text-md text-gray-400">{qty}</span>
 
-                    {/* Increment Button */}
                     <button className="text-gray-400" onClick={handleIncrement}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
                             <circle cx="12" cy="12" r="10" />

@@ -9,7 +9,7 @@ const SignIn = () => {
     return (
         <>
             <AddNavbar/>
-            <div className="min-h-screen flex justify-center items-center mt-2 bg-clearGreen">
+            <div className="min-h-screen flex justify-center items-center mt-2 bg-white">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body">
                         <div className="form-control mb-1">
@@ -42,15 +42,15 @@ const SignIn = () => {
                                 <input type="password" className="grow" placeholder="Password" required />
                             </label>
                             <label className="label">
-                                <Link href="/forgot-password" className="label-text-alt link link-hover text-offBlue">Forgot password?</Link>
+                                <Link href="/forgot-password" className="label-text-alt link link-hover text-forestGreen">Forgot password?</Link>
                             </label>
                         </div>
                         <div className="form-control mt-2">
-                            <button className="btn bg-darkBlack text-offWhite hover:bg-black w-full">Login</button>
+                            <button className="btn bg-clearGreen text-offWhite hover:bg-forestGreen w-full">Login</button>
                         </div>
                         <h2 className="text-md mt-2 text-center divider">OR</h2>
                         <label className="label flex justify-center">
-                                <Link href="/create-account" className="label-text-alt link link-hover text-offBlue">Don't have account yet? Create One!</Link>
+                                <Link href="/create-account" className="label-text-alt link link-hover text-forestGreen">Don't have account yet? Create One!</Link>
                         </label>
                     </form>
                 </div>

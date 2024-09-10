@@ -13,10 +13,10 @@ const ForgotPassword = () => {
     return (
         <>
             <AddNavbar/>
-            <div className="min-h-screen flex justify-center items-center bg-clearGreen">
+            <div className="min-h-screen flex justify-center items-center bg-white">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body" onSubmit={handleSubmit}>
-                        <h2 className="mb-2 text-md font-sans text-left">Forgot password</h2>
+                        <h2 className="mb-2 text-md font-sans text-start text-clearGreen">Forgot password</h2>
                         
                         <div className="form-control mb-1">
                             <label className="input input-bordered flex items-center gap-2">
@@ -49,7 +49,7 @@ const ForgotPassword = () => {
                             </label>
                         </div>
                         <div className="form-control mt-2">
-                            <button type="submit" className="btn bg-darkBlack text-offWhite hover:bg-black w-full">
+                            <button type="submit" className="btn bg-clearGreen text-offWhite hover:bg-forestGreen w-full">
                                 Submit
                             </button>
                         </div>

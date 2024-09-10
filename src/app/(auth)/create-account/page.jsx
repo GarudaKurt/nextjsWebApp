@@ -9,7 +9,7 @@ const Register = () => {
             <div className="min-h-screen flex justify-center items-center bg-clearGreen">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body">
-                        <h2 className="mb-2 text-xl font-sans text-center">Create Account</h2>
+                        <h2 className="mb-2 text-xl font-sans text-start text-clearGreen">Create Account</h2>
                         <div className="form-control mb-1">
                             <label className="input input-bordered flex items-center gap-2 text-darkBlack">
                                 <svg
@@ -55,7 +55,7 @@ const Register = () => {
 
                         </div>
                         <div className="form-control mt-2">
-                            <button className="btn bg-darkBlack text-offWhite hover:bg-black w-full">Submit</button>
+                            <button className="btn bg-clearGreen text-offWhite hover:bg-forestGreen w-full">Submit</button>
                         </div>
                     </form>
                 </div>

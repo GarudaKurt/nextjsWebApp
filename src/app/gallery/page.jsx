@@ -5,6 +5,16 @@ import AddButton from '@/components/buttons/addButton';
 
 const Gallery = () => {
 
+        // Array of images for the Ghost Tour carousel
+        const ghostTourImages = [
+            "/images/tour/me.png",
+            "/images/tour/pic_1.png",
+            "/images/tour/pic_2.png",
+            "/images/tour/pic_3.png",
+            "/images/tour/pic_4.png"
+        ]
+    
+
     return (
         <>
             <Layout>
@@ -18,47 +28,17 @@ const Gallery = () => {
                                 Discover the stories that haunt these streets, as our clients explore the eerie history during our exclusive ghost tours.
                             </p>
                         </div>
-                        <div className="carousel rounded-box md-shadow">
-                            <div className="carousel-item">
-                                <Image
-                                    src={"/images/tour/me.png"}
-                                    alt='tour'
-                                    width={300}
-                                    height={300}
-                                />
-                            </div>
-                            <div className="carousel-item">
-                                <Image
-                                    src={"/images/tour/pic_1.png"}
-                                    alt='tour'
-                                    width={300}
-                                    height={300}
-                                />
-                            </div>
-                            <div className="carousel-item">
-                                <Image
-                                    src={"/images/tour/pic_2.png"}
-                                    alt='tour'
-                                    width={300}
-                                    height={300}
-                                />
-                            </div>
-                            <div className="carousel-item">
-                                <Image
-                                    src={"/images/tour/pic_3.png"}
-                                    alt='tour'
-                                    width={300}
-                                    height={300}
-                                />
-                            </div>
-                            <div className="carousel-item">
-                                <Image
-                                    src={"/images/tour/pic_4.png"}
-                                    alt='tour'
-                                    width={300}
-                                    height={300}
-                                />
-                            </div>
+                        <div className="carousel rounded-box md-shadow mt-4">
+                            {ghostTourImages.map((src, index) => (
+                                <div key={index} className="carousel-item">
+                                    <Image
+                                        src={src}
+                                        alt={`tour image ${index + 1}`}
+                                        width={300}
+                                        height={300}
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
                     <AddButton align={"center"} bcolor={"bg-clearGreen"}>Book Now</AddButton>
