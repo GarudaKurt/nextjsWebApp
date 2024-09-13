@@ -6,7 +6,7 @@ const Register = () => {
     return (
         <>
             <AddNavbar/>
-            <div className="min-h-screen flex justify-center items-center bg-clearGreen">
+            <div className="min-h-screen flex justify-center items-center bg-white">
                 <div className="card max-w-sm shadow-2xl bg-white p-2">
                     <form className="card-body">
                         <h2 className="mb-2 text-xl font-sans text-start text-clearGreen">Create Account</h2>
