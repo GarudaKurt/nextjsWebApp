@@ -74,37 +74,6 @@ const Home = () => {
               </p>
               <AddButton align={"center"}  events={() => alert('Button Clicked!')} >Book Now</AddButton>
             </form>
-            <div className="flex flex-wrap max-w rounded gap-4 bg-white mb-2 justify-center">
-              <h1 className="text-xl font-sans p-2 font-bold leading-tight tracking-wide text-black w-full text-center">Equipments</h1>
-              <CardLabel
-                image={"/images/equipments/equip_1.png"}
-                name={"Thermal Camera"}
-                title={"Thermal Camera"}
-                descriptions={
-                  "A Thermal Imaging Camera detects temperature changes, highlighting cold spots or heat fluctuations that may indicate paranormal activity, making it a crucial tool for ghost hunters"
-                }
-              />
-
-              <CardLabel
-                image={"/images/equipments/spiritbox.png"}
-                name={"Sprint box"}
-                title={"Spirit Box"}
-                descriptions={
-                  "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts."
-                } 
-              />
-
-              <CardLabel
-                image={"/images/equipments/rods.png"}
-                name={"Diving Rods"}
-                title={"Diving Rods"}
-                descriptions={
-                  "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts"
-                }
-              />
-
-            </div>
-
           </>
 
           );
@@ -123,28 +92,6 @@ const Home = () => {
               </p>
               <AddButton align={"center"}  events={() => alert('Button Clicked!')}>Book Now</AddButton>
             </form>
-            <div className="flex flex-wrap max-w rounded gap-2 bg-base-100">
-            <div className="w-full flex justify-center">
-              <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-black font-LuckiestGuy">
-                What Our Clients Say
-              </h1>
-            </div>
-            
-            <div className="w-full flex justify-center gap-4">
-              <CardComments
-                image={"/images/profile/profile_1.png"}
-                feedback={"We were skeptical but they were very patient in sending me documents to fill out. On day of arrival we met in easy location and pick up was easy. Definitely will use them again. Parents first refused but after walking and using scooters there loved them. Easy breezy"}
-                name={"Claudia M."}
-              />
-              
-              <CardComments
-                image={"/images/profile/profile_2.png"}
-                feedback={"The owner is very approachable. Scooter is easy to use and it is sanitized and cleaned before the owner drops it off"}
-                name={"Tommy G."}
-              />
-            </div>
-          </div>
-
           </>
           
         );

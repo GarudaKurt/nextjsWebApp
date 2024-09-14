@@ -15,14 +15,14 @@ const AddFooter = () => {
           <FaWhatsapp className="mb-2 text-white" />
           <div className="text-center">
             <div>Whatsapp Support</div>
-            <div className="text-gray-400">08147758883</div>
+            <div className="text-gray-400">7253778651</div>
           </div>
         </div>
         <div className="flex flex-col items-center">
           <FaPhone className="mb-2 text-white" />
           <div className="text-center">
             <div>Phone Support</div>
-            <div className="text-gray-400">08147758883</div>
+            <div className="text-gray-400">7253778651</div>
           </div>
         </div>
       </div>

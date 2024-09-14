@@ -39,7 +39,6 @@ module.exports = {
         offGreen: "#5DB075",
         relaxGreen: "#4B9460",
         offWhite: "#F3F3F3",
-        darkBlack: "#2C2C2C",
         offBlue: "#007AFF",
         relaxBlack: "#2C2C2C",
       },

@@ -4,6 +4,7 @@ import AddCartCard from "@/components/cards/cartCards"
 import AddSteps from "@/components/steps/page"
 import Layout from "@/components/layout"
 import CardComments from "@/components/cards/commentCard"
+import CardLabel from "@/components/cards/labelCard"
 
 const AddBooking = () => {
     const [selectedTab, setSelectedTab] = useState("Rent Scooters")
@@ -26,14 +27,32 @@ const AddBooking = () => {
             case "Rent Scooters":
                 return (
                     <>
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 justify-center mx-auto">
-                    <AddCartCard title={"Mobility Scooters"} images={"/images/bookings/red-bike.png"} />
-                    <AddCartCard title={"Mobility Scooters"} images={"/images/bookings/blue-bike.png"} />
-                    <AddCartCard title={"Mobility Scooters"} images={"/images/bookings/black-bike.png"} />
-                </div>
-
-
+                        <div className="flex flex-wrap max-w rounded gap-4 bg-white mb-1 justify-center">
+                            <AddCartCard title={"Mobility Scooters"} model={"Red"} images={"/images/bookings/red-bike.png"} />
+                            <AddCartCard title={"Mobility Scooters"} model={"Blue"} images={"/images/bookings/blue-bike.png"} />
+                            <AddCartCard title={"Mobility Scooters"} model={"Black"} images={"/images/bookings/black-bike.png"} />
+                        </div>
+                        <div className="w-full flex mt-2 justify-center bg-forestGreen">
+                            <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-relaxBlack font-yesteryear">
+                                What Our Clients Say
+                            </h1>
+                        </div>
+                        <div className="w-full bg-forestGreen flex justify-center gap-4">
+                            <CardComments
+                                image={"/images/profile/profile_1.png"}
+                                feedback={"We were skeptical but they were very patient in sending me documents to fill out. On day of arrival we met in easy location and pick up was easy. Definitely will use them again. Parents first refused but after walking and using scooters there loved them. Easy breezy"}
+                                name={"Claudia M."}
+                            />
+                            
+                            <CardComments
+                                image={"/images/profile/profile_2.png"}
+                                feedback={"The owner is very approachable. Scooter is easy to use and it is sanitized and cleaned before the owner drops it off"}
+                                name={"Tommy G."}
+                            />
+                        </div>
                     </>
+
+                    
                 )
             case "Ghost Tour":
                 return (
@@ -69,10 +88,10 @@ const AddBooking = () => {
                         </div>
 
                         <div className="w-full flex justify-center bg-forestGreen">
-                            <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-black font-yesteryear">
+                            <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-relaxBlack font-yesteryear">
                                 What Our Clients Say
                             </h1>
-                            </div>
+                        </div>
                             
                             <div className="w-full flex justify-center gap-4 bg-forestGreen">
                             <CardComments
@@ -98,7 +117,36 @@ const AddBooking = () => {
             case "Equipments":
                 return (
                     <>
-                        <h1>Hello Equipments</h1>
+                        <div className="flex flex-wrap max-w rounded gap-4 bg-white  justify-center">
+                            <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-relaxBlack w-full text-center font-yesteryear mt-2">Ghost Hunting Tools</h1>
+                            <CardLabel
+                                image={"/images/equipments/equip_1.png"}
+                                name={"Thermal Camera"}
+                                title={"Thermal Camera"}
+                                descriptions={
+                                "A Thermal Imaging Camera detects temperature changes, highlighting cold spots or heat fluctuations that may indicate paranormal activity, making it a crucial tool for ghost hunters"
+                                }
+                            />
+
+                            <CardLabel
+                                image={"/images/equipments/spiritbox.png"}
+                                name={"Sprint box"}
+                                title={"Spirit Box"}
+                                descriptions={
+                                "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts."
+                                } 
+                            />
+
+                            <CardLabel
+                                image={"/images/equipments/rods.png"}
+                                name={"Diving Rods"}
+                                title={"Diving Rods"}
+                                descriptions={
+                                "A Spirit Box scans radio frequencies, allowing spirits to communicate by converting white noise into words or phrases. This essential tool captures real-time responses during ghost hunts"
+                                }
+                            />
+
+                        </div>
                     </>
                 )
         }

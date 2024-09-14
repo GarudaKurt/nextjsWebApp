@@ -1,7 +1,6 @@
 import AddFooter from "./footer/addFootter"
 import AddNavbar from "./navbar/addNavbar"
 
-
 const Layout = ({children}) => {
     return(
         <>

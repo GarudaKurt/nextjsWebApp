@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const AddCartCard = ({ images, title, bikesRates, tourRates, equipmentRates }) => {
+const AddCartCard = ({ images, title, model,  }) => {
     const [priceRates, setPriceRates] = useState(0);
     const [qty, setQty] = useState(0);
     const [rate, setRate] = useState(""); // Store the selected rate
@@ -40,10 +40,13 @@ const AddCartCard = ({ images, title, bikesRates, tourRates, equipmentRates }) =
     };
 
     return (
-        <div className="card w-full bg-white mt-0 shadow-md">
+        <div className="card w-80 bg-white mt-2 max-w-xs rounded overflow-hidden shadow-lg">
             <div className="card-body items-center text-center">
                 <div className="flex justify-between w-full">
+                <div className="w-full">
                     <h2 className="card-title">{title}</h2>
+                    <label className="text-gray-500 text-sm flex font-sans justify-start mt-1">{model}</label>
+                </div>
                     <div className="rating gap-1">
                         <input type="radio" name="rating-3" className="mask mask-heart bg-red-400" />
                     </div>
@@ -80,7 +83,7 @@ const AddCartCard = ({ images, title, bikesRates, tourRates, equipmentRates }) =
                     </div>
                 </div>
 
-                <div className="flex justify-between w-full items-center mt-4">
+                <div className="flex justify-between w-full items-center ">
                     <select className="select select-ghost p-2 w-full max-w-xs" onChange={handleRateChange}>
                         <option disabled selected>rates</option>
                         <option>24 hours</option>
