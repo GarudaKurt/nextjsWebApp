@@ -1,12 +1,28 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useCartStore } from "@/app/zustand/zustand";
 
-const AddCartCard = ({ images, title, model,  }) => {
+const AddCartCard = ({ images, title, model }) => {
     const [priceRates, setPriceRates] = useState(0);
     const [qty, setQty] = useState(0);
-    const [rate, setRate] = useState(""); // Store the selected rate
+    const [rate, setRate] = useState("");
 
-    // This effect recalculates price when qty or rate changes
+    const addToCart = useCartStore((state) => state.add_to_cart); // Access add_to_cart from the Zustand store
+
+    // Function to add the selected bike data to the global cart
+    const handleAddToCart = () => {
+
+        const newBikeRent = {
+            qty,
+            rate,
+            models: model,
+            total: priceRates
+        };
+
+        // Add the new bike rental to the global cart using the Zustand store
+        addToCart(newBikeRent);
+    };
+
     useEffect(() => {
         let total = 0;
         switch (rate) {
@@ -23,12 +39,11 @@ const AddCartCard = ({ images, title, model,  }) => {
                 total = 0;
         }
         setPriceRates(total);
-    }, [qty, rate]); // Dependency array, will run the effect when either changes
+    }, [qty, rate]);
 
-    // Handles rate change
     const handleRateChange = (e) => {
         const selectedRate = e.target.value;
-        setRate(selectedRate); // Update rate when the user selects a new one
+        setRate(selectedRate);
     };
 
     const handleDecrement = () => {
@@ -43,10 +58,10 @@ const AddCartCard = ({ images, title, model,  }) => {
         <div className="card w-80 bg-white mt-2 max-w-xs rounded overflow-hidden shadow-lg">
             <div className="card-body items-center text-center">
                 <div className="flex justify-between w-full">
-                <div className="w-full">
-                    <h2 className="card-title">{title}</h2>
-                    <label className="text-gray-500 text-sm flex font-sans justify-start mt-1">{model}</label>
-                </div>
+                    <div className="w-full">
+                        <h2 className="card-title">{title}</h2>
+                        <label className="text-gray-500 text-sm flex font-sans justify-start mt-1">{model}</label>
+                    </div>
                     <div className="rating gap-1">
                         <input type="radio" name="rating-3" className="mask mask-heart bg-red-400" />
                     </div>
@@ -64,15 +79,13 @@ const AddCartCard = ({ images, title, model,  }) => {
 
                 <div className="flex justify-between w-full mt-8">
                     <div className="flex items-center">
-                    <button className="text-gray-400 bg-white px-1 shadow-sm " onClick={handleDecrement}>
-                        -
-                    </button>
-
-                    <span className="mx-4 text-md text-gray-400">{qty}</span>
-
-                    <button className="text-green-400 bg-white px-1 shadow-sm" onClick={handleIncrement}>
-                        +
-                    </button>
+                        <button className="text-gray-400 bg-white px-1 shadow-sm" onClick={handleDecrement}>
+                            -
+                        </button>
+                        <span className="mx-4 text-md text-gray-400">{qty}</span>
+                        <button className="text-green-400 bg-white px-1 shadow-sm" onClick={handleIncrement}>
+                            +
+                        </button>
                     </div>
 
                     <div className="flex items-center">
@@ -83,7 +96,7 @@ const AddCartCard = ({ images, title, model,  }) => {
                     </div>
                 </div>
 
-                <div className="flex justify-between w-full items-center ">
+                <div className="flex justify-between w-full items-center">
                     <select className="select select-ghost p-2 w-full max-w-xs" onChange={handleRateChange}>
                         <option disabled selected>rates</option>
                         <option>24 hours</option>
@@ -91,7 +104,9 @@ const AddCartCard = ({ images, title, model,  }) => {
                         <option>120 hours</option>
                     </select>
                     <p className="text-sm font-semibold">${priceRates}</p>
-                    <button className="btn btn-sm ml-5 text-white bg-clearGreen">Add to Cart</button>
+                    <button className="btn btn-sm ml-5 text-white bg-clearGreen" onClick={handleAddToCart}>
+                        Add to Cart
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,27 +1,36 @@
 "use client";
 
+import Link from "next/link";
 import { FaShoppingCart, FaReceipt, FaList, FaCheck } from "react-icons/fa";
 
 const AddSteps = () => {
     return (
         <>
             <ul className="steps steps-vertical text-white lg:steps-horizontal">
-                <li className="step step-white flex items-center space-x-2">
-                    <FaShoppingCart className="w-6 h-6 lg:w-8 lg:h-8" />
-                    <span className="hidden lg:block text-sm lg:text-base">Cart</span>
-                </li>
-                <li className="step step-white flex items-center space-x-2">
-                    <FaReceipt className="w-6 h-6 lg:w-8 lg:h-8" />
-                    <span className="hidden lg:block text-sm lg:text-base">Billing</span>
-                </li>
-                <li className="step step-white flex items-center space-x-2">
-                    <FaList className="w-6 h-6 lg:w-8 lg:h-8" />
-                    <span className="hidden lg:block text-sm lg:text-base">Information</span>
-                </li>
-                <li className="step step-white flex items-center space-x-2">
-                    <FaCheck className="w-6 h-6 lg:w-8 lg:h-8" />
-                    <span className="hidden lg:block text-sm lg:text-base">Verified</span>
-                </li>
+                <Link href="#" className="step step-white flex items-center space-x-2 group">
+                    <FaShoppingCart className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
+                    <span className="hidden lg:block text-sm lg:text-base group-hover:bg-forestGreen p-1 rounded">
+                        Cart
+                    </span>
+                </Link>
+                <Link href="#" className="step step-white flex items-center space-x-2 group">
+                    <FaReceipt className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
+                    <span className="hidden lg:block text-sm lg:text-base group-hover:bg-forestGreen p-1 rounded">
+                        Billing
+                    </span>
+                </Link>
+                <Link href="#" className="step step-white flex items-center space-x-2 group">
+                    <FaList className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
+                    <span className="hidden lg:block text-sm lg:text-base group-hover:bg-forestGreen p-1 rounded">
+                        Information
+                    </span>
+                </Link>
+                <Link href="#" className="step step-white flex items-center space-x-2 group">
+                    <FaCheck className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
+                    <span className="hidden lg:block text-sm lg:text-base group-hover:bg-forestGreen p-1 rounded">
+                        Verified
+                    </span>
+                </Link>
             </ul>
         </>
     );

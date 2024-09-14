@@ -8,32 +8,22 @@ import CardLabel from "@/components/cards/labelCard"
 
 const AddBooking = () => {
     const [selectedTab, setSelectedTab] = useState("Rent Scooters")
-
+    
     const tabs = ["Rent Scooters", "Ghost Tour", "Equipments"]
 
-    // Array of images for the Ghost Tour carousel
-    const ghostTourImages = [
-        "/images/bookings/ghost_hunt_1.png",
-        "/images/bookings/ghost_hunt_2.png",
-        "/images/bookings/ghost_hunt_3.png",
-        "/images/tour/pic_1.png",
-        "/images/tour/pic_2.png",
-        "/images/tour/pic_3.png",
-        "/images/tour/pic_4.png"
-    ]
-
     const renderTabContent = () => {
+
         switch (selectedTab) {
             case "Rent Scooters":
                 return (
                     <>
                         <div className="flex flex-wrap max-w rounded gap-4 bg-white mb-1 justify-center">
-                            <AddCartCard title={"Mobility Scooters"} model={"Red"} images={"/images/bookings/red-bike.png"} />
-                            <AddCartCard title={"Mobility Scooters"} model={"Blue"} images={"/images/bookings/blue-bike.png"} />
-                            <AddCartCard title={"Mobility Scooters"} model={"Black"} images={"/images/bookings/black-bike.png"} />
+                            <AddCartCard title={"Mobility Scooters"} model={"Red"} images={"/images/bookings/red-bike.png"}  />
+                            <AddCartCard title={"Mobility Scooters"} model={"Blue"}  images={"/images/bookings/blue-bike.png"}  />
+                            <AddCartCard title={"Mobility Scooters"} model={"Black"}  images={"/images/bookings/black-bike.png"}  />
                         </div>
                         <div className="w-full flex mt-2 justify-center bg-forestGreen">
-                            <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-relaxBlack font-yesteryear">
+                            <h1 className="text-xl p-1 mt-2 font-bold leading-tight tracking-wide text-relaxBlack font-yesteryear">
                                 What Our Clients Say
                             </h1>
                         </div>
@@ -166,6 +156,7 @@ const AddBooking = () => {
                     </p>
                     
                     <div className="bg-white ">
+                        
                         <div className="container mx-auto mt-8 text-lg flex justify-center">
                             <div className="tabs tabs-boxed bg-white rounded-lg shadow-md">
                                 {tabs.map((tab, index) => (
@@ -180,13 +171,16 @@ const AddBooking = () => {
                                     </button>
                                 ))}
                             </div>
+                            
                         </div>
+                      
                         <div className="w-full  text-center">
                             {renderTabContent()}
                         </div>
                         <div className="bg-forestGreen text-white flex justify-center py-3">
                             <AddSteps />
                         </div>
+                     
                     </div>
                 </div>
             </Layout>
