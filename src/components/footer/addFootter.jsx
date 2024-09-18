@@ -1,4 +1,11 @@
-import { FaEnvelope, FaWhatsapp, FaPhone, FaInstagram, FaTwitter, FaFacebookF } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaWhatsapp,
+  FaPhone,
+  FaInstagram,
+  FaTwitter,
+  FaFacebookF,
+} from "react-icons/fa";
 
 const AddFooter = () => {
   return (
@@ -39,8 +46,7 @@ const AddFooter = () => {
       </div>
       <div className="text-center text-gray-400 mt-4">
         Viva Local Vegas! Is a subsidiary of Sin City Spooks, LLC.
-        <br />
-        © 2024, All Rights Reserved
+        <br />© 2024, All Rights Reserved
       </div>
     </footer>
   );

@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import AddButton from "@/components/buttons/addButton";
-import CardComments from "@/components/cards/commentCard";
-import CardLabel from "@/components/cards/labelCard";
 import Layout from "@/components/layout";
 import { useRouter } from "next/navigation"
 
