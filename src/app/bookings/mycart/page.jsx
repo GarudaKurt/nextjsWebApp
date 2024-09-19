@@ -4,32 +4,49 @@ import Image from "next/image";
 import { FaTrash, FaArrowLeft, FaPlus, FaMinus } from "react-icons/fa";
 import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
+import { useCartStore, loadCartFromLocalStorage } from "@/zustand/zustand";
 
-const myCart = () => {
+const MyCart = () => {
   const [priceRates, setPriceRates] = useState(0);
   const [qty, setQty] = useState(1);
   const [rate, setRate] = useState("");
   const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+  const [cart, setCart] = useState([]);
 
   const router = useRouter();
 
+  const imagesLoad = [
+    "/images/bookings/red-bike.png",
+    "/images/bookings/blue-bike.png",
+    "/images/bookings/black-bike.png",
+  ];
+
+  // Load cart from localStorage when the component mounts
   useEffect(() => {
-    let total = 0;
-    switch (rate) {
-      case "24 hours":
-        total = qty * 35;
-        break;
-      case "48 hours":
-        total = qty * 55;
-        break;
-      case "120 hours":
-        total = qty * 135;
-        break;
-      default:
-        total = 0;
-    }
-    setPriceRates(total);
-  }, [qty, rate]);
+    const storedCart = loadCartFromLocalStorage();
+    setCart(storedCart); // Set the cart state with the loaded data
+  }, []);
+
+  // Handle rate and qty calculation based on the selected rate
+  // useEffect(() => {
+  //   return cart.map((item, index) => {
+  //     let total = 0;
+  //     switch (item.rate) {
+  //       case "24 hours":
+  //         total = item.qty * 35;
+  //         break;
+  //       case "48 hours":
+  //         total = item.qty * 55;
+  //         break;
+  //       case "120 hours":
+  //         total = qty * 135;
+  //         break;
+  //       default:
+  //         total = 0;
+  //     }
+  //     setPriceRates(total);
+  //   });
+  // }, [qty, rate]);
 
   const handleRateChange = (e) => {
     const selectedRate = e.target.value;
@@ -46,6 +63,73 @@ const myCart = () => {
 
   const toggleCollapse = () => {
     setIsCollapseOpen((prevState) => !prevState);
+  };
+
+  // Function to load the cart and map images and values
+  const displayCart = () => {
+    return cart.map((item, index) => {
+      let imageUrl = "";
+      if (item.models === "Red") {
+        imageUrl = imagesLoad[0];
+      } else if (item.models === "Blue") {
+        imageUrl = imagesLoad[1];
+      } else if (item.models === "Black") {
+        imageUrl = imagesLoad[2];
+      }
+
+      return (
+        <div
+          key={index}
+          className="w-full bg-white shadow-xl rounded-lg p-4 mt-4"
+        >
+          <div className="flex flex-col sm:flex-row sm:space-x-4 w-full items-center sm:items-start space-y-4 sm:space-y-0">
+            {/* Image */}
+            <div className="w-24 h-24 sm:w-20 sm:h-20 rounded overflow-hidden">
+              <Image
+                src={imageUrl}
+                alt={`${item.model} Scooter`}
+                width={80}
+                height={80}
+                className="object-cover"
+              />
+            </div>
+
+            {/* Details */}
+            <div className="flex-1 text-center sm:text-left">
+              <h2 className="text-md font-semibold">{item.models} Scooter</h2>
+              <p className="text-sm text-gray-500">Extra battery included</p>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
+              {/* Quantity Controls */}
+              <div className="flex items-center justify-center space-x-2">
+                <button
+                  className="btn btn-ghost btn-sm"
+                  onClick={handleDecrement}
+                >
+                  <FaMinus />
+                </button>
+                <span className="text-lg">{item.qty || qty}</span>
+                <button
+                  className="btn btn-ghost btn-sm"
+                  onClick={handleIncrement}
+                >
+                  <FaPlus />
+                </button>
+                {/* Price and Delete Button */}
+                <div className="flex items-center justify-between space-x-2">
+                  <p className="text-lg font-semibold whitespace-nowrap">
+                    ${item.total || priceRates}
+                  </p>
+                  <button className="btn btn-ghost btn-sm text-red-500">
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
   };
 
   return (
@@ -65,7 +149,7 @@ const myCart = () => {
         </div>
         <div className="divider"></div>
         <p className="text-xs md:text-sm text-gray-500 mb-3">
-          You have 3 items in your cart
+          You have {cart.length} items in your cart
         </p>
 
         {/* Cart Items Container */}
@@ -96,56 +180,8 @@ const myCart = () => {
 
             {/* Make collapse content scrollable */}
             <div className="collapse-content overflow-y-auto max-h-64">
-              {/* Cart Item */}
-              <div className="w-full bg-white shadow-xl rounded-lg p-4 mt-4">
-                <div className="flex flex-col sm:flex-row sm:space-x-4 w-full items-center sm:items-start space-y-4 sm:space-y-0">
-                  {/* Image */}
-                  <div className="w-24 h-24 sm:w-20 sm:h-20 rounded overflow-hidden">
-                    <Image
-                      src={"/images/bookings/red-bike.png"}
-                      alt="Scooter"
-                      width={80}
-                      height={80}
-                      className="object-cover"
-                    />
-                  </div>
-
-                  {/* Details */}
-                  <div className="flex-1 text-center sm:text-left">
-                    <h2 className="text-md font-semibold">Mobile Scooter</h2>
-                    <p className="text-sm text-gray-500">
-                      Extra battery included
-                    </p>
-                  </div>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
-                    {/* Quantity Controls */}
-                    <div className="flex items-center justify-center space-x-2">
-                      <button
-                        className="btn btn-ghost btn-sm"
-                        onClick={handleDecrement}
-                      >
-                        <FaMinus />
-                      </button>
-                      <span className="text-lg">{qty}</span>
-                      <button
-                        className="btn btn-ghost btn-sm"
-                        onClick={handleIncrement}
-                      >
-                        <FaPlus />
-                      </button>
-                      {/* Price and Delete Button */}
-                      <div className="flex items-center justify-between space-x-2">
-                        <p className="text-lg font-semibold whitespace-nowrap">
-                          ${priceRates}
-                        </p>
-                        <button className="btn btn-ghost btn-sm text-red-500">
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Render cart items */}
+              {displayCart()}
             </div>
           </div>
         </div>
@@ -154,4 +190,4 @@ const myCart = () => {
   );
 };
 
-export default myCart;
+export default MyCart;

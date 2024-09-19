@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useCartStore } from "@/app/zustand/zustand";
+import { useCartStore } from "@/zustand/zustand";
 
 const AddCartCard = ({ images, title, model }) => {
   const [priceRates, setPriceRates] = useState(0);

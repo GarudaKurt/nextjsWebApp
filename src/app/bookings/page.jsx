@@ -34,7 +34,7 @@ const AddBooking = () => {
               />
             </div>
             <div className="bg-clearGreen text-white w-full flex justify-center py-2">
-              <AddSteps hidden={false} />
+              <AddSteps />
             </div>
             <div className="w-full flex  justify-center bg-forestGreen">
               <h1 className="text-xl p-1 mt-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
@@ -106,7 +106,7 @@ const AddBooking = () => {
               </div>
             </div>
             <div className="bg-clearGreen text-white w-full flex justify-center py-2">
-              <AddSteps hidden={false} />
+              <AddSteps />
             </div>
             <div className="w-full flex justify-center bg-forestGreen">
               <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
@@ -175,7 +175,7 @@ const AddBooking = () => {
               />
             </div>
             <div className="bg-clearGreen text-white w-full flex justify-center py-2">
-              <AddSteps hidden={false} />
+              <AddSteps />
             </div>
           </>
         );
