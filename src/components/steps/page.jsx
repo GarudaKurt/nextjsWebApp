@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FaShoppingCart, FaReceipt, FaList, FaCheck } from "react-icons/fa";
 
 const AddSteps = ({ alignment, hidden }) => {
-  const isVertical = alignment ? `vertical` : `horizontal`;
+  const isVertical = alignment === true ? `vertical` : `horizontal`;
 
   const spanStyle = hidden
     ? "hidden" // This will hide the span

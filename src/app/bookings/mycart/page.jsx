@@ -4,14 +4,12 @@ import Image from "next/image";
 import { FaTrash, FaArrowLeft, FaPlus, FaMinus } from "react-icons/fa";
 import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
-import { useCartStore, loadCartFromLocalStorage } from "@/zustand/zustand";
+import { useCartStore } from "@/zustand/zustand";
 
 const MyCart = () => {
   const [priceRates, setPriceRates] = useState(0);
-  const [qty, setQty] = useState(1);
-  const [rate, setRate] = useState("");
-  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
   const [cart, setCart] = useState([]);
+  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
 
   const router = useRouter();
 
@@ -21,44 +19,88 @@ const MyCart = () => {
     "/images/bookings/black-bike.png",
   ];
 
-  // Load cart from localStorage when the component mounts
+  const getCart = useCartStore((state) => state.getCart);
   useEffect(() => {
-    const storedCart = loadCartFromLocalStorage();
+    const storedCart = getCart();
     setCart(storedCart); // Set the cart state with the loaded data
-  }, []);
+  }, [getCart]);
 
-  // Handle rate and qty calculation based on the selected rate
-  // useEffect(() => {
-  //   return cart.map((item, index) => {
-  //     let total = 0;
-  //     switch (item.rate) {
-  //       case "24 hours":
-  //         total = item.qty * 35;
-  //         break;
-  //       case "48 hours":
-  //         total = item.qty * 55;
-  //         break;
-  //       case "120 hours":
-  //         total = qty * 135;
-  //         break;
-  //       default:
-  //         total = 0;
-  //     }
-  //     setPriceRates(total);
-  //   });
-  // }, [qty, rate]);
-
-  const handleRateChange = (e) => {
+  // Handle rate change and update total price for the item
+  const handleRateChange = (e, index) => {
     const selectedRate = e.target.value;
-    setRate(selectedRate);
+    const updatedCart = [...cart];
+    updatedCart[index].rate = selectedRate;
+
+    let total = 0;
+    switch (selectedRate) {
+      case "24 hours":
+        total = updatedCart[index].qty * 35;
+        break;
+      case "48 hours":
+        total = updatedCart[index].qty * 55;
+        break;
+      case "120 hours":
+        total = updatedCart[index].qty * 135;
+        break;
+      default:
+        total = 0;
+    }
+
+    updatedCart[index].total = total;
+    setCart(updatedCart); // Update cart state
+    setPriceRates(total); // Update priceRates
   };
 
-  const handleDecrement = () => {
-    if (qty > 1) setQty(qty - 1);
+  // Handle increment
+  const handleIncrement = (index) => {
+    const updatedCart = [...cart];
+    updatedCart[index].qty += 1;
+
+    let total = 0;
+    switch (updatedCart[index].rate) {
+      case "24 hours":
+        total = updatedCart[index].qty * 35;
+        break;
+      case "48 hours":
+        total = updatedCart[index].qty * 55;
+        break;
+      case "120 hours":
+        total = updatedCart[index].qty * 135;
+        break;
+      default:
+        total = 0;
+    }
+
+    updatedCart[index].total = total;
+    setCart(updatedCart);
+    setPriceRates(total);
   };
 
-  const handleIncrement = () => {
-    setQty(qty + 1);
+  // Handle decrement
+  const handleDecrement = (index) => {
+    const updatedCart = [...cart];
+    if (updatedCart[index].qty > 1) {
+      updatedCart[index].qty -= 1;
+
+      let total = 0;
+      switch (updatedCart[index].rate) {
+        case "24 hours":
+          total = updatedCart[index].qty * 35;
+          break;
+        case "48 hours":
+          total = updatedCart[index].qty * 55;
+          break;
+        case "120 hours":
+          total = updatedCart[index].qty * 135;
+          break;
+        default:
+          total = 0;
+      }
+
+      updatedCart[index].total = total;
+      setCart(updatedCart);
+      setPriceRates(total);
+    }
   };
 
   const toggleCollapse = () => {
@@ -96,29 +138,39 @@ const MyCart = () => {
 
             {/* Details */}
             <div className="flex-1 text-center sm:text-left">
-              <h2 className="text-md font-semibold">{item.models} Scooter</h2>
-              <p className="text-sm text-gray-500">Extra battery included</p>
+              <h2 className="text-md font-semibold mt-2">
+                {item.models} Scooter
+              </h2>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
+
+            <div className="flex flex-col  justify-center sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
               {/* Quantity Controls */}
               <div className="flex items-center justify-center space-x-2">
                 <button
                   className="btn btn-ghost btn-sm"
-                  onClick={handleDecrement}
+                  onClick={() => handleDecrement(index)}
                 >
                   <FaMinus />
                 </button>
-                <span className="text-lg">{item.qty || qty}</span>
+                <span className="text-lg">{item.qty}</span>
                 <button
                   className="btn btn-ghost btn-sm"
-                  onClick={handleIncrement}
+                  onClick={() => handleIncrement(index)}
                 >
                   <FaPlus />
                 </button>
-                {/* Price and Delete Button */}
-                <div className="flex items-center justify-between space-x-2">
+                {/* Price and Rate */}
+                <div className="flex items-center space-x-4">
+                  <select
+                    value={item.rate}
+                    onChange={(e) => handleRateChange(e, index)}
+                  >
+                    <option value="24 hours">24 hours</option>
+                    <option value="48 hours">48 hours</option>
+                    <option value="120 hours">120 hours</option>
+                  </select>
                   <p className="text-lg font-semibold whitespace-nowrap">
-                    ${item.total || priceRates}
+                    ${item.total}
                   </p>
                   <button className="btn btn-ghost btn-sm text-red-500">
                     <FaTrash />
