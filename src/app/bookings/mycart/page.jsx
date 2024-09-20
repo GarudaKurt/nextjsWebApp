@@ -20,6 +20,8 @@ const MyCart = () => {
   ];
 
   const getCart = useCartStore((state) => state.getCart);
+  const updateCart = useCartStore((state) => state.updateCart); // Access the updateCart function
+
   useEffect(() => {
     const storedCart = getCart();
     setCart(storedCart); // Set the cart state with the loaded data
