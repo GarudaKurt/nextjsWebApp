@@ -20,7 +20,8 @@ const MyCart = () => {
   ];
 
   const getCart = useCartStore((state) => state.getCart);
-  const updateCarts = useCartStore((state) => state.updateCart); // Access the updateCart function
+  const updateCarts = useCartStore((state) => state.updateCart);
+  const deleteCarts = useCartStore((state) => state.deleteCart);
 
   useEffect(() => {
     const storedCart = getCart();
@@ -83,9 +84,12 @@ const MyCart = () => {
   // Handle decrement
   const handleDecrement = (index) => {
     const updatedCart = [...cart];
+
     if (updatedCart[index].qty > 1) {
+      // Decrease the quantity by 1
       updatedCart[index].qty -= 1;
 
+      // Calculate the new total based on the rate
       let total = 0;
       switch (updatedCart[index].rate) {
         case "24 hours":
@@ -102,9 +106,16 @@ const MyCart = () => {
       }
 
       updatedCart[index].total = total;
+
+      // Update the cart
       updateCarts(updatedCart[index], updatedCart[index].qty);
       setCart(updatedCart);
       setPriceRates(total);
+    } else {
+      // If qty reaches 0, delete the item
+      deleteCarts(index, updatedCart[index].qty);
+      const newCart = updatedCart.filter((_, i) => i !== index); // Remove the item from cart
+      setCart(newCart); // Update the cart state
     }
   };
 
@@ -127,7 +138,7 @@ const MyCart = () => {
       return (
         <div
           key={index}
-          className="w-full bg-white mb-2 shadow-md rounded-lg p-4 mt-4"
+          className="w-full bg-white shadow-md rounded-lg p-4 mt-4"
         >
           <div className="flex flex-col sm:flex-row sm:space-x-4 w-full items-center sm:items-start space-y-4 sm:space-y-0">
             {/* Image */}
@@ -150,28 +161,28 @@ const MyCart = () => {
                 <input
                   type="radio"
                   name="rating-4"
-                  className="mask mask-star-2 bg-green-500"
+                  className="mask mask-star-2 bg-green-400"
                 />
                 <input
                   type="radio"
                   name="rating-4"
-                  className="mask mask-star-2 bg-green-500"
+                  className="mask mask-star-2 bg-green-400"
                   defaultChecked
                 />
                 <input
                   type="radio"
                   name="rating-4"
-                  className="mask mask-star-2 bg-green-500"
+                  className="mask mask-star-2 bg-green-400"
                 />
                 <input
                   type="radio"
                   name="rating-4"
-                  className="mask mask-star-2 bg-green-500"
+                  className="mask mask-star-2 bg-green-400"
                 />
                 <input
                   type="radio"
                   name="rating-4"
-                  className="mask mask-star-2 bg-green-500"
+                  className="mask mask-star-2 bg-green-400"
                 />
               </div>
             </div>
@@ -183,7 +194,7 @@ const MyCart = () => {
                   className="btn btn-ghost btn-sm"
                   onClick={() => handleDecrement(index)}
                 >
-                  <FaMinus />
+                  <FaTrash className="text-red-400" />
                 </button>
                 <span className="text-lg">{item.qty}</span>
                 <button
@@ -205,9 +216,6 @@ const MyCart = () => {
                   <p className="text-lg font-semibold whitespace-nowrap">
                     ${item.total}
                   </p>
-                  <button className="btn btn-ghost btn-sm text-red-500">
-                    <FaTrash />
-                  </button>
                 </div>
               </div>
             </div>
@@ -264,7 +272,7 @@ const MyCart = () => {
             </div>
 
             {/* Make collapse content scrollable */}
-            <div className="collapse-content overflow-y-auto p-2 max-h-64">
+            <div className="collapse-content overflow-y-auto  max-h-64">
               {/* Render cart items */}
               {displayCart()}
             </div>
