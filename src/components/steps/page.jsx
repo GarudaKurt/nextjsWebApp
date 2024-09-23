@@ -11,7 +11,7 @@ const AddSteps = ({ alignment, hidden }) => {
     : "hidden lg:block text-sm lg:text-base group-hover:bg-forestGreen p-1 rounded";
 
   return (
-    <ul className={`steps steps-vertical text-white lg:steps-${isVertical}`}>
+    <ul className={`text-white steps steps-${isVertical}`}>
       {/* Cart */}
       <Link
         href="/bookings/mycart"

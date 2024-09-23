@@ -20,7 +20,7 @@ const MyCart = () => {
   ];
 
   const getCart = useCartStore((state) => state.getCart);
-  const updateCart = useCartStore((state) => state.updateCart); // Access the updateCart function
+  const updateCarts = useCartStore((state) => state.updateCart); // Access the updateCart function
 
   useEffect(() => {
     const storedCart = getCart();
@@ -32,7 +32,6 @@ const MyCart = () => {
     const selectedRate = e.target.value;
     const updatedCart = [...cart];
     updatedCart[index].rate = selectedRate;
-
     let total = 0;
     switch (selectedRate) {
       case "24 hours":
@@ -49,6 +48,8 @@ const MyCart = () => {
     }
 
     updatedCart[index].total = total;
+    updateCarts(updatedCart[index], selectedRate);
+    updateCarts(updatedCart[index], total);
     setCart(updatedCart); // Update cart state
     setPriceRates(total); // Update priceRates
   };
@@ -74,6 +75,7 @@ const MyCart = () => {
     }
 
     updatedCart[index].total = total;
+    updateCarts(updatedCart[index], updatedCart[index].qty);
     setCart(updatedCart);
     setPriceRates(total);
   };
@@ -100,6 +102,7 @@ const MyCart = () => {
       }
 
       updatedCart[index].total = total;
+      updateCarts(updatedCart[index], updatedCart[index].qty);
       setCart(updatedCart);
       setPriceRates(total);
     }
@@ -124,7 +127,7 @@ const MyCart = () => {
       return (
         <div
           key={index}
-          className="w-full bg-white shadow-xl rounded-lg p-4 mt-4"
+          className="w-full bg-white mb-2 shadow-md rounded-lg p-4 mt-4"
         >
           <div className="flex flex-col sm:flex-row sm:space-x-4 w-full items-center sm:items-start space-y-4 sm:space-y-0">
             {/* Image */}
@@ -143,11 +146,39 @@ const MyCart = () => {
               <h2 className="text-md font-semibold mt-2">
                 {item.models} Scooter
               </h2>
+              <div className="rating">
+                <input
+                  type="radio"
+                  name="rating-4"
+                  className="mask mask-star-2 bg-green-500"
+                />
+                <input
+                  type="radio"
+                  name="rating-4"
+                  className="mask mask-star-2 bg-green-500"
+                  defaultChecked
+                />
+                <input
+                  type="radio"
+                  name="rating-4"
+                  className="mask mask-star-2 bg-green-500"
+                />
+                <input
+                  type="radio"
+                  name="rating-4"
+                  className="mask mask-star-2 bg-green-500"
+                />
+                <input
+                  type="radio"
+                  name="rating-4"
+                  className="mask mask-star-2 bg-green-500"
+                />
+              </div>
             </div>
 
-            <div className="flex flex-col  justify-center sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col justify-center sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
               {/* Quantity Controls */}
-              <div className="flex items-center justify-center space-x-2">
+              <div className="flex items-center md:mt-4 justify-center space-x-2">
                 <button
                   className="btn btn-ghost btn-sm"
                   onClick={() => handleDecrement(index)}
@@ -233,7 +264,7 @@ const MyCart = () => {
             </div>
 
             {/* Make collapse content scrollable */}
-            <div className="collapse-content overflow-y-auto max-h-64">
+            <div className="collapse-content overflow-y-auto p-2 max-h-64">
               {/* Render cart items */}
               {displayCart()}
             </div>
