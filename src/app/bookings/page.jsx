@@ -65,16 +65,16 @@ const AddBooking = () => {
           <>
             <div className="hero bg-white">
               <img
-                className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[100vh] object-contain"
-                src="/images/bookings/wallpaper.png"
+                className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[100vh] object-contains"
+                src="/images/bookings/ghost_bg.png"
               />
-              <div className="hero-content text-neutral-content text-center bg-transparent border-2 rounded-md">
+              <div className="hero-content text-neutral-content text-center bg-offWhite rounded-md">
                 <div className="max-w-md">
-                  <h1 className="mb-3 text-gray-700 text-5xl font-bold">
+                  <h1 className="mb-3 text-offBlack text-5xl font-semibold">
                     Ghost of Fremont
                   </h1>
                   <div className="mb-2">
-                    <label className="flex justify-center text-gray-400 text-lg font-bold font-sans">
+                    <label className="flex justify-center text-offBlack text-lg font-bold font-sans">
                       Guest
                     </label>
                     <select
@@ -90,7 +90,7 @@ const AddBooking = () => {
                     </select>
                   </div>
                   <div className="mb-5">
-                    <label className="flex justify-center text-gray-400 text-lg font-bold font-sans">
+                    <label className="flex justify-center text-offBlack text-lg font-bold font-sans">
                       Pick a date
                     </label>
                     <input
@@ -104,9 +104,6 @@ const AddBooking = () => {
                   </button>
                 </div>
               </div>
-            </div>
-            <div className="bg-clearGreen text-white w-full flex justify-center py-2">
-              <AddSteps />
             </div>
             <div className="w-full flex justify-center bg-forestGreen">
               <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
