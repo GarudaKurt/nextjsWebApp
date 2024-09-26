@@ -3,7 +3,7 @@ import Image from "next/image";
 const CardComments = ({ image, feedback, name }) => {
   return (
     <>
-      <div className="max-w-xs p-2 w-full xs:max-w-full xs:flex bg-white rounded mt-8 mb-4 shadow-xl">
+      <div className="max-w-xs p-2 w-80 xs:max-w-full xs:flex bg-white rounded mt-8 mb-4 shadow-xl">
         <div className="mb-8">
           <p className="text-sm text-gray-600 flex items-center">
             <svg
@@ -16,17 +16,17 @@ const CardComments = ({ image, feedback, name }) => {
             Members only
           </p>
           <p className="text-gray-500 text-left p-2 text-base">{feedback}</p>
-        </div>
-        <div className="flex items-center">
-          <Image
-            className="w-10 h-10 rounded-full mb-2 shadow-lg"
-            src={image}
-            alt={`Avatar of ${name}`}
-            width={40}
-            height={40}
-          />
-          <div className="flex items-center text-s ml-3">
-            <p className="text-gray-900 leading-none">- {name}</p>
+          <div className="flex items-center ">
+            <Image
+              className="w-10 h-10 rounded-full mb-2 shadow-lg"
+              src={image}
+              alt={`Avatar of ${name}`}
+              width={40}
+              height={40}
+            />
+            <div className="flex items-center text-s ml-3 ">
+              <p className="text-gray-900 leading-none">- {name}</p>
+            </div>
           </div>
         </div>
       </div>

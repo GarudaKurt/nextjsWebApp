@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaTrash, FaArrowLeft, FaPlus, FaMinus } from "react-icons/fa";
+import { FaTrash, FaArrowLeft, FaPlus } from "react-icons/fa";
 import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/zustand/zustand";
@@ -9,7 +9,8 @@ import { useCartStore } from "@/zustand/zustand";
 const MyCart = () => {
   const [priceRates, setPriceRates] = useState(0);
   const [cart, setCart] = useState([]);
-  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [rateEnable, setRateEnable] = useState(false);
 
   const router = useRouter();
 
@@ -17,6 +18,12 @@ const MyCart = () => {
     "/images/bookings/red-bike.png",
     "/images/bookings/blue-bike.png",
     "/images/bookings/black-bike.png",
+  ];
+
+  const imgEquipment = [
+    "/images/bookings/thermal.png",
+    "/images/bookings/box.png",
+    "/images/bookings/rods.png",
   ];
 
   const getCart = useCartStore((state) => state.getCart);
@@ -28,70 +35,31 @@ const MyCart = () => {
     setCart(storedCart); // Set the cart state with the loaded data
   }, [getCart]);
 
-  // Handle rate change and update total price for the item
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 640);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const handleRateChange = (e, index) => {
     const selectedRate = e.target.value;
     const updatedCart = [...cart];
     updatedCart[index].rate = selectedRate;
     let total = 0;
-    switch (selectedRate) {
-      case "24 hours":
-        total = updatedCart[index].qty * 35;
-        break;
-      case "48 hours":
-        total = updatedCart[index].qty * 55;
-        break;
-      case "120 hours":
-        total = updatedCart[index].qty * 135;
-        break;
-      default:
-        total = 0;
-    }
 
-    updatedCart[index].total = total;
-    updateCarts(updatedCart[index], selectedRate);
-    updateCarts(updatedCart[index], total);
-    setCart(updatedCart); // Update cart state
-    setPriceRates(total); // Update priceRates
-  };
-
-  // Handle increment
-  const handleIncrement = (index) => {
-    const updatedCart = [...cart];
-    updatedCart[index].qty += 1;
-
-    let total = 0;
-    switch (updatedCart[index].rate) {
-      case "24 hours":
-        total = updatedCart[index].qty * 35;
-        break;
-      case "48 hours":
-        total = updatedCart[index].qty * 55;
-        break;
-      case "120 hours":
-        total = updatedCart[index].qty * 135;
-        break;
-      default:
-        total = 0;
-    }
-
-    updatedCart[index].total = total;
-    updateCarts(updatedCart[index], updatedCart[index].qty);
-    setCart(updatedCart);
-    setPriceRates(total);
-  };
-
-  // Handle decrement
-  const handleDecrement = (index) => {
-    const updatedCart = [...cart];
-
-    if (updatedCart[index].qty > 1) {
-      // Decrease the quantity by 1
-      updatedCart[index].qty -= 1;
-
-      // Calculate the new total based on the rate
-      let total = 0;
-      switch (updatedCart[index].rate) {
+    if (updatedCart[index].equipment_title) {
+      total = updatedCart[index].qty * 5;
+      setRateEnable(true);
+    } else {
+      setRateEnable(false);
+      switch (selectedRate) {
         case "24 hours":
           total = updatedCart[index].qty * 35;
           break;
@@ -104,59 +72,127 @@ const MyCart = () => {
         default:
           total = 0;
       }
+    }
+
+    updatedCart[index].total = total;
+    updateCarts(updatedCart[index], selectedRate);
+    updateCarts(updatedCart[index], total);
+    setCart(updatedCart); // Update cart state
+    setPriceRates(total); // Update priceRates
+  };
+
+  const handleIncrement = (index) => {
+    const updatedCart = [...cart];
+    updatedCart[index].qty += 1;
+
+    let total = 0;
+    if (updatedCart[index].equipment_title) {
+      total = updatedCart[index].qty * 5;
+      setRateEnable(true);
+    } else {
+      switch (selectedRate) {
+        case "24 hours":
+          total = updatedCart[index].qty * 35;
+          break;
+        case "48 hours":
+          total = updatedCart[index].qty * 55;
+          break;
+        case "120 hours":
+          total = updatedCart[index].qty * 135;
+          break;
+        default:
+          total = 0;
+      }
+    }
+
+    updatedCart[index].total = total;
+    updateCarts(updatedCart[index], updatedCart[index].qty);
+    setCart(updatedCart);
+    setPriceRates(total);
+  };
+
+  const handleDecrement = (index) => {
+    const updatedCart = [...cart];
+
+    if (updatedCart[index].qty > 1) {
+      updatedCart[index].qty -= 1;
+
+      let total = 0;
+      if (updatedCart[index].equipment_title) {
+        total = updatedCart[index].qty * 5;
+        setRateEnable(false);
+      } else {
+        setRateEnable(true);
+        switch (selectedRate) {
+          case "24 hours":
+            total = updatedCart[index].qty * 35;
+            break;
+          case "48 hours":
+            total = updatedCart[index].qty * 55;
+            break;
+          case "120 hours":
+            total = updatedCart[index].qty * 135;
+            break;
+          default:
+            total = 0;
+        }
+      }
 
       updatedCart[index].total = total;
 
-      // Update the cart
       updateCarts(updatedCart[index], updatedCart[index].qty);
       setCart(updatedCart);
       setPriceRates(total);
     } else {
-      // If qty reaches 0, delete the item
       deleteCarts(index, updatedCart[index].qty);
-      const newCart = updatedCart.filter((_, i) => i !== index); // Remove the item from cart
-      setCart(newCart); // Update the cart state
+      const newCart = updatedCart.filter((_, i) => i !== index);
+      setCart(newCart);
     }
   };
 
-  const toggleCollapse = () => {
-    setIsCollapseOpen((prevState) => !prevState);
-  };
-
-  // Function to load the cart and map images and values
   const displayCart = () => {
     return cart.map((item, index) => {
       let imageUrl = "";
+      let modelTitle = "";
+
       if (item.models === "Red") {
         imageUrl = imagesLoad[0];
+        modelTitle = item.models + " Scooter";
       } else if (item.models === "Blue") {
         imageUrl = imagesLoad[1];
+        modelTitle = item.models + " Scooter";
       } else if (item.models === "Black") {
         imageUrl = imagesLoad[2];
+        modelTitle = item.models + " Scooter";
+      } else if (item.equipment_title === "Thermal Camera") {
+        imageUrl = imgEquipment[0];
+        modelTitle = item.equipment_title;
+      } else if (item.equipment_title === "Spirit Box") {
+        imageUrl = imgEquipment[1];
+        modelTitle = item.equipment_title;
+      } else if (item.equipment_title === "Diving Rods") {
+        imageUrl = imgEquipment[2];
+        modelTitle = item.equipment_title;
       }
 
       return (
         <div
           key={index}
-          className="w-full bg-white shadow-md rounded-lg p-4 mt-4"
+          className="w-full bg-white shadow-md rounded-lg p-4 mt-4 "
         >
           <div className="flex flex-col sm:flex-row sm:space-x-4 w-full items-center sm:items-start space-y-4 sm:space-y-0">
-            {/* Image */}
             <div className="w-24 h-24 sm:w-20 sm:h-20 rounded overflow-hidden">
               <Image
                 src={imageUrl}
-                alt={`${item.model} Scooter`}
+                alt={modelTitle}
                 width={80}
                 height={80}
                 className="object-cover"
               />
             </div>
 
-            {/* Details */}
             <div className="flex-1 text-center sm:text-left">
-              <h2 className="text-md font-semibold mt-2">
-                {item.models} Scooter
-              </h2>
+              <h2 className="text-md font-semibold mt-2">{modelTitle}</h2>
               <div className="rating">
                 <input
                   type="radio"
@@ -188,7 +224,6 @@ const MyCart = () => {
             </div>
 
             <div className="flex flex-col justify-center sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
-              {/* Quantity Controls */}
               <div className="flex items-center md:mt-4 justify-center space-x-2">
                 <button
                   className="btn btn-ghost btn-sm"
@@ -196,24 +231,25 @@ const MyCart = () => {
                 >
                   <FaTrash className="text-red-400" />
                 </button>
-                <span className="text-lg">{item.qty}</span>
+                <span className="text-lg text-offBlack">{item.qty}</span>
                 <button
                   className="btn btn-ghost btn-sm"
                   onClick={() => handleIncrement(index)}
                 >
-                  <FaPlus />
+                  <FaPlus className="text-offBlack" />
                 </button>
-                {/* Price and Rate */}
                 <div className="flex items-center space-x-4">
                   <select
+                    className="text-md text-offBlack"
                     value={item.rate}
                     onChange={(e) => handleRateChange(e, index)}
+                    disabled={item.equipment_title || rateEnable} // Disable if equipment_title is fal
                   >
                     <option value="24 hours">24 hours</option>
                     <option value="48 hours">48 hours</option>
                     <option value="120 hours">120 hours</option>
                   </select>
-                  <p className="text-lg font-semibold whitespace-nowrap">
+                  <p className="text-md text-semibold text-offBlack whitespace-nowrap">
                     ${item.total}
                   </p>
                 </div>
@@ -227,8 +263,7 @@ const MyCart = () => {
 
   return (
     <>
-      <div className="bg-forestGreen px-4 md:px-8">
-        {/* Header */}
+      <div className="bg-forestGreen md:px-8 w-full">
         <div className="flex items-center justify-start">
           <button
             className="btn btn-square btn-ghost"
@@ -244,40 +279,40 @@ const MyCart = () => {
         <p className="text-xs md:text-sm text-gray-500 mb-3">
           You have {cart.length} items in your cart
         </p>
-
-        {/* Cart Items Container */}
+        {isSmallScreen && <AddSteps alignment={false} hidden={true} />}
         <div className="flex flex-col md:flex-row md:space-x-4 items-start">
-          <AddSteps alignment={true} hidden={true} />
+          {/* Cart Items */}
+          {!isSmallScreen && <AddSteps alignment={true} hidden={true} />}
 
-          {/* Cart Item - Controlled Collapse */}
           <div
-            className={`collapse ${
-              isCollapseOpen ? "collapse-open" : "collapse-close"
-            } border border-base-300 bg-white w-full md:w-1/2 mt-5`}
+            className={`border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5`}
           >
-            <div
-              className="collapse-title text-xl font-medium flex justify-between items-center"
-              onClick={toggleCollapse}
-            >
-              <h2 className="text-sm md:text-xl font-semibold text-gray-600">
-                Shopping Cart
-              </h2>
-              <span>
-                {isCollapseOpen ? (
-                  <FaMinus className="text-lg" />
-                ) : (
-                  <FaPlus className="text-lg" />
-                )}
-              </span>
-            </div>
+            <h2 className="text-sm md:text-xl mb-2 p-2 font-semibold text-gray-600">
+              Shopping Cart
+            </h2>
 
-            {/* Make collapse content scrollable */}
-            <div className="collapse-content overflow-y-auto  max-h-64">
-              {/* Render cart items */}
+            {/* Scrollable cart content */}
+            <div
+              className={`${cart.length > 2 ? "max-h-64 overflow-y-auto" : ""}`}
+            >
               {displayCart()}
             </div>
           </div>
         </div>
+      </div>
+      <div className="bg-white text-offBlack text-center py-8">
+        <h2 className="text-lg font-semibold">Terms and Condition</h2>
+        <p className="text-sm mt-4">
+          By renting our products, you agree to use them responsibly and return
+          them in the same condition. <br />
+          The rental period begins upon receipt of the product and ends when it
+          is returned. Late returns may incur additional fees.
+          <br />
+          You are responsible for any damages or loss during the rental period.
+          Fees for repairs or replacement will apply. <br />
+          All rentals must be paid upfront. Refunds are not available once the
+          rental period starts.
+        </p>
       </div>
     </>
   );

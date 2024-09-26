@@ -4,14 +4,16 @@ import Link from "next/link";
 import { FaShoppingCart, FaReceipt, FaList, FaCheck } from "react-icons/fa";
 
 const AddSteps = ({ alignment, hidden }) => {
-  const isVertical = alignment === true ? `vertical` : `horizontal`;
+  const isVertical = alignment
+    ? "text-white steps steps-vertical"
+    : "text-white steps steps-horizontal";
 
   const spanStyle = hidden
     ? "hidden" // This will hide the span
-    : "hidden lg:block text-sm lg:text-base group-hover:bg-forestGreen p-1 rounded";
+    : "hidden lg:block text-sm lg:text-base p-1 rounded";
 
   return (
-    <ul className={`text-white steps steps-${isVertical}`}>
+    <ul className={isVertical}>
       {/* Cart */}
       <Link
         href="/bookings/mycart"

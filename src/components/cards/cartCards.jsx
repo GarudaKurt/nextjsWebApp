@@ -133,7 +133,7 @@ const AddCartCard = ({ images, title, model }) => {
           </select>
           <p className="text-sm font-semibold">${priceRates}</p>
           <button
-            className="btn btn-sm ml-5 text-white bg-clearGreen"
+            className="btn btn-sm ml-5 text-white bg-relaxGreen"
             onClick={handleAddToCart}
           >
             Add to Cart
