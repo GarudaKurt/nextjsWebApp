@@ -5,14 +5,232 @@ import AddSteps from "@/components/steps/page";
 import AddNavbar from "@/components/navbar/addNavbar";
 import CardComments from "@/components/cards/commentCard";
 import CardLabel from "@/components/cards/labelCard";
-import AddModals from "@/components/modal/page";
+import { useCartStore } from "@/zustand/zustand";
+import {
+  FaTimes,
+  FaCalendar,
+  FaMapMarker,
+  FaUser,
+  FaEnvelope,
+  FaMoneyBill,
+  FaHome,
+  FaCarAlt,
+  FaUserCheck,
+} from "react-icons/fa";
 
 const AddBooking = () => {
   const [selectedTab, setSelectedTab] = useState("Rent Scooters");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [usersName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [selectRate, setSelectRate] = useState("");
+  const [selectDate, setSelectDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [budget, setBudget] = useState("");
+  const [lodging, setLodging] = useState("");
+  const [transportation, setTransportation] = useState("");
+
+  const addNewBooking = useCartStore((state) => state.add_booking);
+
+  const handleSubmit = () => {
+    // set_book_rate(selectRate);
+    // set_book_date(selectDate);
+  };
+
+  const handleSubmitVegas = () => {
+    setIsModalOpen(true);
+  };
+
+  const successModal = () => {
+    return (
+      <div className="modal-box">
+        <form method="dialog">
+          {/* if there is a button in form, it will close the modal */}
+          <button
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onClick={() => setIsModalOpen(false)}
+          >
+            ✕
+          </button>
+        </form>
+        <h3 className="font-bold text-relaxBlack text-lg">
+          Your vegas tours is submitted
+        </h3>
+      </div>
+    );
+  };
+
+  const handleBookings = (e) => {
+    const bookings = {
+      users: "",
+      email: "",
+      rate: selectRate,
+      date: selectDate,
+      location: location,
+      budget: budget,
+      lodging: lodging,
+      transpo: transportation,
+    };
+
+    console.log("Bookings data:", bookings);
+    addNewBooking(bookings);
+    setIsModalOpen(true);
+  };
+
+  const tourInfo = () => {
+    if (!isModalOpen) return null;
+    return (
+      <div className="modal pt-24 modal-open text-relaxBlack">
+        <div className="modal-box bg-white sm:max-w-full h-100">
+          <form className="modal-form" onSubmit={handleBookings}>
+            <button
+              className="absolute right-2 top-2"
+              onClick={() => setIsModalOpen(false)}
+            >
+              <FaTimes className="text-xl font-offBlack" />
+            </button>
+
+            <h2 className="mb-2 text-xl font-sans font-semibold text-start">
+              Information
+            </h2>
+            <div className="form-control mb-1">
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaUser className="h-4 w-4 opacity-70 text-darkBlack" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Username"
+                  required
+                  value={usersName} // Change this to the appropriate state
+                  onChange={(e) => setUserName(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <label className="input input-bordered flex items-center gap-2">
+                <FaEnvelope className="h-4 w-4 opacity-70 text-darkBlack" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Email"
+                  required
+                  value={email} // Change this to the appropriate state
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaUserCheck className="h-4 w-4 opacity-70 text-darkBlack" />
+                <select
+                  className="select select-ghost grow text-relaxBlack max-w-full"
+                  value={selectRate}
+                  onChange={(e) => setSelectRate(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Rates for guest
+                  </option>
+                  <option value="one">One Guest: $20</option>
+                  <option value="two">Two Guest: $30</option>
+                  <option value="three">Three Guest: $50</option>
+                </select>
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaCalendar className="h-4 w-4 opacity-70 text-darkBlack" />
+                <input
+                  type="date"
+                  className="grow"
+                  placeholder="Date"
+                  required
+                  value={selectDate}
+                  onChange={(e) => selectDate(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <p className="text-sm flex justify-start mb-1 mt-1">
+                Where are you coming from?
+              </p>
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaMapMarker className="h-4 w-4 opacity-70 text-darkBlack" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Location"
+                  required
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <p className="text-sm flex justify-start mb-1 mt-1">
+                How much do you plan to spend on this trip? This should include
+                arrival/departure, lodging, transportation, food, and
+                entertainment.
+              </p>
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaMoneyBill className="h-4 w-4 opacity-70 text-darkBlack" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Budget"
+                  required
+                  value={budget}
+                  onChange={(e) => setBudget(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <p className="text-sm flex justify-start mb-1 mt-1">
+                The Strip? Downtown? Airbnb?
+              </p>
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaHome className="h-4 w-4 opacity-70 text-darkBlack" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Lodging Preference"
+                  required
+                  value={lodging}
+                  onChange={(e) => setLodging(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <p className="text-sm flex justify-start mb-1 mt-1">
+                How would you prefer to get around (Walking, car rental,
+                rideshare, etc.)?
+              </p>
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaCarAlt className="h-4 w-4 opacity-70 text-darkBlack" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Transportation"
+                  required
+                  value={transportation}
+                  onChange={(e) => setTransportation(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="modal-action">
+              <button
+                type="submit" // Ensure the button submits the form
+                className="btn text-white bg-offGreen btn-block"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
 
   const tabs = ["Rent Scooters", "Ghost Tour", "Vegas Tour", "Hunt Gear"];
-
   const renderTabContent = () => {
     switch (selectedTab) {
       case "Rent Scooters":
@@ -81,7 +299,8 @@ const AddBooking = () => {
                     </label>
                     <select
                       className="select select-primary text-relaxBlack w-full max-w-xs"
-                      defaultValue="" // Use defaultValue for the initial state
+                      value={selectRate}
+                      onChange={(e) => setSelectRate(e.target.value)}
                     >
                       <option value="" disabled>
                         Rates for guest
@@ -99,11 +318,15 @@ const AddBooking = () => {
                       type="date"
                       className="input input-bordered input-primary text-relaxBlack w-full max-w-xs"
                       placeholder="Pick a date"
+                      value={selectDate}
+                      onChange={(e) => setSelectDate(e.target.value)}
                     />
                   </div>
                   <button
                     className="btn btn-block bg-forestGreen text-offWhite"
-                    onClick={() => setIsModalOpen(true)} // Set modal state to true on click
+                    onClick={() => {
+                      handleSubmit;
+                    }} // Set modal state to true on click
                   >
                     Book Now
                   </button>
@@ -111,10 +334,6 @@ const AddBooking = () => {
               </div>
             </div>
 
-            <AddModals
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-            />
             <div className="w-full flex justify-center bg-white">
               <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
                 What Our Clients Say
@@ -166,8 +385,9 @@ const AddBooking = () => {
                     </label>
                     <select
                       className="select select-primary text-relaxBlack w-full max-w-xs"
-                      defaultValue="" // Use defaultValue for the initial state
                       required
+                      value={selectRate}
+                      onChange={(e) => setSelectRate(e.target.value)}
                     >
                       <option value="" disabled>
                         Rates for guest
@@ -186,21 +406,20 @@ const AddBooking = () => {
                       className="input input-bordered input-primary text-relaxBlack w-full max-w-xs"
                       placeholder="Pick a date"
                       required
+                      value={selectDate}
+                      onChange={(e) => setSelectDate(e.target.value)}
                     />
                   </div>
                   <button
                     className="btn btn-block bg-forestGreen text-offWhite"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleSubmitVegas}
                   >
                     Book Now
                   </button>
                 </div>
+                {isModalOpen && tourInfo()}
               </div>
             </div>
-            <AddModals
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-            />
             <div className="w-full flex justify-center bg-white">
               <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
                 What Our Clients Say
