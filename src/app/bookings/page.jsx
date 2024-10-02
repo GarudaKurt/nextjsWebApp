@@ -142,19 +142,52 @@ const AddBooking = () => {
               </label>
             </div>
             <div className="form-control mb-1">
-              <p className="text-sm flex justify-start mb-1 mt-1">
-                Where are you coming from?
-              </p>
               <label className="input input-bordered flex items-center gap-2 text-darkBlack">
                 <FaMapMarker className="h-4 w-4 opacity-70 text-darkBlack" />
                 <input
                   type="text"
                   className="grow"
-                  placeholder="Location"
+                  placeholder="Where are you coming from?"
                   required
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 />
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaHome className="h-4 w-4 opacity-70 text-darkBlack" />
+                <select
+                  className="select select-ghost grow text-relaxBlack max-w-full"
+                  value={lodging}
+                  onChange={(e) => setLodging(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Lodging Preference
+                  </option>
+                  <option value="strip">The Strip</option>
+                  <option value="downtown">Downtown</option>
+                  <option value="airbnb">AirBnB</option>
+                  <option value="others">Others.</option>
+                </select>
+              </label>
+            </div>
+            <div className="form-control mb-1">
+              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
+                <FaCarAlt className="h-4 w-4 opacity-70 text-darkBlack" />
+                <select
+                  className="select select-ghost grow text-relaxBlack max-w-full"
+                  value={lodging}
+                  onChange={(e) => setLodging(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Transportation
+                  </option>
+                  <option value="Walking">Walking</option>
+                  <option value="car-rental">Car Rental</option>
+                  <option value="ride-share">Ride Share</option>
+                  <option value="others">Others.</option>
+                </select>
               </label>
             </div>
             <div className="form-control mb-1">
@@ -172,39 +205,6 @@ const AddBooking = () => {
                   required
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
-                />
-              </label>
-            </div>
-            <div className="form-control mb-1">
-              <p className="text-sm flex justify-start mb-1 mt-1">
-                The Strip? Downtown? Airbnb?
-              </p>
-              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
-                <FaHome className="h-4 w-4 opacity-70 text-darkBlack" />
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Lodging Preference"
-                  required
-                  value={lodging}
-                  onChange={(e) => setLodging(e.target.value)}
-                />
-              </label>
-            </div>
-            <div className="form-control mb-1">
-              <p className="text-sm flex justify-start mb-1 mt-1">
-                How would you prefer to get around (Walking, car rental,
-                rideshare, etc.)?
-              </p>
-              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
-                <FaCarAlt className="h-4 w-4 opacity-70 text-darkBlack" />
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Transportation"
-                  required
-                  value={transportation}
-                  onChange={(e) => setTransportation(e.target.value)}
                 />
               </label>
             </div>
