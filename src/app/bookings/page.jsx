@@ -5,7 +5,7 @@ import AddSteps from "@/components/steps/page";
 import AddNavbar from "@/components/navbar/addNavbar";
 import CardComments from "@/components/cards/commentCard";
 import CardLabel from "@/components/cards/labelCard";
-import { useCartStore } from "@/zustand/zustand";
+import { useCartStore } from "../zustand/zustand";
 import {
   FaTimes,
   FaCalendar,
@@ -21,6 +21,8 @@ import {
 const AddBooking = () => {
   const [selectedTab, setSelectedTab] = useState("Rent Scooters");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
+
   const [usersName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [selectRate, setSelectRate] = useState("");
@@ -32,35 +34,20 @@ const AddBooking = () => {
 
   const addNewBooking = useCartStore((state) => state.add_booking);
 
-  const handleSubmit = () => {
-    // set_book_rate(selectRate);
-    // set_book_date(selectDate);
-  };
+  const handleSubmit = () => {};
 
-  const handleSubmitVegas = () => {
-    setIsModalOpen(true);
+  const clearField = () => {
+    setUserName("");
+    setEmail("");
+    setSelectRate("");
+    setSelectDate("");
+    setLocation("");
+    setBudget("");
+    setLodging("");
+    setTransportation("");
   };
-
-  const successModal = () => {
-    return (
-      <div className="modal-box">
-        <form method="dialog">
-          {/* if there is a button in form, it will close the modal */}
-          <button
-            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            onClick={() => setIsModalOpen(false)}
-          >
-            ✕
-          </button>
-        </form>
-        <h3 className="font-bold text-relaxBlack text-lg">
-          Your vegas tours is submitted
-        </h3>
-      </div>
-    );
-  };
-
   const handleBookings = (e) => {
+    e.preventDefault();
     const bookings = {
       users: "",
       email: "",
@@ -73,15 +60,20 @@ const AddBooking = () => {
     };
 
     console.log("Bookings data:", bookings);
-    addNewBooking(bookings);
     setIsModalOpen(true);
+    addNewBooking(bookings);
+    setSuccess(true);
+    setTimeout(() => {
+      setSuccess(false);
+      clearField();
+    }, 5000);
   };
 
   const tourInfo = () => {
     if (!isModalOpen) return null;
     return (
-      <div className="modal pt-24 modal-open text-relaxBlack">
-        <div className="modal-box bg-white sm:max-w-full h-100">
+      <div className="modal modal-open pt-24 text-relaxBlack">
+        <div className="modal-box bg-white sm:max-w-50 h-100">
           <form className="modal-form" onSubmit={handleBookings}>
             <button
               className="absolute right-2 top-2"
@@ -224,6 +216,11 @@ const AddBooking = () => {
                 Submit
               </button>
             </div>
+            {success && (
+              <p className="flex justify-center text-center mt-2 text-sm text-relaxGreen pt-2">
+                Success! submited form.
+              </p>
+            )}
           </form>
         </div>
       </div>
@@ -412,7 +409,7 @@ const AddBooking = () => {
                   </div>
                   <button
                     className="btn btn-block bg-forestGreen text-offWhite"
-                    onClick={handleSubmitVegas}
+                    onClick={() => setIsModalOpen(true)}
                   >
                     Book Now
                   </button>

@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { useCartStore } from "@/zustand/zustand";
-
+import { useCartStore } from "@/app/zustand/zustand";
 const CardLabel = ({ image, name, title, descriptions }) => {
   const addToCart = useCartStore((state) => state.add_to_cart); // Access add_to_cart from the Zustand store
 
