@@ -22,9 +22,8 @@ const AddBooking = () => {
   const [selectedTab, setSelectedTab] = useState("Rent Scooters");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const [usersName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
   const [selectRate, setSelectRate] = useState("");
   const [selectDate, setSelectDate] = useState("");
   const [location, setLocation] = useState("");
@@ -33,12 +32,25 @@ const AddBooking = () => {
   const [transportation, setTransportation] = useState("");
 
   const addNewBooking = useCartStore((state) => state.add_booking);
+  const addGhostTour = useCartStore((state) => state.add_ghost_tour);
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    const bookings = {
+      name: "",
+      email: "",
+      phone: "",
+      rate: selectRate,
+      date: selectDate,
+    };
+    addGhostTour(bookings);
+    setShowModal(true);
+    setTimeout(() => {
+      setShowModal(false);
+    }, 3000);
+    clearField();
+  };
 
   const clearField = () => {
-    setUserName("");
-    setEmail("");
     setSelectRate("");
     setSelectDate("");
     setLocation("");
@@ -66,7 +78,7 @@ const AddBooking = () => {
     setTimeout(() => {
       setSuccess(false);
       clearField();
-    }, 5000);
+    }, 3000);
   };
 
   const tourInfo = () => {
@@ -87,45 +99,15 @@ const AddBooking = () => {
             </h2>
             <div className="form-control mb-1">
               <label className="input input-bordered flex items-center gap-2 text-darkBlack">
-                <FaUser className="h-4 w-4 opacity-70 text-darkBlack" />
+                <FaMapMarker className="h-4 w-4 opacity-70 text-darkBlack" />
                 <input
                   type="text"
                   className="grow"
-                  placeholder="Username"
+                  placeholder="Where are you coming from?"
                   required
-                  value={usersName} // Change this to the appropriate state
-                  onChange={(e) => setUserName(e.target.value)}
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                 />
-              </label>
-            </div>
-            <div className="form-control mb-1">
-              <label className="input input-bordered flex items-center gap-2">
-                <FaEnvelope className="h-4 w-4 opacity-70 text-darkBlack" />
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Email"
-                  required
-                  value={email} // Change this to the appropriate state
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </label>
-            </div>
-            <div className="form-control mb-1">
-              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
-                <FaUserCheck className="h-4 w-4 opacity-70 text-darkBlack" />
-                <select
-                  className="select select-ghost grow text-relaxBlack max-w-full"
-                  value={selectRate}
-                  onChange={(e) => setSelectRate(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Rates for guest
-                  </option>
-                  <option value="one">One Guest: $20</option>
-                  <option value="two">Two Guest: $30</option>
-                  <option value="three">Three Guest: $50</option>
-                </select>
               </label>
             </div>
             <div className="form-control mb-1">
@@ -141,17 +123,22 @@ const AddBooking = () => {
                 />
               </label>
             </div>
+
             <div className="form-control mb-1">
               <label className="input input-bordered flex items-center gap-2 text-darkBlack">
-                <FaMapMarker className="h-4 w-4 opacity-70 text-darkBlack" />
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Where are you coming from?"
-                  required
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
+                <FaUserCheck className="h-4 w-4 opacity-70 text-darkBlack" />
+                <select
+                  className="select select-ghost grow text-relaxBlack max-w-full"
+                  value={selectRate}
+                  onChange={(e) => setSelectRate(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Rates for guest
+                  </option>
+                  <option value="one">One Guest: $20</option>
+                  <option value="two">Two Guest: $30</option>
+                  <option value="three">Three Guest: $50</option>
+                </select>
               </label>
             </div>
             <div className="form-control mb-1">
@@ -190,7 +177,7 @@ const AddBooking = () => {
                 </select>
               </label>
             </div>
-            <div className="form-control mb-1">
+            <div className="form-control">
               <p className="text-sm flex justify-start mb-1 mt-1">
                 How much do you plan to spend on this trip? This should include
                 arrival/departure, lodging, transportation, food, and
@@ -321,12 +308,15 @@ const AddBooking = () => {
                   </div>
                   <button
                     className="btn btn-block bg-forestGreen text-offWhite"
-                    onClick={() => {
-                      handleSubmit;
-                    }} // Set modal state to true on click
+                    onClick={() => handleSubmit()}
                   >
                     Book Now
                   </button>
+                  {showModal && (
+                    <p className="flext justify-center p-2 text-lg font-sans text-relaxGreen">
+                      Successfully submited!
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
