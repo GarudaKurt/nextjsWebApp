@@ -46,13 +46,27 @@ export const saveGhostTourToLocalStorage = (cart) => {
   }
 };
 
+export const loadRentalInfoFromLocalStorage = () => {
+  if (typeof window !== "undefined") {
+    const storedCart = localStorage.getItem("rentalInfo");
+    return storedCart ? JSON.parse(storedCart) : [];
+  }
+  return [];
+};
+
+// Save the tour to localStorage
+export const saveRentalInfoToLocalStorage = (cart) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("rentalInfo", JSON.stringify(cart));
+  }
+};
+
 export const useCartStore = create((set, get) => ({
   localUserData: null,
-  bookingRate: "",
-  dateFrom: "",
   myCart: loadCartFromLocalStorage(), // Load the cart from localStorage on initialization
   tour: loadTourFromLocalStorage(),
   ghostTour: loadGhostTourFromLocalStorage(),
+  rentalInfos: loadRentalInfoFromLocalStorage(),
 
   // Function to add a bike rental to the cart
   add_to_cart: (addCart) => {

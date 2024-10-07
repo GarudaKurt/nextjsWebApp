@@ -237,15 +237,15 @@ const AddBooking = () => {
                 images={"/images/bookings/black-bike.png"}
               />
             </div>
-            <div className="bg-offGreen text-white w-full flex justify-center py-2">
+            <div className="bg-white text-white w-full flex justify-center py-2">
               <AddSteps alignment={false} />
             </div>
-            <div className="w-full flex  justify-center bg-forestGreen">
+            <div className="w-full flex  justify-center bg-offWhite">
               <h1 className="text-xl p-1 mt-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
                 What Our Clients Say
               </h1>
             </div>
-            <div className="w-full bg-forestGreen flex justify-center gap-4">
+            <div className="w-full bg-offWhite flex justify-center gap-4">
               <CardComments
                 image={"/images/profile/profile_1.png"}
                 feedback={
@@ -321,13 +321,13 @@ const AddBooking = () => {
               </div>
             </div>
 
-            <div className="w-full flex justify-center bg-white">
+            <div className="w-full flex justify-center bg-offWhite">
               <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
                 What Our Clients Say
               </h1>
             </div>
 
-            <div className="w-full flex justify-center gap-4 bg-white">
+            <div className="w-full flex justify-center gap-4 bg-offWhite">
               <CardComments
                 image={"/images/profile/profile_1.png"}
                 feedback={
@@ -407,13 +407,13 @@ const AddBooking = () => {
                 {isModalOpen && tourInfo()}
               </div>
             </div>
-            <div className="w-full flex justify-center bg-white">
+            <div className="w-full flex justify-center bg-offWhite">
               <h1 className="text-xl p-2 font-bold leading-tight tracking-wide text-gray-500 font-yesteryear">
                 What Our Clients Say
               </h1>
             </div>
 
-            <div className="w-full flex justify-center gap-4 bg-white">
+            <div className="w-full flex justify-center gap-4 bg-offWhite">
               <CardComments
                 image={"/images/profile/profile_1.png"}
                 feedback={
@@ -466,7 +466,7 @@ const AddBooking = () => {
                 }
               />
             </div>
-            <div className="bg-offGreen text-white w-full flex justify-center py-2">
+            <div className="bg-offWhite text-white w-full flex justify-center py-2">
               <AddSteps />
             </div>
           </>

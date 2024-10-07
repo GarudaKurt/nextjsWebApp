@@ -4,13 +4,14 @@ import Image from "next/image";
 import { FaTrash, FaArrowLeft, FaPlus } from "react-icons/fa";
 import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
-import { useCartStore } from "@/zustand/zustand";
+import { useCartStore } from "@/app/zustand/zustand";
 
 const MyCart = () => {
   const [priceRates, setPriceRates] = useState(0);
   const [cart, setCart] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [rateEnable, setRateEnable] = useState(false);
+  const [checkout, setCheckout] = useState(false);
 
   const router = useRouter();
 
@@ -150,6 +151,8 @@ const MyCart = () => {
     }
   };
 
+  const handleCheckout = () => {};
+
   const displayCart = () => {
     return cart.map((item, index) => {
       let imageUrl = "";
@@ -263,8 +266,8 @@ const MyCart = () => {
 
   return (
     <>
-      <div className="bg-forestGreen md:px-8 w-full">
-        <div className="flex items-center justify-start">
+      <div className="bg-white md:px-8 w-full">
+        <div className="flex items-center px-2 pt-2 justify-start">
           <button
             className="btn btn-square btn-ghost"
             onClick={() => router.push("/bookings")}
@@ -276,17 +279,19 @@ const MyCart = () => {
           </h1>
         </div>
         <div className="divider"></div>
-        <p className="text-xs md:text-sm text-gray-500 mb-3">
+        <p className="text-xs px-5 md:text-sm text-gray-500 mb-3">
           You have {cart.length} items in your cart
         </p>
-        {isSmallScreen && <AddSteps alignment={false} hidden={true} />}
+        {isSmallScreen && (
+          <AddSteps alignment={false} hidden={true} cartPage={true} />
+        )}
         <div className="flex flex-col md:flex-row md:space-x-4 items-start">
           {/* Cart Items */}
-          {!isSmallScreen && <AddSteps alignment={true} hidden={true} />}
+          {!isSmallScreen && (
+            <AddSteps alignment={true} hidden={true} cartPage={true} />
+          )}
 
-          <div
-            className={`border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5`}
-          >
+          <div className="border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5">
             <h2 className="text-sm md:text-xl mb-2 p-2 font-semibold text-gray-600">
               Shopping Cart
             </h2>
@@ -297,10 +302,20 @@ const MyCart = () => {
             >
               {displayCart()}
             </div>
+            <div className="flex justify-start p-2">
+              <button
+                className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md "
+                onClick={() => {
+                  setCheckout(true);
+                }}
+              >
+                Check out
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div className="bg-white text-offBlack text-center py-8">
+      <div className="bg-offWhite text-offBlack text-center py-8">
         <h2 className="text-lg font-semibold">Terms and Condition</h2>
         <p className="text-sm mt-4">
           By renting our products, you agree to use them responsibly and return

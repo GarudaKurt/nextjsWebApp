@@ -3,50 +3,42 @@
 import Link from "next/link";
 import { FaShoppingCart, FaReceipt, FaList, FaCheck } from "react-icons/fa";
 
-const AddSteps = ({ alignment, hidden }) => {
+const AddSteps = ({ alignment, hidden, cartPage }) => {
   const isVertical = alignment
-    ? "text-white steps steps-vertical"
-    : "text-white steps steps-horizontal";
+    ? "text-relaxBlack steps steps-vertical"
+    : "text-relaxBlack steps steps-horizontal";
 
   const spanStyle = hidden
     ? "hidden" // This will hide the span
-    : "hidden lg:block text-sm lg:text-base p-1 rounded";
+    : "hidden lg:block text-sm text-relaxBlack p-1 rounded";
+
+  const currentPage = cartPage
+    ? "step step-success flex items-center space-x-2 group"
+    : "step flex items-center space-x-2 group";
 
   return (
     <ul className={isVertical}>
       {/* Cart */}
-      <Link
-        href="/bookings/mycart"
-        className="step step-white flex items-center space-x-2 group"
-      >
-        <FaShoppingCart className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
+      <Link href="/bookings/mycart" className={currentPage}>
+        <FaShoppingCart className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
         <span className={spanStyle}>Cart</span>
       </Link>
 
       {/* Billing */}
-      <Link
-        href="#"
-        className="step step-white flex items-center space-x-2 group"
-      >
-        <FaReceipt className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
+      <Link href="/bookings/billing" className={currentPage}>
+        <FaReceipt className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
         <span className={spanStyle}>Billing</span>
       </Link>
 
       {/* Information */}
-      <Link
-        href="#"
-        className="step step-white flex items-center space-x-2 group"
-      >
-        <FaList className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
-        <span className={spanStyle}>Information</span>
+      <Link href="/bookings/rental-info" className={currentPage}>
+        <FaList className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
+        <span className={spanStyle}>Info</span>
       </Link>
 
       {/* Verified */}
-      <Link
-        href="#"
-        className="step step-white flex items-center space-x-2 group"
-      >
-        <FaCheck className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-clearGreen p-1 rounded" />
+      <Link href="/bookings/confirmation" className={currentPage}>
+        <FaCheck className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
         <span className={spanStyle}>Verified</span>
       </Link>
     </ul>
