@@ -62,18 +62,56 @@ export const saveRentalInfoToLocalStorage = (cart) => {
 };
 
 export const useCartStore = create((set, get) => ({
-  localUserData: null,
+  localBilling: [],
+  localRental: [],
+  localConfirm: [],
   myCart: loadCartFromLocalStorage(), // Load the cart from localStorage on initialization
   tour: loadTourFromLocalStorage(),
   ghostTour: loadGhostTourFromLocalStorage(),
   rentalInfos: loadRentalInfoFromLocalStorage(),
 
+  setbillingInfo: (infos) => {
+    set((state) => {
+      const updatedInfos = [...state.localBilling, infos];
+      console.log("rental infos ", updatedInfos);
+      return { localBilling: updatedInfos };
+    });
+  },
+  getbillingInfo: () => {
+    return get().localBilling();
+  },
+
+  setrentInfo: (infos) => {
+    set((state) => {
+      const updatedInfos = [...state.localRental, infos];
+      console.log("rental infos ", updatedInfos);
+      return { localRental: updatedInfos };
+    });
+  },
+
+  submitRental: (info) => {
+    set((state) => {
+      const getConfirm = { ...info }; // Spread the new info into an object
+      const updatedRentalInfo = {
+        ...get().localBilling[0], // Assuming localBilling contains only one object
+        ...get().localRental[0], // Assuming localRental contains only one object
+        ...getConfirm, // Spread the confirm info
+      };
+
+      console.log("Merged Rental Info: ", updatedRentalInfo);
+      saveRentalInfoToLocalStorage(updatedRentalInfo); // Save the object to localStorage
+      return { rentalInfos: updatedRentalInfo }; // Store the updated rental info as an object
+    });
+  },
+
+  clientInformation: () => {
+    return get().rentalInfos;
+  },
+
   // Function to add a bike rental to the cart
   add_to_cart: (addCart) => {
     set((state) => {
       const updatedCart = [...state.myCart, addCart]; // Append the new cart item
-      console.log("Added to Cart:", addCart); // Log the new item being added
-      console.log("Updated Cart:", updatedCart); // Log the entire updated cart
       saveCartToLocalStorage(updatedCart); // Save the updated cart to localStorage
       return { myCart: updatedCart };
     });
@@ -96,8 +134,8 @@ export const useCartStore = create((set, get) => ({
   deleteCart: (index) => {
     set((state) => {
       const updatedCart = [...state.myCart];
-      updatedCart.splice(index, 1); // Remove the item at the specified index
-      saveCartToLocalStorage(updatedCart); // Save the updated cart to localStorage
+      updatedCart.splice(index, 1);
+      saveCartToLocalStorage(updatedCart);
       return { myCart: updatedCart };
     });
   },
@@ -105,7 +143,6 @@ export const useCartStore = create((set, get) => ({
   // Function to get the current cart
   getCart: () => {
     const cart = get().myCart;
-    console.log("Current Cart:", cart); // Log the current cart state
     return cart;
   },
 
@@ -113,9 +150,7 @@ export const useCartStore = create((set, get) => ({
   add_booking: (addBooking) => {
     set((state) => {
       const updatedTour = [...state.tour, addBooking]; // Append the new tour item
-      console.log("Added to Tour:", addBooking); // Log the new item being added
-      console.log("Updated Tour:", updatedTour); // Log the entire updated tour list
-      saveTourToLocalStorage(updatedTour); // Save the updated tour list to localStorage
+      saveTourToLocalStorage(updatedTour);
       return { tour: updatedTour };
     });
   },
@@ -124,8 +159,8 @@ export const useCartStore = create((set, get) => ({
   cancelBooking: (index) => {
     set((state) => {
       const updatedTour = [...state.tour];
-      updatedTour.splice(index, 1); // Remove the item at the specified index
-      saveTourToLocalStorage(updatedTour); // Save the updated tour list to localStorage
+      updatedTour.splice(index, 1);
+      saveTourToLocalStorage(updatedTour);
       return { tour: updatedTour };
     });
   },
@@ -133,10 +168,10 @@ export const useCartStore = create((set, get) => ({
   // Function to add a tour to the tour list
   add_ghost_tour: (addBooking) => {
     set((state) => {
-      const updatedTour = [...state.ghostTour, addBooking]; // Append the new tour item
-      console.log("Added to Tour:", addBooking); // Log the new item being added
-      console.log("Updated Tour:", updatedTour); // Log the entire updated tour list
-      saveGhostTourToLocalStorage(updatedTour); // Save the updated tour list to localStorage
+      const updatedTour = [...state.ghostTour, addBooking];
+      console.log("Added to Tour:", addBooking);
+      console.log("Updated Tour:", updatedTour);
+      saveGhostTourToLocalStorage(updatedTour);
       return { ghostTour: updatedTour };
     });
   },
@@ -145,8 +180,8 @@ export const useCartStore = create((set, get) => ({
   cancel_ghost_tour: (index) => {
     set((state) => {
       const updatedTour = [...state.tour];
-      updatedTour.splice(index, 1); // Remove the item at the specified index
-      saveGhostTourToLocalStorage(updatedTour); // Save the updated tour list to localStorage
+      updatedTour.splice(index, 1);
+      saveGhostTourToLocalStorage(updatedTour);
       return { ghostTour: updatedTour };
     });
   },

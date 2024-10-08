@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { FaShoppingCart, FaReceipt, FaList, FaCheck } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaReceipt,
+  FaList,
+  FaCheck,
+  FaEllipsisH,
+} from "react-icons/fa";
 
 const AddSteps = ({ alignment, hidden, cartPage }) => {
   const isVertical = alignment
@@ -39,7 +45,12 @@ const AddSteps = ({ alignment, hidden, cartPage }) => {
       {/* Verified */}
       <Link href="/bookings/confirmation" className={currentPage}>
         <FaCheck className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
-        <span className={spanStyle}>Verified</span>
+        <span className={spanStyle}>Confirm</span>
+      </Link>
+
+      <Link href="/bookings/verification" className={currentPage}>
+        <FaEllipsisH className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
+        <span className={spanStyle}>Status</span>
       </Link>
     </ul>
   );

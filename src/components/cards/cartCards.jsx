@@ -54,7 +54,7 @@ const AddCartCard = ({ images, title, model }) => {
   };
 
   return (
-    <div className="card w-80 bg-white mt-2 max-w-xs rounded overflow-hidden shadow-lg">
+    <div className="card w-80 bg-white mt-2 max-w-xs rounded overflow-hidden shadow-md">
       <div className="card-body items-center text-center">
         <div className="flex justify-between w-full">
           <div className="w-full">
