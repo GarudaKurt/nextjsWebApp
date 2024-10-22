@@ -24,9 +24,9 @@ const AboutUS = () => {
 
   const TopContent = () => (
     <div className="relative w-full sm:w-1/2 flex justify-center items-center">
-      <div className="rounded-full p-8 bg-yellowOrange flex items-center justify-center">
+      <div className="rounded-full p-8 flex items-center justify-center">
         <Image
-          className="rounded-full object-cover  skeleton"
+          className="rounded-full object-cover"
           src={"/images/about-us/equipment.png"}
           alt="Explore Haunted Sites"
           width={400}
@@ -59,7 +59,7 @@ const AboutUS = () => {
             <div className="pb-16 text-center">
               <div className="flex flex-col sm:flex-row justify-center mt-2 items-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <h2 className="text-4xl mt-8 font-yesteryear font-bold leading-tight text-clearGreen">
-                  WHO WE ARE
+                  WHO ARE WE
                 </h2>
               </div>
               <p className="text-gray-500 text-lg leading-8 mt-4">
@@ -129,10 +129,10 @@ const AboutUS = () => {
               </div>
               {/* Image */}
               <div className="relative w-full sm:w-1/2 flex justify-center items-center ">
-                <div className="rounded-full p-8 bg-yellowOrange flex items-center justify-center ">
+                <div className="rounded-full p-8 flex items-center justify-center ">
                   <Image
-                    className="rounded-full object-cover skeleton "
-                    src={"/images/landing-page/bike.png"}
+                    className="rounded-full object-cover "
+                    src={"/images/landing-page/scooter.png"}
                     alt="Explore Haunted Sites"
                     width={400} // Set this to match the source image's aspect ratio
                     height={400}

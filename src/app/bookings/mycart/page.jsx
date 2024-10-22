@@ -151,7 +151,9 @@ const MyCart = () => {
     }
   };
 
-  const handleCheckout = () => {};
+  const handleCheckout = () => {
+    router.push("/bookings/billing");
+  };
 
   const displayCart = () => {
     return cart.map((item, index) => {
@@ -283,12 +285,16 @@ const MyCart = () => {
           You have {cart.length} items in your cart
         </p>
         {isSmallScreen && (
-          <AddSteps alignment={false} hidden={true} cartPage={true} />
+          <AddSteps alignment={false} hidden={true} cartPage={"step-success"} />
         )}
         <div className="flex flex-col md:flex-row md:space-x-4 items-start">
           {/* Cart Items */}
           {!isSmallScreen && (
-            <AddSteps alignment={true} hidden={true} cartPage={true} />
+            <AddSteps
+              alignment={true}
+              hidden={true}
+              cartPage={"step-success"}
+            />
           )}
 
           <div className="border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5">
@@ -306,7 +312,7 @@ const MyCart = () => {
               <button
                 className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md "
                 onClick={() => {
-                  setCheckout(true);
+                  handleCheckout();
                 }}
               >
                 Check out
