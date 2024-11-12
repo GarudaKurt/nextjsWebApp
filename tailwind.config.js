@@ -40,6 +40,7 @@ module.exports = {
         clearGreen: "#1A946F",
         offGreen: "#5DB075",
         relaxGreen: "#4B9460",
+        chillGreen: "#40B59F",
         offWhite: "#F3F3F3",
         offBlue: "#007AFF",
         relaxBlack: "#2C2C2C",

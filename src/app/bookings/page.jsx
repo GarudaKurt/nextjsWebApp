@@ -5,6 +5,8 @@ import AddSteps from "@/components/steps/page";
 import AddNavbar from "@/components/navbar/addNavbar";
 import CardComments from "@/components/cards/commentCard";
 import CardLabel from "@/components/cards/labelCard";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useCartStore } from "../zustand/zustand";
 import {
   FaTimes,
@@ -113,13 +115,16 @@ const AddBooking = () => {
             <div className="form-control mb-1">
               <label className="input input-bordered flex items-center gap-2 text-darkBlack">
                 <FaCalendar className="h-4 w-4 opacity-70 text-darkBlack" />
-                <input
-                  type="date"
-                  className="grow"
-                  placeholder="Date"
-                  required
-                  value={selectDate}
-                  onChange={(e) => selectDate(e.target.value)}
+                <DatePicker
+                  selected={selectDate}
+                  onChange={(date) => selectDate(date)}
+                  inline
+                  calendarClassName="border-none"
+                  dayClassName={(date) =>
+                    date.getDate() === new Date().getDate()
+                      ? "bg-green-500 text-white rounded-full"
+                      : "hover:bg-gray-200"
+                  }
                 />
               </label>
             </div>
@@ -298,12 +303,12 @@ const AddBooking = () => {
                     <label className="flex justify-center text-offBlack text-lg font-bold font-sans">
                       Pick a date
                     </label>
-                    <input
-                      type="date"
-                      className="input input-bordered input-primary text-relaxBlack w-full max-w-xs"
-                      placeholder="Pick a date"
-                      value={selectDate}
-                      onChange={(e) => setSelectDate(e.target.value)}
+                    <DatePicker
+                      selected={selectDate}
+                      onChange={(date) => setSelectDate(date)}
+                      className="grow input input-bordered input-primary text-relaxBlack w-full max-w-xs"
+                      placeholderText="Select a date"
+                      dateFormat="yyyy-MM-dd"
                     />
                   </div>
                   <button
@@ -388,13 +393,12 @@ const AddBooking = () => {
                     <label className="flex justify-center text-offBlack text-lg font-bold font-sans">
                       Pick a date
                     </label>
-                    <input
-                      type="date"
-                      className="input input-bordered input-primary text-relaxBlack w-full max-w-xs"
-                      placeholder="Pick a date"
-                      required
-                      value={selectDate}
-                      onChange={(e) => setSelectDate(e.target.value)}
+                    <DatePicker
+                      selected={selectDate}
+                      onChange={(date) => setSelectDate(date)}
+                      className="grow input input-bordered input-primary text-relaxBlack w-full max-w-xs"
+                      placeholderText="Select a date"
+                      dateFormat="yyyy-MM-dd"
                     />
                   </div>
                   <button
