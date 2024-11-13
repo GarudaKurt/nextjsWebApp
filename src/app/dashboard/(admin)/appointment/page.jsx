@@ -105,10 +105,16 @@ const Appointment = () => {
                     key={index}
                     className="bg-white border-b hover:bg-gray-50"
                   >
-                    <td className="py-3 px-4">{appointment.name}</td>
-                    <td className="py-3 px-4">{appointment.phone}</td>
-                    <td className="py-3 px-4">{appointment.appointment}</td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 text-relaxBlack">
+                      {appointment.name}
+                    </td>
+                    <td className="py-3 px-4 text-relaxBlack">
+                      {appointment.phone}
+                    </td>
+                    <td className="py-3 px-4 text-relaxBlack">
+                      {appointment.appointment}
+                    </td>
+                    <td className="py-3 px-4 text-relaxBlack">
                       <span
                         className={`px-3 py-1 rounded-full ${
                           appointment.status === "Pending"

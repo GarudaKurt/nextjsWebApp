@@ -5,6 +5,7 @@
 import {
   FaHome,
   FaCalendarWeek,
+  FaCalendarDay,
   FaBell,
   FaBookOpen,
   FaReceipt,
@@ -25,7 +26,7 @@ const Sidebar = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Toggle button for mobile view */}
-      <div className="p-4 bg-clearGreen text-white md:hidden min-h-screen">
+      <div className="p-4 bg-chillGreen text-white md:hidden min-h-screen">
         <button onClick={toggleSidebar} className="text-xl">
           <FaBars />
         </button>
@@ -45,43 +46,65 @@ const Sidebar = () => {
             </button>
           </div>
 
-          <ul className="menu p-4 overflow-y-auto w-full text-white font-sans text-md">
-            <span className="flex space-x-2 mb-2 hover:bg-gray-700 rounded">
+          <ul className="menu p-4 overflow-y-auto w-full text-white font-sans font-semibold text-md">
+            <span className="flex space-x-2 mb-2 hover:bg-teal-700 rounded">
               <FaHome className="mt-1" />
-              <Link href="#" className="font-bold">
+              <Link href="/dashboard/admins" className="font-bold">
                 Dashboard
               </Link>
             </span>
 
-            <span className="flex space-x-2 mb-2 hover:bg-gray-700 rounded">
+            <span className="flex space-x-2 mb-2 hover:bg-teal-700 rounded">
               <FaCalendarWeek className="mt-1" />
-              <Link href="#" className="hover:bg-red rounded-md">
+              <Link
+                href="/dashboard/appointment"
+                className="hover:bg-red rounded-md"
+              >
                 Appointment
               </Link>
             </span>
 
-            <span className="flex space-x-2 mb-2 hover:bg-gray-700 rounded">
+            <span className="flex space-x-2 mb-2 hover:bg-teal-700 rounded">
               <FaBell className="mt-1" />
-              <Link href="#" className="hover:bg-red rounded-md">
+              <Link
+                href="/dashboard/notification"
+                className="hover:bg-red rounded-md"
+              >
                 Notification
               </Link>
             </span>
 
-            <span className="flex space-x-2 mb-2 hover:bg-gray-700 rounded">
+            <span className="flex space-x-2 mb-2 hover:bg-teal-700 rounded">
               <FaBookOpen className="mt-1" />
-              <Link href="#" className="hover:bg-red rounded-md">
+              <Link
+                href="/dashboard/order-list"
+                className="hover:bg-red rounded-md"
+              >
                 Order List
               </Link>
             </span>
 
-            <span className="flex space-x-2 mb-2 hover:bg-gray-700 rounded">
+            <span className="flex space-x-2 mb-2 hover:bg-teal-700 rounded">
               <FaReceipt className="mt-1" />
-              <Link href="#" className="hover:bg-red rounded-md">
+              <Link
+                href="/dashboard/reports"
+                className="hover:bg-red rounded-md"
+              >
                 Reports
               </Link>
             </span>
 
-            <span className="flex space-x-2 mb-2 hover:bg-gray-700 rounded">
+            <span className="flex space-x-2 mb-2 hover:bg-teal-700 rounded">
+              <FaCalendarDay className="mt-1" />
+              <Link
+                href="/dashboard/calendar"
+                className="hover:bg-red rounded-md"
+              >
+                Calendar
+              </Link>
+            </span>
+
+            <span className="flex space-x-2 mb-2 hover:bg-teal-700 rounded">
               <FaSignOutAlt className="mt-1" />
               <Link href="#" className="hover:bg-red rounded-md">
                 Logout
