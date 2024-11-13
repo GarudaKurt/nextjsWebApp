@@ -137,7 +137,7 @@ const Home = () => {
             <div className="relative">
               <Image
                 className="bg-fixed  rounded relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src={"/images/landing-page/main-profile.png"}
+                src={"/images/landing-page/profile.png"}
                 layout="responsive"
                 width={350}
                 height={350}

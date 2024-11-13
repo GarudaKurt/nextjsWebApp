@@ -4,6 +4,8 @@ import { FaArrowLeft } from "react-icons/fa";
 import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/app/zustand/zustand";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const RentalInfo = () => {
   const router = useRouter();
@@ -91,13 +93,12 @@ const RentalInfo = () => {
             <label className="label">
               <span className="label-text">Date</span>
             </label>
-            <input
-              type="date"
-              placeholder="Select Date"
-              className="input input-bordered w-full"
-              required
-              value={pickDate}
-              onChange={(e) => setpickDate(e.target.value)}
+            <DatePicker
+              selected={pickDate}
+              onChange={(date) => setpickDate(date)}
+              className="grow input input-bordered text-relaxBlack w-full"
+              placeholderText="Select a date"
+              dateFormat="yyyy-MM-dd"
             />
           </div>
 
@@ -147,13 +148,12 @@ const RentalInfo = () => {
             <label className="label">
               <span className="label-text">Date</span>
             </label>
-            <input
-              type="date"
-              placeholder="Select Date"
-              className="input input-bordered w-full"
-              required
-              value={dropDate}
-              onChange={(e) => setdropDate(e.target.value)}
+            <DatePicker
+              selected={dropDate}
+              onChange={(date) => setdropDate(date)}
+              className="grow input input-bordered text-relaxBlack w-full"
+              placeholderText="Select a date"
+              dateFormat="yyyy-MM-dd"
             />
           </div>
 
