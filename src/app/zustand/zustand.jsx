@@ -1,188 +1,180 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { firestore, auth } from "../firebaseConfig/config"; // Ensure auth is imported
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
-// Load the cart from localStorage
-export const loadCartFromLocalStorage = () => {
-  if (typeof window !== "undefined") {
-    const storedCart = localStorage.getItem("myCart");
-    return storedCart ? JSON.parse(storedCart) : [];
-  }
-  return [];
+// Define the initial state for userData
+const initialUserData = {
+  myCart: [],
+  tour: [],
+  ghostTour: [],
+  rentalInfo: [],
 };
 
-// Save the cart to localStorage
-export const saveCartToLocalStorage = (cart) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("myCart", JSON.stringify(cart));
-  }
-};
+// Zustand store with persist middleware
+export const useCartStore = create(
+  persist(
+    (set, get) => ({
+      userData: initialUserData,
 
-export const loadTourFromLocalStorage = () => {
-  if (typeof window !== "undefined") {
-    const storedCart = localStorage.getItem("tour");
-    return storedCart ? JSON.parse(storedCart) : [];
-  }
-  return [];
-};
+      // Register function with corrected auth and document creation
+      register: async (email, password, name) => {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          const uid = userCredential.user.uid;
+          const userRef = doc(firestore, "users", uid);
 
-// Save the tour to localStorage
-export const saveTourToLocalStorage = (cart) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("tour", JSON.stringify(cart));
-  }
-};
+          // Store user data in Firestore with UID and name
+          await setDoc(userRef, { name, email });
+          console.log("User registered and data saved to Firestore.");
+        } catch (error) {
+          console.error("Registration error:", error);
+        }
+      },
 
-export const loadGhostTourFromLocalStorage = () => {
-  if (typeof window !== "undefined") {
-    const storedCart = localStorage.getItem("ghostTour");
-    return storedCart ? JSON.parse(storedCart) : [];
-  }
-  return [];
-};
+      login: async (email, password) => {
+        try {
+          const { user } = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
 
-// Save the tour to localStorage
-export const saveGhostTourToLocalStorage = (cart) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("ghostTour", JSON.stringify(cart));
-  }
-};
+          // Fetch user data from Firestore
+          const userRef = doc(firestore, "users", user.uid);
+          const userDoc = await getDoc(userRef);
 
-export const loadRentalInfoFromLocalStorage = () => {
-  if (typeof window !== "undefined") {
-    const storedCart = localStorage.getItem("rentalInfo");
-    return storedCart ? JSON.parse(storedCart) : [];
-  }
-  return [];
-};
+          if (userDoc.exists()) {
+            set({
+              userData: userDoc.data(), // Update Zustand with Firestore user data
+              isLoggedIn: true, // Set login state
+              authError: null, // Clear any previous error messages
+            });
+            alert("User is login!!");
+            return true; // Indicate successful login
+          } else {
+            console.error("User data not found in Firestore.");
+            set({ authError: "User data not found." });
+            return false;
+          }
+        } catch (error) {
+          console.error("Failed to login:", error);
+          set({
+            authError: "Login failed. Check your credentials and try again.",
+          });
+          return false;
+        }
+      },
 
-// Save the tour to localStorage
-export const saveRentalInfoToLocalStorage = (cart) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("rentalInfo", JSON.stringify(cart));
-  }
-};
+      getUserName: async () => {
+        try {
+          const user = auth.currentUser; // Ensure the current authenticated user is available
+          if (user) {
+            const userRef = doc(firestore, "users", user.uid);
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              set({ userName: userData.name });
+            } else {
+              console.error("User data not found.");
+              set({ userName: "Unknown Name" });
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch username:", error);
+        }
+      },
 
-export const useCartStore = create((set, get) => ({
-  localBilling: [],
-  localRental: [],
-  localConfirm: [],
-  myCart: loadCartFromLocalStorage(), // Load the cart from localStorage on initialization
-  tour: loadTourFromLocalStorage(),
-  ghostTour: loadGhostTourFromLocalStorage(),
-  rentalInfos: loadRentalInfoFromLocalStorage(),
+      logout: () => {
+        auth
+          .signOut()
+          .then(() => {
+            set({
+              userData: initialUserData, // Reset user data
+              isLoggedIn: false, // Update login state
+              authError: null, // Clear any previous error messages
+            });
+            alert("User logged out.");
+          })
+          .catch((error) => {
+            console.error("Logout error:", error);
+            set({ authError: "Failed to log out. Please try again." });
+          });
+      },
 
-  setbillingInfo: (infos) => {
-    set((state) => {
-      const updatedInfos = [...state.localBilling, infos];
-      console.log("rental infos ", updatedInfos);
-      return { localBilling: updatedInfos };
-    });
-  },
-  getbillingInfo: () => {
-    return get().localBilling();
-  },
+      // Update a specific field in userData
+      updateUserData: (key, value) => {
+        set((state) => ({
+          userData: { ...state.userData, [key]: value },
+        }));
+      },
 
-  setrentInfo: (infos) => {
-    set((state) => {
-      const updatedInfos = [...state.localRental, infos];
-      console.log("rental infos ", updatedInfos);
-      return { localRental: updatedInfos };
-    });
-  },
+      // Function to add to cart
+      add_to_cart: (addCart) => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            myCart: [...state.userData.myCart, addCart],
+          },
+        }));
+      },
 
-  submitRental: (info) => {
-    set((state) => {
-      const getConfirm = { ...info }; // Spread the new info into an object
-      const updatedRentalInfo = {
-        ...get().localBilling[0], // Assuming localBilling contains only one object
-        ...get().localRental[0], // Assuming localRental contains only one object
-        ...getConfirm, // Spread the confirm info
-      };
+      // Function to update a cart item
+      updateCart: (index, updatedItem) => {
+        set((state) => {
+          const updatedCart = [...state.userData.myCart];
+          updatedCart[index] = { ...updatedCart[index], ...updatedItem };
+          return { userData: { ...state.userData, myCart: updatedCart } };
+        });
+      },
 
-      console.log("Merged Rental Info: ", updatedRentalInfo);
-      saveRentalInfoToLocalStorage(updatedRentalInfo); // Save the object to localStorage
-      return { rentalInfos: updatedRentalInfo }; // Store the updated rental info as an object
-    });
-  },
+      // Function to delete an item from the cart
+      deleteCart: (index) => {
+        set((state) => {
+          const updatedCart = [...state.userData.myCart];
+          updatedCart.splice(index, 1);
+          return { userData: { ...state.userData, myCart: updatedCart } };
+        });
+      },
 
-  clientInformation: () => {
-    return get().rentalInfos;
-  },
+      // Function to add a booking
+      add_booking: (addBooking) => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            tour: [...state.userData.tour, addBooking],
+          },
+        }));
+      },
 
-  // Function to add a bike rental to the cart
-  add_to_cart: (addCart) => {
-    set((state) => {
-      const updatedCart = [...state.myCart, addCart]; // Append the new cart item
-      saveCartToLocalStorage(updatedCart); // Save the updated cart to localStorage
-      return { myCart: updatedCart };
-    });
-  },
+      // Function to cancel a booking
+      cancelBooking: (index) => {
+        set((state) => {
+          const updatedTour = [...state.userData.tour];
+          updatedTour.splice(index, 1);
+          return { userData: { ...state.userData, tour: updatedTour } };
+        });
+      },
 
-  // Function to update the cart item
-  updateCart: (index, updatedItem) => {
-    set((state) => {
-      const updatedCart = [...state.myCart];
-      updatedCart[index] = {
-        ...updatedCart[index],
-        ...updatedItem,
-      };
-      saveCartToLocalStorage(updatedCart);
-      return { myCart: updatedCart };
-    });
-  },
+      // Similar functions for ghostTour and rentalInfo...
 
-  // Function to delete an item from the cart if qty is 0
-  deleteCart: (index) => {
-    set((state) => {
-      const updatedCart = [...state.myCart];
-      updatedCart.splice(index, 1);
-      saveCartToLocalStorage(updatedCart);
-      return { myCart: updatedCart };
-    });
-  },
-
-  // Function to get the current cart
-  getCart: () => {
-    const cart = get().myCart;
-    return cart;
-  },
-
-  // Function to add a tour to the tour list
-  add_booking: (addBooking) => {
-    set((state) => {
-      const updatedTour = [...state.tour, addBooking]; // Append the new tour item
-      saveTourToLocalStorage(updatedTour);
-      return { tour: updatedTour };
-    });
-  },
-
-  // Function to cancel a booking
-  cancelBooking: (index) => {
-    set((state) => {
-      const updatedTour = [...state.tour];
-      updatedTour.splice(index, 1);
-      saveTourToLocalStorage(updatedTour);
-      return { tour: updatedTour };
-    });
-  },
-
-  // Function to add a tour to the tour list
-  add_ghost_tour: (addBooking) => {
-    set((state) => {
-      const updatedTour = [...state.ghostTour, addBooking];
-      console.log("Added to Tour:", addBooking);
-      console.log("Updated Tour:", updatedTour);
-      saveGhostTourToLocalStorage(updatedTour);
-      return { ghostTour: updatedTour };
-    });
-  },
-
-  // Function to cancel a booking
-  cancel_ghost_tour: (index) => {
-    set((state) => {
-      const updatedTour = [...state.tour];
-      updatedTour.splice(index, 1);
-      saveGhostTourToLocalStorage(updatedTour);
-      return { ghostTour: updatedTour };
-    });
-  },
-}));
+      // Retrieve specific parts of userData
+      getCart: () => get().userData.myCart,
+      getTour: () => get().userData.tour,
+      getGhostTour: () => get().userData.ghostTour,
+      getRentalInfo: () => get().userData.rentalInfo,
+    }),
+    {
+      name: "user_data", // unique name for localStorage key
+      partialize: (state) => ({ userData: state.userData }), // Only persist userData
+    }
+  )
+);

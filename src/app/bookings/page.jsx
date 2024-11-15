@@ -300,7 +300,7 @@ const AddBooking = () => {
                     </select>
                   </div>
                   <div className="mb-5">
-                    <label className="flex justify-center text-offBlack text-lg font-bold font-sans">
+                    <label className="flex justify-center text-offBlack text-lg w-full font-bold font-sans">
                       Pick a date
                     </label>
                     <DatePicker

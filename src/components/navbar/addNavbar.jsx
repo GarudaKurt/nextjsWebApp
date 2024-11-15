@@ -1,11 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { FaShoppingCart } from "react-icons/fa";
+import { useCartStore } from "@/app/zustand/zustand";
 
 const AddNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { isLoggedIn, userName, getUserName, logout } = useCartStore(
+    (state) => ({
+      isLoggedIn: state.isLoggedIn,
+      userName: state.userName,
+      getUserName: state.getUserName,
+      logout: state.logout,
+    })
+  );
+
+  useEffect(() => {
+    if (isLoggedIn && !userName) {
+      getUserName(); // Fetch user's name if logged in and userName not yet set
+    }
+  }, [isLoggedIn, userName, getUserName]);
 
   return (
     <nav className="fixed left-0 top-0 w-full pb-6 pt-8 z-10 bg-offGreen">
@@ -45,33 +61,42 @@ const AddNavbar = () => {
         >
           <Link
             href="/"
-            className="block px-3 py-2 text-white hover:text-clearGreen"
+            className="block px-2 py-2 text-white hover:text-clearGreen"
           >
             Home
           </Link>
           <Link
             href="/gallery"
-            className="block px-3 py-2 text-white hover:text-clearGreen"
+            className="block px-2 py-2 text-white hover:text-clearGreen"
           >
             Gallery
           </Link>
           <Link
             href="/services"
-            className="block px-3 py-2 text-white hover:text-clearGreen"
+            className="block px-2 py-2 text-white hover:text-clearGreen"
           >
             Services
           </Link>
-          <Link
-            href="/login"
-            className="block px-3 py-2 text-white hover:text-clearGreen"
-          >
-            Sign In
-          </Link>
+          {isLoggedIn ? (
+            <span className="block px-2 py-2 text-white">
+              Hello, {userName}! |{" "}
+              <button className="hover:bg-relaxGreen rounded" onClick={logout}>
+                Logout
+              </button>
+            </span>
+          ) : (
+            <Link
+              href="/login"
+              className="block px-2 py-2 text-white hover:text-clearGreen"
+            >
+              Sign In
+            </Link>
+          )}
           <Link
             href="#"
-            className="block px-3 py-2 text-white hover:text-clearGreen"
+            className="block px-2 py-2 text-white hover:text-clearGreen"
           >
-            Notification
+            <FaShoppingCart />
           </Link>
         </div>
       </div>
