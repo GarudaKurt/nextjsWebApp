@@ -18,7 +18,23 @@ const RentalInfo = () => {
   const [dropTime, setdropTime] = useState("");
   const [show, setShow] = useState(false);
 
-  const rentalInfos = useCartStore((state) => state.setrentInfo);
+  const { setRentalInfo, getRentalInfo } = useCartStore((state) => ({
+    setRentalInfo: state.setRentalInfo,
+    getRentalInfo: state.getRentalInfo,
+  }));
+
+  useEffect(() => {
+    const rentalData = getRentalInfo();
+    if (rentalData) {
+      setpickLocation(rentalData.pickLocation);
+      setpickDate(rentalData.pickDate);
+      setpickTime(rentalData.pickTime);
+      setpickLocation(rentalData.pickLocation);
+      setdropLocation(rentalData.dropLocation);
+      setdropDate(rentalData.dropDate);
+      setdropTime(rentalData.dropTime);
+    }
+  }, [getRentalInfo]);
 
   const handleSubmit = () => {
     if (
@@ -33,7 +49,7 @@ const RentalInfo = () => {
       return;
     }
 
-    const info = {
+    const rentalData = {
       pickLocation: pickLocation,
       pickDate: pickDate,
       pickTime: pickTime,
@@ -41,7 +57,7 @@ const RentalInfo = () => {
       dropDate: dropDate,
       dropTime: dropTime,
     };
-    rentalInfos(info);
+    setRentalInfo(rentalData);
     router.push("/bookings/confirmation");
   };
 

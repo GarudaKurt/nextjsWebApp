@@ -16,7 +16,6 @@ const AddSteps = ({
   billPage,
   infoPage,
   confirmPage,
-  statusPage,
 }) => {
   const isVertical = alignment
     ? "text-relaxBlack steps steps-vertical"
@@ -61,15 +60,7 @@ const AddSteps = ({
         className={`step ${confirmPage} flex items-center space-x-2 group`}
       >
         <FaCheck className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
-        <span className={spanStyle}>Confirm</span>
-      </Link>
-
-      <Link
-        href="#"
-        className={`step ${statusPage} flex items-center space-x-2 group`}
-      >
-        <FaEllipsisH className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />
-        <span className={spanStyle}>Status</span>
+        <span className={spanStyle}>Verification</span>
       </Link>
     </ul>
   );

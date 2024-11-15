@@ -13,6 +13,8 @@ const initialUserData = {
   tour: [],
   ghostTour: [],
   rentalInfo: [],
+  billingInfo: [],
+  confirmation: [],
 };
 
 // Zustand store with persist middleware
@@ -164,6 +166,32 @@ export const useCartStore = create(
         });
       },
 
+      setBillingInfo: (billingData) => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            billingInfo: billingData,
+          },
+        }));
+      },
+
+      setRentalInfo: (rentalData) => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            rentalInfo: rentalData,
+          },
+        }));
+      },
+
+      setConfirmation: (confirm) => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            confirmation: confirm,
+          },
+        }));
+      },
       // Similar functions for ghostTour and rentalInfo...
 
       // Retrieve specific parts of userData
@@ -171,6 +199,8 @@ export const useCartStore = create(
       getTour: () => get().userData.tour,
       getGhostTour: () => get().userData.ghostTour,
       getRentalInfo: () => get().userData.rentalInfo,
+      getBillingInfo: () => get().userData.billingInfo,
+      getConfirmation: () => get().userData.confirmation,
     }),
     {
       name: "user_data", // unique name for localStorage key

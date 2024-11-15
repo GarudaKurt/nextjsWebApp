@@ -1,8 +1,8 @@
 "use client";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaClock } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import AddSteps from "@/components/steps/page";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartStore } from "@/app/zustand/zustand";
 const Verification = () => {
   const router = useRouter();
@@ -10,12 +10,18 @@ const Verification = () => {
   const [termsAgree, setTermsAgree] = useState(false);
   const [show, setShow] = useState(false);
 
-  const submitRental = useCartStore((state) => state.submitRental);
+  const { setConfirmation, getConfirmation } = useCartStore((state) => ({
+    setConfirmation: state.setConfirmation,
+    getConfirmation: state.getConfirmation,
+  }));
 
-  if (!submitRental) {
-    console.error("submitRental function is undefined");
-    return null;
-  }
+  useEffect(() => {
+    const info = getConfirmation();
+    if (info) {
+      setHandleCare(info.agreementCare);
+      setTermsAgree(info.terms);
+    }
+  }, [getConfirmation]);
 
   const handleSubmit = () => {
     if (!handleCare || !termsAgree) {
@@ -26,8 +32,7 @@ const Verification = () => {
       agreementCare: handleCare,
       terms: termsAgree,
     };
-    submitRental(info); // Call Zustand function to update rental info
-    router.push("/bookings/verification");
+    setConfirmation(info); // Call Zustand function to update rental info
   };
 
   return (
@@ -77,6 +82,19 @@ const Verification = () => {
             <a className="text-blue-500 underline">privacy policy</a>.
           </span>
         </label>
+      </div>
+
+      <p className="px-8 text-gray-500 text-sm pt-4">
+        Wait for 24 hours until the admin confirm your rentals order.
+      </p>
+      <div className="flex items-center justify-start pt-4">
+        <h3 className="px-8 text-lg md:text-xl font-bold text-gray-500">
+          Status:
+        </h3>
+        <button className="btn btn-xs bg-pendingYellow hover:bg-yellow-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
+          <span>PENDING</span>
+          <FaClock />
+        </button>
       </div>
 
       <div className="px-8 mt-6">

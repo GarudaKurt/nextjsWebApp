@@ -15,30 +15,32 @@ const Billings = () => {
   const [isSubmit, setSubmitted] = useState(false);
   const [show, setShow] = useState(false);
 
-  const billingInfo = useCartStore((state) => state.setbillingInfo);
-  const clientInformation = useCartStore((state) => state.clientInformation);
-
+  const { setBillingInfo, getBillingInfo } = useCartStore((state) => ({
+    setBillingInfo: state.setBillingInfo,
+    getBillingInfo: state.getBillingInfo,
+  }));
   useEffect(() => {
-    if (clientInformation) {
-      setName(clientInformation.name || "");
-      setAddress(clientInformation.address || "");
-      setPhone(clientInformation.phone || "");
-      setCity(clientInformation.city || "");
+    const billingInfo = getBillingInfo();
+    if (getBillingInfo) {
+      setName(billingInfo.name || "");
+      setAddress(billingInfo.address || "");
+      setPhone(billingInfo.phone || "");
+      setCity(billingInfo.city || "");
     }
-  }, [clientInformation]);
+  }, [getBillingInfo]);
 
   const handleSubmit = () => {
     if (!name || !phone || !address || !city) {
       setShow(true);
       return;
     }
-    const getInfo = {
-      name: name,
-      address: address,
-      phone: phone,
-      city: city,
+    const billingData = {
+      name,
+      address,
+      phone,
+      city,
     };
-    billingInfo(getInfo);
+    setBillingInfo(billingData); // Update billing info in Zustand
     setSubmitted(true);
     router.push("/bookings/rental-info");
   };
