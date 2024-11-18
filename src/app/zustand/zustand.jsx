@@ -10,8 +10,8 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 // Define the initial state for userData
 const initialUserData = {
   myCart: [],
-  tour: [],
   ghostTour: [],
+  vegasTour: [],
   rentalInfo: [],
   billingInfo: [],
   confirmation: [],
@@ -87,7 +87,7 @@ export const useCartStore = create(
               set({ userName: userData.name });
             } else {
               console.error("User data not found.");
-              set({ userName: "Unknown Name" });
+              set({ userName: "No Name" });
             }
           }
         } catch (error) {
@@ -119,51 +119,70 @@ export const useCartStore = create(
         }));
       },
 
-      // Function to add to cart
       add_to_cart: (addCart) => {
         set((state) => ({
           userData: {
             ...state.userData,
-            myCart: [...state.userData.myCart, addCart],
+            myCart: Array.isArray(state.userData.myCart)
+              ? [...state.userData.myCart, addCart]
+              : [addCart], // If myCart isn't an array, reset it with the new item
           },
         }));
       },
 
-      // Function to update a cart item
       updateCart: (index, updatedItem) => {
         set((state) => {
-          const updatedCart = [...state.userData.myCart];
-          updatedCart[index] = { ...updatedCart[index], ...updatedItem };
+          const updatedCart = Array.isArray(state.userData.myCart)
+            ? [...state.userData.myCart]
+            : []; // Fallback to an empty array
+
+          if (updatedCart[index]) {
+            updatedCart[index] = { ...updatedCart[index], ...updatedItem };
+          }
           return { userData: { ...state.userData, myCart: updatedCart } };
         });
       },
 
-      // Function to delete an item from the cart
       deleteCart: (index) => {
         set((state) => {
-          const updatedCart = [...state.userData.myCart];
-          updatedCart.splice(index, 1);
-          return { userData: { ...state.userData, myCart: updatedCart } };
+          // Ensure myCart is a valid array before proceeding
+          const currentCart = Array.isArray(state.userData.myCart)
+            ? state.userData.myCart
+            : [];
+
+          // Check if the index is within the valid range
+          if (index >= 0 && index < currentCart.length) {
+            const updatedCart = [...currentCart];
+            updatedCart.splice(index, 1); // Remove the item at the specified index
+            return { userData: { ...state.userData, myCart: updatedCart } };
+          }
+
+          // If the index is invalid or the cart is not an array, return the state as-is
+          console.warn(
+            "Invalid index or cart state in deleteCart:",
+            index,
+            currentCart
+          );
+          return state;
         });
       },
 
-      // Function to add a booking
-      add_booking: (addBooking) => {
+      setGhostTour: (bookings) => {
         set((state) => ({
           userData: {
             ...state.userData,
-            tour: [...state.userData.tour, addBooking],
+            ghostTour: bookings,
           },
         }));
       },
 
-      // Function to cancel a booking
-      cancelBooking: (index) => {
-        set((state) => {
-          const updatedTour = [...state.userData.tour];
-          updatedTour.splice(index, 1);
-          return { userData: { ...state.userData, tour: updatedTour } };
-        });
+      setVegasTour: (bookings) => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            vegasTour: bookings,
+          },
+        }));
       },
 
       setBillingInfo: (billingData) => {

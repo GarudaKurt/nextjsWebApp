@@ -92,12 +92,15 @@ const AddNavbar = () => {
               Sign In
             </Link>
           )}
-          <Link
-            href="#"
-            className="block px-2 py-2 text-white hover:text-clearGreen"
-          >
-            <FaShoppingCart />
-          </Link>
+          {isLoggedIn && (
+            <Link
+              href="#"
+              className="block px-2 py-2 text-white hover:text-clearGreen flex justift-end items-center gap-2"
+            >
+              <FaShoppingCart />
+              Cart
+            </Link>
+          )}
         </div>
       </div>
     </nav>

@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import AddNavbar from "@/components/navbar/addNavbar";
 import { useCartStore } from "@/app/zustand/zustand";
 import { useState } from "react";
 
@@ -27,12 +26,15 @@ const SignIn = () => {
       return;
     }
     const success = await login(email, pass);
-    if (!success) alert("Invalid email/password ");
+    if (!success) {
+      alert("Invalid email/password ");
+      return;
+    }
+    router.push("/");
   };
 
   return (
     <>
-      <AddNavbar />
       <div className="min-h-screen flex justify-center items-center mt-2 bg-white">
         <div className="card max-w-sm shadow-2xl bg-white p-2">
           <form className="card-body" onSubmit={handleSubmit}>

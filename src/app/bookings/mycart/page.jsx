@@ -7,12 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/app/zustand/zustand";
 
 const MyCart = () => {
-  const [priceRates, setPriceRates] = useState(0);
-  const [cart, setCart] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [rateEnable, setRateEnable] = useState(false);
-  const [checkout, setCheckout] = useState(false);
-
   const router = useRouter();
 
   const imagesLoad = [
@@ -27,14 +22,12 @@ const MyCart = () => {
     "/images/bookings/rods.png",
   ];
 
-  const getCart = useCartStore((state) => state.getCart);
-  const updateCarts = useCartStore((state) => state.updateCart);
-  const deleteCarts = useCartStore((state) => state.deleteCart);
-
-  useEffect(() => {
-    const storedCart = getCart();
-    setCart(storedCart); // Set the cart state with the loaded data
-  }, [getCart]);
+  // Get cart data from store
+  const cart = useCartStore((state) => state.userData?.myCart || []); // Default to an empty array if undefined
+  const { updateCart, deleteCart } = useCartStore((state) => ({
+    updateCart: state.updateCart,
+    deleteCart: state.deleteCart,
+  }));
 
   useEffect(() => {
     const handleResize = () => {
@@ -42,74 +35,53 @@ const MyCart = () => {
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
+  const calculateTotal = (qty, rate, equipmentTitle) => {
+    if (equipmentTitle) return qty * 5;
+    switch (rate) {
+      case "24 hours":
+        return qty * 35;
+      case "48 hours":
+        return qty * 55;
+      case "120 hours":
+        return qty * 135;
+      default:
+        return 0;
+    }
+  };
+
   const handleRateChange = (e, index) => {
     const selectedRate = e.target.value;
     const updatedCart = [...cart];
     updatedCart[index].rate = selectedRate;
-    let total = 0;
 
-    if (updatedCart[index].equipment_title) {
-      total = updatedCart[index].qty * 5;
-      setRateEnable(true);
-    } else {
-      setRateEnable(false);
-      switch (selectedRate) {
-        case "24 hours":
-          total = updatedCart[index].qty * 35;
-          break;
-        case "48 hours":
-          total = updatedCart[index].qty * 55;
-          break;
-        case "120 hours":
-          total = updatedCart[index].qty * 135;
-          break;
-        default:
-          total = 0;
-      }
-    }
+    const total = calculateTotal(
+      updatedCart[index].qty,
+      selectedRate,
+      updatedCart[index].equipment_title
+    );
 
     updatedCart[index].total = total;
-    updateCarts(updatedCart[index], selectedRate);
-    updateCarts(updatedCart[index], total);
-    setCart(updatedCart); // Update cart state
-    setPriceRates(total); // Update priceRates
+    updateCart(updatedCart[index]);
   };
 
   const handleIncrement = (index) => {
     const updatedCart = [...cart];
     updatedCart[index].qty += 1;
 
-    let total = 0;
-    if (updatedCart[index].equipment_title) {
-      total = updatedCart[index].qty * 5;
-      setRateEnable(true);
-    } else {
-      switch (selectedRate) {
-        case "24 hours":
-          total = updatedCart[index].qty * 35;
-          break;
-        case "48 hours":
-          total = updatedCart[index].qty * 55;
-          break;
-        case "120 hours":
-          total = updatedCart[index].qty * 135;
-          break;
-        default:
-          total = 0;
-      }
-    }
+    const total = calculateTotal(
+      updatedCart[index].qty,
+      updatedCart[index].rate,
+      updatedCart[index].equipment_title
+    );
 
     updatedCart[index].total = total;
-    updateCarts(updatedCart[index], updatedCart[index].qty);
-    setCart(updatedCart);
-    setPriceRates(total);
+    updateCart(updatedCart[index]);
   };
 
   const handleDecrement = (index) => {
@@ -118,36 +90,16 @@ const MyCart = () => {
     if (updatedCart[index].qty > 1) {
       updatedCart[index].qty -= 1;
 
-      let total = 0;
-      if (updatedCart[index].equipment_title) {
-        total = updatedCart[index].qty * 5;
-        setRateEnable(false);
-      } else {
-        setRateEnable(true);
-        switch (selectedRate) {
-          case "24 hours":
-            total = updatedCart[index].qty * 35;
-            break;
-          case "48 hours":
-            total = updatedCart[index].qty * 55;
-            break;
-          case "120 hours":
-            total = updatedCart[index].qty * 135;
-            break;
-          default:
-            total = 0;
-        }
-      }
+      const total = calculateTotal(
+        updatedCart[index].qty,
+        updatedCart[index].rate,
+        updatedCart[index].equipment_title
+      );
 
       updatedCart[index].total = total;
-
-      updateCarts(updatedCart[index], updatedCart[index].qty);
-      setCart(updatedCart);
-      setPriceRates(total);
+      updateCart(updatedCart[index]);
     } else {
-      deleteCarts(index, updatedCart[index].qty);
-      const newCart = updatedCart.filter((_, i) => i !== index);
-      setCart(newCart);
+      deleteCart(index);
     }
   };
 
@@ -156,6 +108,14 @@ const MyCart = () => {
   };
 
   const displayCart = () => {
+    if (cart.length === 0) {
+      return (
+        <p className="text-center text-gray-500">
+          Your cart is currently empty.
+        </p>
+      );
+    }
+
     return cart.map((item, index) => {
       let imageUrl = "";
       let modelTitle = "";
@@ -198,38 +158,10 @@ const MyCart = () => {
 
             <div className="flex-1 text-center sm:text-left">
               <h2 className="text-md font-semibold mt-2">{modelTitle}</h2>
-              <div className="rating">
-                <input
-                  type="radio"
-                  name="rating-4"
-                  className="mask mask-star-2 bg-green-400"
-                />
-                <input
-                  type="radio"
-                  name="rating-4"
-                  className="mask mask-star-2 bg-green-400"
-                  defaultChecked
-                />
-                <input
-                  type="radio"
-                  name="rating-4"
-                  className="mask mask-star-2 bg-green-400"
-                />
-                <input
-                  type="radio"
-                  name="rating-4"
-                  className="mask mask-star-2 bg-green-400"
-                />
-                <input
-                  type="radio"
-                  name="rating-4"
-                  className="mask mask-star-2 bg-green-400"
-                />
-              </div>
             </div>
 
             <div className="flex flex-col justify-center sm:flex-row sm:items-center sm:justify-between w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
-              <div className="flex items-center md:mt-4 justify-center space-x-2">
+              <div className="flex items-center justify-center space-x-2">
                 <button
                   className="btn btn-ghost btn-sm"
                   onClick={() => handleDecrement(index)}
@@ -248,7 +180,7 @@ const MyCart = () => {
                     className="text-md text-offBlack"
                     value={item.rate}
                     onChange={(e) => handleRateChange(e, index)}
-                    disabled={item.equipment_title || rateEnable} // Disable if equipment_title is fal
+                    disabled={!!item.equipment_title}
                   >
                     <option value="24 hours">24 hours</option>
                     <option value="48 hours">48 hours</option>
@@ -288,7 +220,6 @@ const MyCart = () => {
           <AddSteps alignment={false} hidden={true} cartPage={"step-success"} />
         )}
         <div className="flex flex-col md:flex-row md:space-x-4 items-start">
-          {/* Cart Items */}
           {!isSmallScreen && (
             <AddSteps
               alignment={true}
@@ -296,13 +227,10 @@ const MyCart = () => {
               cartPage={"step-success"}
             />
           )}
-
           <div className="border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5">
             <h2 className="text-sm md:text-xl mb-2 p-2 font-semibold text-gray-600">
               Shopping Cart
             </h2>
-
-            {/* Scrollable cart content */}
             <div
               className={`${cart.length > 2 ? "max-h-64 overflow-y-auto" : ""}`}
             >
@@ -310,30 +238,14 @@ const MyCart = () => {
             </div>
             <div className="flex justify-start p-2">
               <button
-                className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md "
-                onClick={() => {
-                  handleCheckout();
-                }}
+                className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md"
+                onClick={handleCheckout}
               >
                 Check out
               </button>
             </div>
           </div>
         </div>
-      </div>
-      <div className="bg-offWhite text-offBlack text-center py-8">
-        <h2 className="text-lg font-semibold">Terms and Condition</h2>
-        <p className="text-sm mt-4">
-          By renting our products, you agree to use them responsibly and return
-          them in the same condition. <br />
-          The rental period begins upon receipt of the product and ends when it
-          is returned. Late returns may incur additional fees.
-          <br />
-          You are responsible for any damages or loss during the rental period.
-          Fees for repairs or replacement will apply. <br />
-          All rentals must be paid upfront. Refunds are not available once the
-          rental period starts.
-        </p>
       </div>
     </>
   );

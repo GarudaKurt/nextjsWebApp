@@ -15,19 +15,20 @@ const Billings = () => {
   const [isSubmit, setSubmitted] = useState(false);
   const [show, setShow] = useState(false);
 
-  const { setBillingInfo, getBillingInfo } = useCartStore((state) => ({
+  const billingData = useCartStore(
+    (state) => state.userData?.billingInfo || []
+  );
+  const { setBillingInfo, userName, getUserName } = useCartStore((state) => ({
     setBillingInfo: state.setBillingInfo,
-    getBillingInfo: state.getBillingInfo,
+    userName: state.userName,
+    getUserName: state.getUserName,
   }));
   useEffect(() => {
-    const billingInfo = getBillingInfo();
-    if (getBillingInfo) {
-      setName(billingInfo.name || "");
-      setAddress(billingInfo.address || "");
-      setPhone(billingInfo.phone || "");
-      setCity(billingInfo.city || "");
-    }
-  }, [getBillingInfo]);
+    setName(userName || "");
+    setAddress(billingData.address || "");
+    setPhone(billingData.phone || "");
+    setCity(billingData.city || "");
+  }, []); // Only include essential dependencies
 
   const handleSubmit = () => {
     if (!name || !phone || !address || !city) {

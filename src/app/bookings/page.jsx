@@ -12,8 +12,6 @@ import {
   FaTimes,
   FaCalendar,
   FaMapMarker,
-  FaUser,
-  FaEnvelope,
   FaMoneyBill,
   FaHome,
   FaCarAlt,
@@ -33,23 +31,18 @@ const AddBooking = () => {
   const [lodging, setLodging] = useState("");
   const [transportation, setTransportation] = useState("");
 
-  const addNewBooking = useCartStore((state) => state.add_booking);
-  const addGhostTour = useCartStore((state) => state.add_ghost_tour);
+  const { setGhostTour, setVegasTour } = useCartStore((state) => ({
+    setGhostTour: state.setGhostTour,
+    setVegasTour: state.setVegasTour,
+  }));
 
   const handleSubmit = () => {
     const bookings = {
-      name: "",
-      email: "",
       phone: "",
       rate: selectRate,
       date: selectDate,
     };
-    addGhostTour(bookings);
-    setShowModal(true);
-    setTimeout(() => {
-      setShowModal(false);
-    }, 3000);
-    clearField();
+    setGhostTour(bookings);
   };
 
   const clearField = () => {
@@ -63,8 +56,6 @@ const AddBooking = () => {
   const handleBookings = (e) => {
     e.preventDefault();
     const bookings = {
-      users: "",
-      email: "",
       rate: selectRate,
       date: selectDate,
       location: location,
@@ -75,7 +66,7 @@ const AddBooking = () => {
 
     console.log("Bookings data:", bookings);
     setIsModalOpen(true);
-    addNewBooking(bookings);
+    setVegasTour(bookings);
     setSuccess(true);
     setTimeout(() => {
       setSuccess(false);
@@ -109,22 +100,6 @@ const AddBooking = () => {
                   required
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                />
-              </label>
-            </div>
-            <div className="form-control mb-1">
-              <label className="input input-bordered flex items-center gap-2 text-darkBlack">
-                <FaCalendar className="h-4 w-4 opacity-70 text-darkBlack" />
-                <DatePicker
-                  selected={selectDate}
-                  onChange={(date) => selectDate(date)}
-                  inline
-                  calendarClassName="border-none"
-                  dayClassName={(date) =>
-                    date.getDate() === new Date().getDate()
-                      ? "bg-green-500 text-white rounded-full"
-                      : "hover:bg-gray-200"
-                  }
                 />
               </label>
             </div>
@@ -287,7 +262,7 @@ const AddBooking = () => {
                       Guest
                     </label>
                     <select
-                      className="select select-primary text-relaxBlack w-full max-w-xs"
+                      className="select input-bordered text-relaxBlack w-full max-w-xs"
                       value={selectRate}
                       onChange={(e) => setSelectRate(e.target.value)}
                     >
@@ -300,17 +275,18 @@ const AddBooking = () => {
                     </select>
                   </div>
                   <div className="mb-5">
-                    <label className="flex justify-center text-offBlack text-lg w-full font-bold font-sans">
+                    <label className="flex justify-center text-offBlack text-lg font-bold font-sans">
                       Pick a date
                     </label>
                     <DatePicker
                       selected={selectDate}
                       onChange={(date) => setSelectDate(date)}
-                      className="grow input input-bordered input-primary text-relaxBlack w-full max-w-xs"
+                      className="input input-bordered text-relaxBlack w-full max-w-xs"
                       placeholderText="Select a date"
                       dateFormat="yyyy-MM-dd"
                     />
                   </div>
+
                   <button
                     className="btn btn-block bg-forestGreen text-offWhite"
                     onClick={() => handleSubmit()}
@@ -376,7 +352,7 @@ const AddBooking = () => {
                       Guest
                     </label>
                     <select
-                      className="select select-primary text-relaxBlack w-full max-w-xs"
+                      className="select text-relaxBlack w-full max-w-xs"
                       required
                       value={selectRate}
                       onChange={(e) => setSelectRate(e.target.value)}
@@ -396,7 +372,7 @@ const AddBooking = () => {
                     <DatePicker
                       selected={selectDate}
                       onChange={(date) => setSelectDate(date)}
-                      className="grow input input-bordered input-primary text-relaxBlack w-full max-w-xs"
+                      className="grow input input-bordered  text-relaxBlack w-full max-w-xs"
                       placeholderText="Select a date"
                       dateFormat="yyyy-MM-dd"
                     />
