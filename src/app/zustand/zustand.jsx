@@ -6,9 +6,12 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 // Define the initial state for userData
 const initialUserData = {
+  isSubmit: false,
+  submitTours: false,
   myCart: [],
   ghostTour: [],
   vegasTour: [],
@@ -203,7 +206,7 @@ export const useCartStore = create(
         }));
       },
 
-      setConfirmation: (confirm) => {
+      setConfirmation: async (confirm) => {
         set((state) => ({
           userData: {
             ...state.userData,
@@ -211,6 +214,80 @@ export const useCartStore = create(
           },
         }));
       },
+
+      submitForm: async (submit) => {
+        set({ userData: { ...get().userData, isSubmit: submit } });
+
+        if (submit) {
+          try {
+            const user = auth.currentUser; // Ensure user is authenticated
+            if (user) {
+              const userRef = doc(firestore, "users", user.uid);
+              const rentalsRef = doc(userRef, "rentals", uuidv4());
+
+              // Extract only the desired fields from userData
+              const { myCart, rentalInfo, billingInfo, confirmation } =
+                get().userData;
+
+              // Prepare the data to store as an array
+              const submissionData = {
+                myCart,
+                rentalInfo,
+                billingInfo,
+                confirmation,
+              };
+
+              // Update Firestore with the submission data
+              await setDoc(
+                rentalsRef,
+                { rentalInformation: submissionData },
+                { merge: true }
+              );
+              console.log("Selected data successfully synced to Firestore.");
+            } else {
+              console.error("User not authenticated. Cannot update Firestore.");
+            }
+          } catch (error) {
+            console.error("Error updating Firestore:", error);
+          }
+        }
+      },
+
+      submitToursForm: async (submit) => {
+        set({ userData: { ...get().userData, submitTours: submit } });
+
+        if (submit) {
+          try {
+            const user = auth.currentUser; // Ensure user is authenticated
+            if (user) {
+              const userRef = doc(firestore, "users", user.uid);
+              const rentalsRef = doc(userRef, "tours", uuidv4());
+
+              // Extract only the desired fields from userData
+              const { ghostTour, vegasTour } = get().userData;
+
+              // Prepare the data to store as an array
+              const submissionData = {
+                ghostTour,
+                vegasTour,
+              };
+
+              // Update Firestore with the submission data
+              await setDoc(
+                rentalsRef,
+                { toursInformation: submissionData },
+                { merge: true }
+              );
+              console.log("Selected data successfully synced to Firestore.");
+            } else {
+              console.error("User not authenticated. Cannot update Firestore.");
+            }
+          } catch (error) {
+            console.error("Error updating Firestore:", error);
+          }
+        }
+      },
+
       // Similar functions for ghostTour and rentalInfo...
 
       // Retrieve specific parts of userData

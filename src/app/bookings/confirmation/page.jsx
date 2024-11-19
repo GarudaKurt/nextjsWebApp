@@ -10,10 +10,13 @@ const Verification = () => {
   const [termsAgree, setTermsAgree] = useState(false);
   const [show, setShow] = useState(false);
 
-  const { setConfirmation, getConfirmation } = useCartStore((state) => ({
-    setConfirmation: state.setConfirmation,
-    getConfirmation: state.getConfirmation,
-  }));
+  const { setConfirmation, getConfirmation, submitForm } = useCartStore(
+    (state) => ({
+      setConfirmation: state.setConfirmation,
+      getConfirmation: state.getConfirmation,
+      submitForm: state.submitForm,
+    })
+  );
 
   useEffect(() => {
     const info = getConfirmation();
@@ -33,6 +36,7 @@ const Verification = () => {
       terms: termsAgree,
     };
     setConfirmation(info); // Call Zustand function to update rental info
+    submitForm(true);
   };
 
   return (
