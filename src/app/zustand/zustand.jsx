@@ -45,6 +45,13 @@ export const useCartStore = create(
         }
       },
 
+      isLoggedIn: async () => {
+        const user = auth.currentUser; // Ensure the current authenticated user is available
+        if (!user) {
+          console.error("User need to sigin first!");
+        }
+      },
+
       login: async (email, password) => {
         try {
           const { user } = await signInWithEmailAndPassword(

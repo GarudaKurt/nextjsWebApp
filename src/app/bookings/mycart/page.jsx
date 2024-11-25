@@ -250,7 +250,7 @@ const MyCart = () => {
           </div>
           <div className="flex justify-start p-2">
             <button
-              className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md"
+              className="btn bg-successGreen hover:bg-clearGreen text-white text-md"
               onClick={handleCheckout}
             >
               Check out

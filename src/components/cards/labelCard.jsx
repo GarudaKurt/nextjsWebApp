@@ -1,9 +1,24 @@
 import Image from "next/image";
 import { useCartStore } from "@/app/zustand/zustand";
+import { useState } from "react";
 const CardLabel = ({ image, name, title, descriptions }) => {
+  const [modalMessage, setModalMessage] = useState(""); // Message for the modal
+  const [showModal, setShowModal] = useState(false);
+
   const addToCart = useCartStore((state) => state.add_to_cart); // Access add_to_cart from the Zustand store
+  const isLoggedIn = useCartStore((state) => state.isLoggedIn); // Check if user is logged in
 
   const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      // If user is not logged in, show a login prompt
+      setModalMessage("Please sign in to add items to your cart!");
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 2500);
+      return;
+    }
+
     const cartItem = {
       equipment_title: title,
       qty: 1,
@@ -11,6 +26,14 @@ const CardLabel = ({ image, name, title, descriptions }) => {
       total: 5,
     };
     addToCart(cartItem);
+    // Add the item to the Zustand store
+    setModalMessage("Successfully added to cart!");
+    setShowModal(true);
+
+    // Auto-close the modal after 1.5 seconds
+    setTimeout(() => {
+      setShowModal(false);
+    }, 1500);
   };
 
   return (
@@ -34,6 +57,15 @@ const CardLabel = ({ image, name, title, descriptions }) => {
       >
         Add Cart
       </button>
+      {showModal && (
+        <div className="fixed inset-0 flex p-30 items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <h3 className="text-lg font-semibold text-relaxBlack">
+              {modalMessage}
+            </h3>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

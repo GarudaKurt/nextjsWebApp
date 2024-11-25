@@ -6,11 +6,23 @@ const AddCartCard = ({ images, title, model }) => {
   const [priceRates, setPriceRates] = useState(0);
   const [qty, setQty] = useState(0);
   const [rate, setRate] = useState("");
+  const [modalMessage, setModalMessage] = useState(""); // Message for the modal
+  const [showModal, setShowModal] = useState(false);
 
-  const addToCart = useCartStore((state) => state.add_to_cart); // Access add_to_cart from the Zustand store
+  const addToCart = useCartStore((state) => state.add_to_cart); // Access add_to_cart from Zustand
+  const isLoggedIn = useCartStore((state) => state.isLoggedIn); // Check if user is logged in
 
-  // Function to add the selected bike data to the global cart
   const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      // If user is not logged in, show a login prompt
+      setModalMessage("Please sign in to add items to your cart!");
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 2500);
+      return;
+    }
+
     const newBikeRent = {
       qty,
       rate,
@@ -18,8 +30,15 @@ const AddCartCard = ({ images, title, model }) => {
       total: priceRates,
     };
 
-    // Add the new bike rental to the global cart using the Zustand store
+    // Add the item to the Zustand store
     addToCart(newBikeRent);
+    setModalMessage("Successfully added to cart!");
+    setShowModal(true);
+
+    // Auto-close the modal after 1.5 seconds
+    setTimeout(() => {
+      setShowModal(false);
+    }, 1500);
   };
 
   useEffect(() => {
@@ -41,8 +60,7 @@ const AddCartCard = ({ images, title, model }) => {
   }, [qty, rate]);
 
   const handleRateChange = (e) => {
-    const selectedRate = e.target.value;
-    setRate(selectedRate);
+    setRate(e.target.value);
   };
 
   const handleDecrement = () => {
@@ -62,13 +80,6 @@ const AddCartCard = ({ images, title, model }) => {
             <label className="text-gray-500 text-sm flex font-sans justify-start mt-1">
               {model}
             </label>
-          </div>
-          <div className="rating gap-1">
-            <input
-              type="radio"
-              name="rating-3"
-              className="mask mask-heart bg-red-400"
-            />
           </div>
         </div>
 
@@ -98,31 +109,13 @@ const AddCartCard = ({ images, title, model }) => {
               +
             </button>
           </div>
-
-          <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-6 w-6 text-gray-400"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5.121 19.364A4 4 0 0110 16h4a4 4 0 014.879 3.364M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-            <p className="text-sm ml-2 text-gray-500">1 person</p>
-          </div>
         </div>
 
         <div className="flex justify-between w-full items-center">
           <select
             className="select select-ghost p-2 w-full max-w-xs"
             onChange={handleRateChange}
-            value={rate} // Control the selected option via value
+            value={rate}
           >
             <option value="" disabled>
               rates
@@ -140,6 +133,17 @@ const AddCartCard = ({ images, title, model }) => {
           </button>
         </div>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0  p-30 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <h3 className="text-lg font-semibold text-relaxBlack">
+              {modalMessage}
+            </h3>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
