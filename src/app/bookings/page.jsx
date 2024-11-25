@@ -31,10 +31,13 @@ const AddBooking = () => {
   const [lodging, setLodging] = useState("");
   const [transportation, setTransportation] = useState("");
 
-  const { setGhostTour, setVegasTour } = useCartStore((state) => ({
-    setGhostTour: state.setGhostTour,
-    setVegasTour: state.setVegasTour,
-  }));
+  const { setGhostTour, setVegasTour, submitToursForm } = useCartStore(
+    (state) => ({
+      setGhostTour: state.setGhostTour,
+      setVegasTour: state.setVegasTour,
+      submitToursForm: state.submitToursForm,
+    })
+  );
 
   const handleSubmit = () => {
     const bookings = {
@@ -43,6 +46,7 @@ const AddBooking = () => {
       date: selectDate,
     };
     setGhostTour(bookings);
+    submitToursForm(true);
   };
 
   const clearField = () => {
@@ -67,6 +71,7 @@ const AddBooking = () => {
     console.log("Bookings data:", bookings);
     setIsModalOpen(true);
     setVegasTour(bookings);
+    submitToursForm(true);
     setSuccess(true);
     setTimeout(() => {
       setSuccess(false);

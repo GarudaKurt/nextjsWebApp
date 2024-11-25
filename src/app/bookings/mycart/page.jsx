@@ -1,13 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaTrash, FaArrowLeft, FaPlus } from "react-icons/fa";
+import {
+  FaTrash,
+  FaArrowLeft,
+  FaPlus,
+  FaClock,
+  FaCheckCircle,
+} from "react-icons/fa";
 import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/app/zustand/zustand";
 
 const MyCart = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [cart, setCart] = useState([]); // State to track cart data
+  const [cartStatus, setCartStatus] = useState(false);
   const router = useRouter();
 
   const imagesLoad = [
@@ -23,11 +31,20 @@ const MyCart = () => {
   ];
 
   // Get cart data from store
-  const cart = useCartStore((state) => state.userData?.myCart || []); // Default to an empty array if undefined
-  const { updateCart, deleteCart } = useCartStore((state) => ({
+  const { updateCart, deleteCart, getForm } = useCartStore((state) => ({
     updateCart: state.updateCart,
     deleteCart: state.deleteCart,
+    getForm: state.getForm,
   }));
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      await getForm(); // Fetch the cart data
+      setCart(useCartStore.getState().userData?.myCart || []); // Update the local state with cart data
+      setCartStatus(useCartStore.getState().userData?.adminConfirmStatus);
+    };
+    fetchCartData();
+  }, [getForm]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -199,55 +216,67 @@ const MyCart = () => {
   };
 
   return (
-    <>
-      <div className="bg-white md:px-8 w-full">
-        <div className="flex items-center px-2 pt-2 justify-start">
-          <button
-            className="btn btn-square btn-ghost"
-            onClick={() => router.push("/bookings")}
-          >
-            <FaArrowLeft className="text-gray-500" />
-          </button>
-          <h1 className="text-lg md:text-xl font-bold text-gray-600">
-            Shopping Continue
-          </h1>
-        </div>
-        <div className="divider"></div>
-        <p className="text-xs px-5 md:text-sm text-gray-500 mb-3">
-          You have {cart.length} items in your cart
-        </p>
-        {isSmallScreen && (
-          <AddSteps alignment={false} hidden={true} cartPage={"step-success"} />
+    <div className="bg-white md:px-8 w-full">
+      <div className="flex items-center px-2 pt-2 justify-start">
+        <button
+          className="btn btn-square btn-ghost"
+          onClick={() => router.push("/bookings")}
+        >
+          <FaArrowLeft className="text-gray-500" />
+        </button>
+        <h1 className="text-lg md:text-xl font-bold text-gray-600">
+          Shopping Continue
+        </h1>
+      </div>
+      <div className="divider"></div>
+      <p className="text-xs px-5 md:text-sm text-gray-500 mb-3">
+        You have {cart.length} items in your cart
+      </p>
+      {isSmallScreen && (
+        <AddSteps alignment={false} hidden={true} cartPage={"step-success"} />
+      )}
+      <div className="flex flex-col md:flex-row md:space-x-4 items-start">
+        {!isSmallScreen && (
+          <AddSteps alignment={true} hidden={true} cartPage={"step-success"} />
         )}
-        <div className="flex flex-col md:flex-row md:space-x-4 items-start">
-          {!isSmallScreen && (
-            <AddSteps
-              alignment={true}
-              hidden={true}
-              cartPage={"step-success"}
-            />
-          )}
-          <div className="border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5">
-            <h2 className="text-sm md:text-xl mb-2 p-2 font-semibold text-gray-600">
-              Shopping Cart
-            </h2>
-            <div
-              className={`${cart.length > 2 ? "max-h-64 overflow-y-auto" : ""}`}
+        <div className="border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5">
+          <h2 className="text-sm md:text-xl mb-2 p-2 font-semibold text-gray-600">
+            Shopping Cart
+          </h2>
+          <div
+            className={`${cart.length > 2 ? "max-h-64 overflow-y-auto" : ""}`}
+          >
+            {displayCart()}
+          </div>
+          <div className="flex justify-start p-2">
+            <button
+              className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md"
+              onClick={handleCheckout}
             >
-              {displayCart()}
-            </div>
-            <div className="flex justify-start p-2">
-              <button
-                className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md"
-                onClick={handleCheckout}
-              >
-                Check out
-              </button>
-            </div>
+              Check out
+            </button>
           </div>
         </div>
+        {cart.length > 0 && (
+          <div className="flex items-center justify-start pt-4">
+            <h3 className="px-8 text-lg md:text-xl font-bold text-gray-500">
+              Status:
+            </h3>
+            {cartStatus ? (
+              <button className="btn btn-xs bg-pendingYellow hover:bg-yellow-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
+                <span>Pending Order</span>
+                <FaClock />
+              </button>
+            ) : (
+              <button className="btn btn-xs bg-successGreen hover:bg-green-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
+                <span>Approve! Order</span>
+                <FaCheckCircle />
+              </button>
+            )}
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

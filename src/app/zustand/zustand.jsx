@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
 // Define the initial state for userData
@@ -225,6 +225,8 @@ export const useCartStore = create(
               const userRef = doc(firestore, "users", user.uid);
               const rentalsRef = doc(userRef, "rentals", uuidv4());
 
+              let adminConfirmStatus = false;
+
               // Extract only the desired fields from userData
               const { myCart, rentalInfo, billingInfo, confirmation } =
                 get().userData;
@@ -235,6 +237,7 @@ export const useCartStore = create(
                 rentalInfo,
                 billingInfo,
                 confirmation,
+                adminConfirmStatus,
               };
 
               // Update Firestore with the submission data
@@ -253,6 +256,73 @@ export const useCartStore = create(
         }
       },
 
+      getForm: async () => {
+        try {
+          console.error("Fetching data...");
+          const user = auth.currentUser; // Ensure user is authenticated
+          if (!user) {
+            console.error(
+              "User not authenticated. Cannot fetch Firestore data."
+            );
+            return;
+          }
+          const rentalsCollectionRef = collection(
+            firestore,
+            "users",
+            user.uid,
+            "rentals"
+          );
+          const querySnapshot = await getDocs(rentalsCollectionRef);
+
+          const rentalData = [];
+          querySnapshot.forEach((doc) => {
+            rentalData.push({ id: doc.id, ...doc.data() });
+          });
+
+          if (rentalData.length > 0) {
+            console.error("Processing fetched data...");
+            rentalData.forEach((item) => {
+              // Check if adminConfirmStatus is false
+              if (item.rentalInformation?.adminConfirmStatus === false) {
+                // Update Zustand states with the respective data
+                useCartStore
+                  .getState()
+                  .updateUserData(
+                    "myCart",
+                    item.rentalInformation.myCart || []
+                  );
+                useCartStore
+                  .getState()
+                  .updateUserData(
+                    "billingInfo",
+                    item.rentalInformation.billingInfo || {}
+                  );
+                useCartStore
+                  .getState()
+                  .updateUserData(
+                    "confirmation",
+                    item.rentalInformation.confirmation || {}
+                  );
+                useCartStore
+                  .getState()
+                  .updateUserData(
+                    "rentalInfo",
+                    item.rentalInformation.rentalInfo || {}
+                  );
+              } else {
+                console.error(
+                  "Admin confirmation status is TRUE. Skipping assignment."
+                );
+              }
+            });
+          } else {
+            console.error("No rentals document found for the user.");
+          }
+        } catch (error) {
+          console.error("Error fetching data from Firestore:", error);
+        }
+      },
+
       submitToursForm: async (submit) => {
         set({ userData: { ...get().userData, submitTours: submit } });
 
@@ -263,15 +333,18 @@ export const useCartStore = create(
               const userRef = doc(firestore, "users", user.uid);
               const rentalsRef = doc(userRef, "tours", uuidv4());
 
-              // Extract only the desired fields from userData
+              // Extract `ghostTour` and `vegasTour` from userData
               const { ghostTour, vegasTour } = get().userData;
 
-              // Prepare the data to store as an array
-              const submissionData = {
-                ghostTour,
-                vegasTour,
-              };
-
+              // Create the submissionData object dynamically, excluding empty arrays
+              const submissionData = {};
+              if (ghostTour) {
+                console.log("DEUB PASS HERE");
+                submissionData.ghostTour = ghostTour;
+              }
+              if (vegasTour) {
+                submissionData.vegasTour = vegasTour;
+              }
               // Update Firestore with the submission data
               await setDoc(
                 rentalsRef,
@@ -288,6 +361,15 @@ export const useCartStore = create(
         }
       },
 
+      displayCarts: async () => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            myCart: getForm(),
+          },
+        }));
+      },
+
       // Similar functions for ghostTour and rentalInfo...
 
       // Retrieve specific parts of userData
@@ -297,6 +379,7 @@ export const useCartStore = create(
       getRentalInfo: () => get().userData.rentalInfo,
       getBillingInfo: () => get().userData.billingInfo,
       getConfirmation: () => get().userData.confirmation,
+      getAdminCormation: () => get().userData.adminConfirmStatus,
     }),
     {
       name: "user_data", // unique name for localStorage key

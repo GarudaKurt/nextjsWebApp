@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { useCartStore } from "@/app/zustand/zustand";
 
 const AddNavbar = () => {
@@ -77,28 +77,47 @@ const AddNavbar = () => {
           >
             Services
           </Link>
+          {isLoggedIn && (
+            <Link
+              href="/bookings/mycart"
+              className="block px-2 py-2 text-white hover:text-clearGreen flex justift-end items-center gap-2"
+            >
+              <FaShoppingCart />
+              Cart
+            </Link>
+          )}
           {isLoggedIn ? (
-            <span className="block px-2 py-2 text-white">
-              Hello, {userName}! |{" "}
-              <button className="hover:bg-relaxGreen rounded" onClick={logout}>
-                Logout
-              </button>
-            </span>
+            <div className="dropdown dropdown-hover dropdown-bottom md:dropdown-end">
+              <div
+                tabIndex={0}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <FaUserCircle className="text-white" />
+                <span className="text-white">Profile</span>
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow"
+              >
+                <li className="px-2 py-1 text-gray-800">
+                  Hello, {userName || "No Name"}!
+                </li>
+                <li>
+                  <button
+                    className="w-full text-left  px-2 py-1 rounded text-cancelRed"
+                    onClick={logout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
           ) : (
             <Link
               href="/login"
               className="block px-2 py-2 text-white hover:text-clearGreen"
             >
               Sign In
-            </Link>
-          )}
-          {isLoggedIn && (
-            <Link
-              href="#"
-              className="block px-2 py-2 text-white hover:text-clearGreen flex justift-end items-center gap-2"
-            >
-              <FaShoppingCart />
-              Cart
             </Link>
           )}
         </div>
