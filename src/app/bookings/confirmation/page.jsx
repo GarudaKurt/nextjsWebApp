@@ -34,6 +34,7 @@ const Verification = () => {
     const info = {
       agreementCare: handleCare,
       terms: termsAgree,
+      adminOrderStatus: false,
     };
     setConfirmation(info); // Call Zustand function to update rental info
     submitForm(true);

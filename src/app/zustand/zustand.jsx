@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 const initialUserData = {
   isSubmit: false,
   submitTours: false,
+  orderStatus: false,
   myCart: [],
   ghostTour: [],
   vegasTour: [],
@@ -42,13 +43,6 @@ export const useCartStore = create(
           console.log("User registered and data saved to Firestore.");
         } catch (error) {
           console.error("Registration error:", error);
-        }
-      },
-
-      isLoggedIn: async () => {
-        const user = auth.currentUser; // Ensure the current authenticated user is available
-        if (!user) {
-          console.error("User need to sigin first!");
         }
       },
 
@@ -115,6 +109,7 @@ export const useCartStore = create(
               authError: null, // Clear any previous error messages
             });
             alert("User logged out.");
+            set({ userName: null });
           })
           .catch((error) => {
             console.error("Logout error:", error);
@@ -231,9 +226,7 @@ export const useCartStore = create(
             if (user) {
               const userRef = doc(firestore, "users", user.uid);
               const rentalsRef = doc(userRef, "rentals", uuidv4());
-
-              let adminConfirmStatus = false;
-
+              const adminOrderStatus = false;
               // Extract only the desired fields from userData
               const { myCart, rentalInfo, billingInfo, confirmation } =
                 get().userData;
@@ -244,7 +237,7 @@ export const useCartStore = create(
                 rentalInfo,
                 billingInfo,
                 confirmation,
-                adminConfirmStatus,
+                adminOrderStatus,
               };
 
               // Update Firestore with the submission data
@@ -260,73 +253,6 @@ export const useCartStore = create(
           } catch (error) {
             console.error("Error updating Firestore:", error);
           }
-        }
-      },
-
-      getForm: async () => {
-        try {
-          console.error("Fetching data...");
-          const user = auth.currentUser; // Ensure user is authenticated
-          if (!user) {
-            console.error(
-              "User not authenticated. Cannot fetch Firestore data."
-            );
-            return;
-          }
-          const rentalsCollectionRef = collection(
-            firestore,
-            "users",
-            user.uid,
-            "rentals"
-          );
-          const querySnapshot = await getDocs(rentalsCollectionRef);
-
-          const rentalData = [];
-          querySnapshot.forEach((doc) => {
-            rentalData.push({ id: doc.id, ...doc.data() });
-          });
-
-          if (rentalData.length > 0) {
-            console.error("Processing fetched data...");
-            rentalData.forEach((item) => {
-              // Check if adminConfirmStatus is false
-              if (item.rentalInformation?.adminConfirmStatus === false) {
-                // Update Zustand states with the respective data
-                useCartStore
-                  .getState()
-                  .updateUserData(
-                    "myCart",
-                    item.rentalInformation.myCart || []
-                  );
-                useCartStore
-                  .getState()
-                  .updateUserData(
-                    "billingInfo",
-                    item.rentalInformation.billingInfo || {}
-                  );
-                useCartStore
-                  .getState()
-                  .updateUserData(
-                    "confirmation",
-                    item.rentalInformation.confirmation || {}
-                  );
-                useCartStore
-                  .getState()
-                  .updateUserData(
-                    "rentalInfo",
-                    item.rentalInformation.rentalInfo || {}
-                  );
-              } else {
-                console.error(
-                  "Admin confirmation status is TRUE. Skipping assignment."
-                );
-              }
-            });
-          } else {
-            console.error("No rentals document found for the user.");
-          }
-        } catch (error) {
-          console.error("Error fetching data from Firestore:", error);
         }
       },
 
@@ -377,6 +303,56 @@ export const useCartStore = create(
         }));
       },
 
+      // Update order status
+      updateOrderStatus: async (status) => {
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            orderStatus: status,
+          },
+        }));
+      },
+
+      // Fetch Firestore data and include orderStatus updates
+      getForm: async () => {
+        try {
+          const user = auth.currentUser;
+          if (!user) {
+            console.error(
+              "User not authenticated. Cannot fetch Firestore data."
+            );
+            return;
+          }
+
+          const rentalsCollectionRef = collection(
+            firestore,
+            "users",
+            user.uid,
+            "rentals"
+          );
+          const querySnapshot = await getDocs(rentalsCollectionRef);
+
+          const rentalData = [];
+          querySnapshot.forEach((doc) => {
+            rentalData.push({ id: doc.id, ...doc.data() });
+          });
+
+          rentalData.forEach((item) => {
+            if (item.rentalInformation) {
+              useCartStore
+                .getState()
+                .updateOrderStatus(item.rentalInformation.adminOrderStatus);
+              useCartStore
+                .getState()
+                .updateUserData("myCart", item.rentalInformation.myCart || []);
+              // Add other fields as needed
+            }
+          });
+        } catch (error) {
+          console.error("Error fetching Firestore data:", error);
+        }
+      },
+
       // Similar functions for ghostTour and rentalInfo...
 
       // Retrieve specific parts of userData
@@ -387,6 +363,8 @@ export const useCartStore = create(
       getBillingInfo: () => get().userData.billingInfo,
       getConfirmation: () => get().userData.confirmation,
       getAdminCormation: () => get().userData.adminConfirmStatus,
+      getOrderStatus: () => get().userData.orderStatus,
+      // Fetch order status
     }),
     {
       name: "user_data", // unique name for localStorage key

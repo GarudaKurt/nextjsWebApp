@@ -31,20 +31,25 @@ const MyCart = () => {
   ];
 
   // Get cart data from store
-  const { updateCart, deleteCart, getForm } = useCartStore((state) => ({
-    updateCart: state.updateCart,
-    deleteCart: state.deleteCart,
-    getForm: state.getForm,
-  }));
+  const { updateCart, deleteCart, getForm, getOrderStatus } = useCartStore(
+    (state) => ({
+      updateCart: state.updateCart,
+      deleteCart: state.deleteCart,
+      getForm: state.getForm,
+      getOrderStatus: state.getOrderStatus,
+    })
+  );
 
   useEffect(() => {
     const fetchCartData = async () => {
       await getForm(); // Fetch the cart data
       setCart(useCartStore.getState().userData?.myCart || []); // Update the local state with cart data
-      setCartStatus(useCartStore.getState().userData?.adminConfirmStatus);
+      let orderStatus = useCartStore.getState().userData?.orderStatus || false;
+      console.log("Status: ", orderStatus);
+      setCartStatus(orderStatus);
     };
     fetchCartData();
-  }, [getForm]);
+  }, [getForm, setCartStatus]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -263,14 +268,14 @@ const MyCart = () => {
               Status:
             </h3>
             {cartStatus ? (
-              <button className="btn btn-xs bg-pendingYellow hover:bg-yellow-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
-                <span>Pending Order</span>
-                <FaClock />
-              </button>
-            ) : (
               <button className="btn btn-xs bg-successGreen hover:bg-green-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
                 <span>Approve! Order</span>
                 <FaCheckCircle />
+              </button>
+            ) : (
+              <button className="btn btn-xs bg-pendingYellow hover:bg-yellow-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
+                <span>Pending Order</span>
+                <FaClock />
               </button>
             )}
           </div>
