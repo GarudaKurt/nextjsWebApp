@@ -12,11 +12,10 @@ import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/app/zustand/zustand";
 
-const MyCart = () => {
+const ShoppingCart = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [cart, setCart] = useState([]); // State to track cart data
   const [cartStatus, setCartStatus] = useState(false);
-  const [updateMessage, setUpdateMessage] = useState('')
   const router = useRouter();
 
   const imagesLoad = [
@@ -32,12 +31,12 @@ const MyCart = () => {
   ];
 
   // Get cart data from store
-  const { updateCart, deleteCart, getForm, updateMyCarts } = useCartStore(
+  const { updateCart, deleteCart, getForm, getOrderStatus } = useCartStore(
     (state) => ({
       updateCart: state.updateCart,
       deleteCart: state.deleteCart,
       getForm: state.getForm,
-      updateMyCarts: state.updateMyCarts
+      getOrderStatus: state.getOrderStatus,
     })
   );
 
@@ -81,72 +80,54 @@ const MyCart = () => {
   const handleRateChange = (e, index) => {
     const selectedRate = e.target.value;
     const updatedCart = [...cart];
-  
     updatedCart[index].rate = selectedRate;
-  
+
     const total = calculateTotal(
       updatedCart[index].qty,
       selectedRate,
       updatedCart[index].equipment_title
     );
-  
+
     updatedCart[index].total = total;
-  
-    updateCart(index, updatedCart[index]);
-    updateMyCarts();
-    setCart(updatedCart); // Ensure state is updated
+    updateCart(updatedCart[index]);
   };
-  
 
   const handleIncrement = (index) => {
     const updatedCart = [...cart];
-  
     updatedCart[index].qty += 1;
-  
+
     const total = calculateTotal(
       updatedCart[index].qty,
       updatedCart[index].rate,
       updatedCart[index].equipment_title
     );
-  
+
     updatedCart[index].total = total;
-  
-    updateCart(index, updatedCart[index]);
-    updateMyCarts();
-    setCart(updatedCart); // Ensure state is updated
-    setUpdateMessage(`You have updated the quantity to ${updatedCart[index].qty}`);
+    updateCart(updatedCart[index]);
   };
-  
 
   const handleDecrement = (index) => {
     const updatedCart = [...cart];
-  
+
     if (updatedCart[index].qty > 1) {
       updatedCart[index].qty -= 1;
-  
+
       const total = calculateTotal(
         updatedCart[index].qty,
         updatedCart[index].rate,
         updatedCart[index].equipment_title
       );
-  
+
       updatedCart[index].total = total;
-  
-      updateCart(index, updatedCart[index]);
-      updateMyCarts();
-      setCart(updatedCart); // Ensure state is updated
-      setUpdateMessage(`You have updated the quantity to ${updatedCart[index].qty}`);
+      updateCart(updatedCart[index]);
     } else {
-      // Remove item completely if quantity is 1
-      updatedCart.splice(index, 1);
-      updateCart(index, null); // Remove the item from the store
-      deleteCart(index); // Ensure deletion logic updates the cart in Firestore
-      updateMyCarts();
-      setCart(updatedCart); // Ensure state is updated
-      setUpdateMessage(`Item removed from the cart.`);
+      deleteCart(index);
     }
   };
-  
+
+  const handleCheckout = () => {
+    router.push("/bookings/billing");
+  };
 
   const displayCart = () => {
     if (cart.length === 0) {
@@ -256,12 +237,12 @@ const MyCart = () => {
       <p className="text-xs px-5 md:text-sm text-gray-500 mb-3">
         You have {cart.length} items in your cart
       </p>
-      {isSmallScreen && cart.length > 0 && (
-        <AddSteps alignment={false} hidden={true} cartPage={"step-success"} billPage={"step-success"} infoPage={"step-success"} confirmPage={"step-success"}/>
+      {isSmallScreen && (
+        <AddSteps alignment={false} hidden={true} cartPage={"step-success"} />
       )}
       <div className="flex flex-col md:flex-row md:space-x-4 items-start">
-        {!isSmallScreen && cart.length > 0 && (
-          <AddSteps alignment={true} hidden={true} cartPage={"step-success"} billPage={"step-success"} infoPage={"step-success"} confirmPage={"step-success"}/>
+        {!isSmallScreen && (
+          <AddSteps alignment={true} hidden={true} cartPage={"step-success"} />
         )}
         <div className="border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5">
           <h2 className="text-sm md:text-xl mb-2 p-2 font-semibold text-gray-600">
@@ -272,31 +253,18 @@ const MyCart = () => {
           >
             {displayCart()}
           </div>
-          <p className="text-xs px-5 md:text-sm text-gray-500 m-3">
-            {updateMessage}
-          </p>
-        </div>
-        {cart.length > 0 && (
-          <div className="flex items-center justify-start pt-4">
-            <h3 className="px-8 text-lg md:text-xl font-bold text-gray-500">
-              Status:
-            </h3>
-            {cartStatus ? (
-              <button className="btn btn-xs bg-successGreen hover:bg-green-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
-                <span>Approve! Order</span>
-                <FaCheckCircle />
-              </button>
-            ) : (
-              <button className="btn btn-xs bg-pendingYellow hover:bg-yellow-500 text-white text-center font-semibold rounded-full px-2 flex items-center ">
-                <span>Pending Order</span>
-                <FaClock />
-              </button>
-            )}
+          <div className="flex justify-start p-2">
+            <button
+              className="btn bg-successGreen hover:bg-clearGreen text-white text-md"
+              onClick={handleCheckout}
+            >
+              Check out
+            </button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
 };
 
-export default MyCart;
+export default ShoppingCart;

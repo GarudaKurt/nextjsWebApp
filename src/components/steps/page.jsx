@@ -29,7 +29,7 @@ const AddSteps = ({
     <ul className={isVertical}>
       {/* Cart */}
       <Link
-        href="/bookings/mycart"
+        href="/bookings/shopping-cart"
         className={`step ${cartPage} flex items-center space-x-2 group`}
       >
         <FaShoppingCart className="w-6 h-6 lg:w-8 lg:h-8 group-hover:bg-white p-1 rounded" />

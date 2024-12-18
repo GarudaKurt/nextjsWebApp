@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { firestore, auth } from "../firebaseConfig/config"; // Ensure auth is imported
+import { firestore, auth } from "../../components/cards/firebaseConfig/config"; // Ensure auth is imported
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, updateDoc, collection, deleteDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
 // Define the initial state for userData
@@ -140,13 +140,15 @@ export const useCartStore = create(
           const updatedCart = Array.isArray(state.userData.myCart)
             ? [...state.userData.myCart]
             : []; // Fallback to an empty array
-
-          if (updatedCart[index]) {
+      
+          if (index >= 0 && index < updatedCart.length) {
             updatedCart[index] = { ...updatedCart[index], ...updatedItem };
           }
+      
           return { userData: { ...state.userData, myCart: updatedCart } };
         });
       },
+      
 
       deleteCart: (index) => {
         set((state) => {
@@ -224,8 +226,7 @@ export const useCartStore = create(
           try {
             const user = auth.currentUser; // Ensure user is authenticated
             if (user) {
-              const userRef = doc(firestore, "users", user.uid);
-              const rentalsRef = doc(userRef, "rentals", uuidv4());
+              const userRef = doc(firestore, "users", user.uid, "rentals", uuidv4());
               const adminOrderStatus = false;
               // Extract only the desired fields from userData
               const { myCart, rentalInfo, billingInfo, confirmation } =
@@ -242,7 +243,7 @@ export const useCartStore = create(
 
               // Update Firestore with the submission data
               await setDoc(
-                rentalsRef,
+                userRef,
                 { rentalInformation: submissionData },
                 { merge: true }
               );
@@ -353,6 +354,36 @@ export const useCartStore = create(
         }
       },
 
+      updateMyCarts: async () => {
+        try {
+          const user = auth.currentUser;
+          if (!user) {
+            console.error("User not authenticated. Cannot update Firestore data.");
+            return;
+          }
+      
+          const rentalsCollectionRef = collection(firestore, "users", user.uid, "rentals");
+          const querySnapshot = await getDocs(rentalsCollectionRef);
+      
+          const cartData = useCartStore.getState().userData?.myCart || [];
+      
+          // Assuming you want to update all rental documents with the latest cart data
+          for (const docSnapshot of querySnapshot.docs) {
+            const rentalDocRef = doc(firestore, "users", user.uid, "rentals", docSnapshot.id);
+            if(cartData.length === 0) {
+              await deleteDoc(rentalDocRef);
+            }
+            await updateDoc(rentalDocRef, {
+              "rentalInformation.myCart": cartData,
+            });
+          }
+      
+          console.log("Firestore myCart data updated successfully.");
+        } catch (error) {
+          console.error("Error updating Firestore data:", error);
+        }
+      },
+      
       // Similar functions for ghostTour and rentalInfo...
 
       // Retrieve specific parts of userData

@@ -1,11 +1,14 @@
 "use client";
 import { useCartStore } from "@/app/zustand/zustand";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+
+  const router = useRouter()
 
   const { register } = useCartStore((state) => ({
     register: state.register,
@@ -25,6 +28,7 @@ const Register = () => {
       return;
     }
     await register(email, pass, name);
+    router.push("/")
   };
 
   return (
