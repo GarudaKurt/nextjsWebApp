@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useCartStore } from "@/app/zustand/zustand";
+import {
+  FaInfoCircle
+} from "react-icons/fa";
 
 const AddCartCard = ({ images, title, model }) => {
   const [priceRates, setPriceRates] = useState(0);
@@ -15,7 +18,7 @@ const AddCartCard = ({ images, title, model }) => {
   const handleAddToCart = () => {
     if (!isLoggedIn) {
       // If user is not logged in, show a login prompt
-      setModalMessage("Please sign in to add items to your cart!");
+      setModalMessage("Fail to add the cart please Signin.");
       setShowModal(true);
       setTimeout(() => {
         setShowModal(false);
@@ -136,13 +139,14 @@ const AddCartCard = ({ images, title, model }) => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0  p-30 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <h3 className="text-lg font-semibold text-relaxBlack">
+        <div className="fixed inset-0 p-30 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center">
+            <FaInfoCircle className="text-4xl text-blue-500 mb-2" />
+            <p className="text-lg font-semibold text-black text-center">
               {modalMessage}
-            </h3>
+            </p>
           </div>
-        </div>
+      </div>
       )}
     </div>
   );

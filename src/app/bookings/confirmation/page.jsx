@@ -38,6 +38,9 @@ const Verification = () => {
     };
     setConfirmation(info); // Call Zustand function to update rental info
     submitForm(true);
+    setTimeout(() => {
+      router.push("/")
+    },3000)
   };
 
   return (

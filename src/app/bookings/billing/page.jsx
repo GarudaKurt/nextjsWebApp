@@ -103,7 +103,7 @@ const Billings = () => {
             </label>
             <input
               type="text"
-              placeholder="Address"
+              placeholder="Street Address"
               className="input input-bordered w-full"
               required
               value={address}
