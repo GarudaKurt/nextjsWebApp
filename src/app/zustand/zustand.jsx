@@ -383,6 +383,40 @@ export const useCartStore = create(
           console.error("Error updating Firestore data:", error);
         }
       },
+
+      cancelOrder: async () => {
+        try {
+          const user = auth.currentUser;
+          if (!user) {
+            console.error("User not authenticated. Cannot update Firestore data.");
+            return;
+          }
+      
+          const rentalsCollectionRef = collection(firestore, "users", user.uid, "rentals");
+          const querySnapshot = await getDocs(rentalsCollectionRef);
+      
+          // Delete all rental documents in Firestore
+          const deletePromises = querySnapshot.docs.map((docSnapshot) => {
+            const rentalDocRef = doc(firestore, "users", user.uid, "rentals", docSnapshot.id);
+            return deleteDoc(rentalDocRef);
+          });
+
+          await Promise.all(deletePromises);
+      
+          // Clear myCart in local state using zustand
+          useCartStore.setState((state) => ({
+            userData: {
+              ...state.userData,
+              myCart: [], // Clear the cart
+            },
+          }));
+      
+          console.log("Firestore myCart data deleted and state cleared successfully.");
+        } catch (error) {
+          console.error("Error deleting Firestore data or clearing state:", error);
+        }
+      },      
+
       
       // Similar functions for ghostTour and rentalInfo...
 

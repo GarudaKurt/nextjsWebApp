@@ -17,6 +17,9 @@ const MyCart = () => {
   const [cart, setCart] = useState([]); // State to track cart data
   const [cartStatus, setCartStatus] = useState(false);
   const [updateMessage, setUpdateMessage] = useState('')
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  
   const router = useRouter();
 
   const imagesLoad = [
@@ -32,14 +35,32 @@ const MyCart = () => {
   ];
 
   // Get cart data from store
-  const { updateCart, deleteCart, getForm, updateMyCarts } = useCartStore(
+  const { updateCart, deleteCart, getForm, updateMyCarts, cancelOrder } = useCartStore(
     (state) => ({
       updateCart: state.updateCart,
       deleteCart: state.deleteCart,
       getForm: state.getForm,
-      updateMyCarts: state.updateMyCarts
+      updateMyCarts: state.updateMyCarts,
+      cancelOrder: state.cancelOrder
     })
   );
+
+  const carts = useCartStore((state) => state.userData?.myCart || []);
+    useEffect(() => {
+      setCart(carts); // Update local state when Zustand's state changes
+  }, [carts]);
+
+  const handleCancel = () => {
+    setShowModal(true);
+    setModalMessage("Are you sure you want to cancel your order?");
+  };
+
+  const confirmCancel = async () => {
+    await cancelOrder();
+    setShowModal(false);
+  };
+
+  
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -51,6 +72,7 @@ const MyCart = () => {
     };
     fetchCartData();
   }, [getForm, setCartStatus]);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -272,10 +294,32 @@ const MyCart = () => {
           >
             {displayCart()}
           </div>
-          <p className="text-xs px-5 md:text-sm text-gray-500 m-3">
-            {updateMessage}
-          </p>
+          <div className="flex justify-start p-2">
+            <button
+              className="btn bg-offWhite hover:bg-white text-relaxBlack text-md"
+              onClick={()=>{handleCancel()}}
+            >
+              Cancel order
+            </button>
+          </div>
+          <div className={`modal ${showModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <p className="text-center">{modalMessage}</p>
+            <div className="modal-action flex justify-center">
+              <button className="btn text-white bg-cancelRed hover:bg-cancelRed mx-2" onClick={confirmCancel}>
+                Yes
+              </button>
+              <button className="btn bg-offWhite mx-2" onClick={() => setShowModal(false)}>
+                No
+              </button>
+            </div>
+          </div>
         </div>
+        <p className="text-xs px-5 md:text-sm text-gray-500 m-3">
+          {updateMessage}
+        </p>
+        </div>
+        
         {cart.length > 0 && (
           <div className="flex items-center justify-start pt-4">
             <h3 className="px-8 text-lg md:text-xl font-bold text-gray-500">
