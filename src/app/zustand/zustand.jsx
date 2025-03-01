@@ -125,15 +125,27 @@ export const useCartStore = create(
       },
 
       add_to_cart: (addCart) => {
-        set((state) => ({
-          userData: {
-            ...state.userData,
-            myCart: Array.isArray(state.userData.myCart)
-              ? [...state.userData.myCart, addCart]
-              : [addCart], // If myCart isn't an array, reset it with the new item
-          },
-        }));
+        set((state) => {
+          // Check if the orderStatus is false and `myCart` is an array
+          if (state.userData?.confirmation?.adminConfirmStatus === false && Array.isArray(state.userData.myCart?.adminConfirmStatus)) {
+            return {
+              userData: {
+                ...state.userData,
+                myCart: [...state.userData.myCart, addCart], // Append new items to the existing cart
+              },
+            };
+          }
+
+          // Fallback: Create a new cart if `orderStatus` is not false or `myCart` is invalid
+          return {
+            userData: {
+              ...state.userData,
+              myCart: [addCart], // Initialize a new cart with the new item
+            },
+          };
+        });
       },
+      
 
       updateCart: (index, updatedItem) => {
         set((state) => {
@@ -221,41 +233,66 @@ export const useCartStore = create(
 
       submitForm: async (submit) => {
         set({ userData: { ...get().userData, isSubmit: submit } });
-
+      
         if (submit) {
           try {
             const user = auth.currentUser; // Ensure user is authenticated
-            if (user) {
+            if (!user) {
+              console.error("User not authenticated. Cannot update Firestore.");
+              return;
+            }
+      
+            const rentalsCollectionRef = collection(firestore, "users", user.uid, "rentals");
+            const querySnapshot = await getDocs(rentalsCollectionRef);
+      
+            let existingDoc = null;
+      
+            // Check for a document with adminOrderStatus: false
+            querySnapshot.forEach((doc) => {
+              if (doc.data().rentalInformation?.adminOrderStatus === false) {
+                existingDoc = doc; // Found the document to update
+              }
+            });
+      
+            const { myCart, rentalInfo, billingInfo, confirmation } = get().userData;
+      
+            if (existingDoc) {
+              // Update the existing document
+              const rentalDocRef = doc(firestore, "users", user.uid, "rentals", existingDoc.id);
+      
+              // Merge existing cart with new items
+              const updatedCart = [
+                ...existingDoc.data().rentalInformation.myCart,
+                ...myCart,
+              ];
+      
+              await updateDoc(rentalDocRef, {
+                "rentalInformation.myCart": updatedCart,
+                "rentalInformation.rentalInfo": rentalInfo,
+                "rentalInformation.billingInfo": billingInfo,
+                "rentalInformation.confirmation": confirmation,
+              });
+              console.log("Existing Firestore document updated successfully.");
+            } else {
+              // Create a new document if no matching document exists
               const userRef = doc(firestore, "users", user.uid, "rentals", uuidv4());
-              const adminOrderStatus = false;
-              // Extract only the desired fields from userData
-              const { myCart, rentalInfo, billingInfo, confirmation } =
-                get().userData;
-
-              // Prepare the data to store as an array
+      
               const submissionData = {
                 myCart,
                 rentalInfo,
                 billingInfo,
                 confirmation,
-                adminOrderStatus,
               };
-
-              // Update Firestore with the submission data
-              await setDoc(
-                userRef,
-                { rentalInformation: submissionData },
-                { merge: true }
-              );
-              console.log("Selected data successfully synced to Firestore.");
-            } else {
-              console.error("User not authenticated. Cannot update Firestore.");
+      
+              await setDoc(userRef, { rentalInformation: submissionData }, { merge: true });
+              console.log("New Firestore document created successfully.");
             }
           } catch (error) {
             console.error("Error updating Firestore:", error);
           }
         }
       },
+           
 
       submitToursForm: async (submit) => {
         set({ userData: { ...get().userData, submitTours: submit } });
@@ -313,46 +350,29 @@ export const useCartStore = create(
           },
         }));
       },
-
-      // Fetch Firestore data and include orderStatus updates
       getForm: async () => {
         try {
           const user = auth.currentUser;
           if (!user) {
-            console.error(
-              "User not authenticated. Cannot fetch Firestore data."
-            );
+            console.error("User not authenticated. Cannot fetch Firestore data.");
             return;
           }
-
-          const rentalsCollectionRef = collection(
-            firestore,
-            "users",
-            user.uid,
-            "rentals"
-          );
+      
+          const rentalsCollectionRef = collection(firestore, "users", user.uid, "rentals");
           const querySnapshot = await getDocs(rentalsCollectionRef);
-
-          const rentalData = [];
+      
           querySnapshot.forEach((doc) => {
-            rentalData.push({ id: doc.id, ...doc.data() });
-          });
-
-          rentalData.forEach((item) => {
-            if (item.rentalInformation) {
-              useCartStore
-                .getState()
-                .updateOrderStatus(item.rentalInformation.adminOrderStatus);
-              useCartStore
-                .getState()
-                .updateUserData("myCart", item.rentalInformation.myCart || []);
-              // Add other fields as needed
+            const rentalInfo = doc.data().rentalInformation;
+            if (rentalInfo) {
+              useCartStore.getState().updateOrderStatus(rentalInfo.adminOrderStatus);
+              useCartStore.getState().updateUserData("myCart", rentalInfo.myCart || []);
+              // Update other fields as needed
             }
           });
         } catch (error) {
           console.error("Error fetching Firestore data:", error);
         }
-      },
+      },      
 
       updateMyCarts: async () => {
         try {

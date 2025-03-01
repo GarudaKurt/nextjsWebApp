@@ -2,26 +2,32 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
-import { useCartStore } from "@/app/zustand/zustand";
 
 const AddNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const { isLoggedIn, userName, getUserName, logout } = useCartStore(
-    (state) => ({
-      isLoggedIn: state.isLoggedIn,
-      userName: state.userName,
-      getUserName: state.getUserName,
-      logout: state.logout,
-    })
-  );
+  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
-    if (isLoggedIn && !userName) {
-      getUserName(); // Fetch user's name if logged in and userName not yet set
-    }
-  }, [isLoggedIn, userName, getUserName]);
+    const updateTime = () => {
+      const now = new Date();
+      const formattedTime = now.toLocaleString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      });
+      setCurrentTime(formattedTime);
+    };
+
+    updateTime(); // Initial call
+    const interval = setInterval(updateTime, 1000); // Update every second
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   return (
     <nav className="fixed left-0 top-0 w-full pb-6 pt-8 z-10 bg-offGreen">
@@ -29,7 +35,7 @@ const AddNavbar = () => {
         {!isOpen && (
           <div className="flex items-center">
             <h2 className="font-yesteryear text-xl text-white">
-              Viva Local Vegas
+              University of Cebu
             </h2>
           </div>
         )}
@@ -59,67 +65,9 @@ const AddNavbar = () => {
             isOpen ? "block" : "hidden"
           } w-full md:flex md:items-center md:w-auto md:space-x-8`}
         >
-          <Link
-            href="/"
-            className="block px-2 py-2 text-white hover:text-clearGreen"
-          >
-            Home
+          <Link href="/services" className="block px-2 py-2 text-white hover:text-clearGreen">
+            {currentTime} {/* Real-time date and time update */}
           </Link>
-          <Link
-            href="/gallery"
-            className="block px-2 py-2 text-white hover:text-clearGreen"
-          >
-            Gallery
-          </Link>
-          <Link
-            href="/services"
-            className="block px-2 py-2 text-white hover:text-clearGreen"
-          >
-            Services
-          </Link>
-          {isLoggedIn && (
-            <Link
-              href="/bookings/mycart"
-              className="block px-2 py-2 text-white hover:text-clearGreen flex justift-end items-center gap-2"
-            >
-              <FaShoppingCart />
-              Cart
-            </Link>
-          )}
-          {isLoggedIn ? (
-            <div className="dropdown dropdown-hover dropdown-bottom md:dropdown-end">
-              <div
-                tabIndex={0}
-                className="flex items-center space-x-2 cursor-pointer"
-              >
-                <FaUserCircle className="text-white" />
-                <span className="text-white">Profile</span>
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow"
-              >
-                <li className="px-2 py-1 text-gray-800">
-                  Hello, {userName || "No Name"}!
-                </li>
-                <li>
-                  <button
-                    className="w-full text-left  px-2 py-1 rounded text-cancelRed"
-                    onClick={logout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              className="block px-2 py-2 text-white hover:text-clearGreen"
-            >
-              Sign In
-            </Link>
-          )}
         </div>
       </div>
     </nav>

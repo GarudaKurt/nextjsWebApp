@@ -15,7 +15,7 @@ const AddFooter = () => {
           <FaEnvelope className="mb-2 text-white" />
           <div className="text-center">
             <div>Email Support</div>
-            <div className="text-gray-400">vivalocalvegas@gmail.com</div>
+            <div className="text-gray-400">universityofcebu@gmail.com</div>
           </div>
         </div>
         <div className="flex flex-col items-center mb-4 md:mb-0">
@@ -45,7 +45,7 @@ const AddFooter = () => {
         </a>
       </div>
       <div className="text-center text-gray-400 mt-4">
-        Viva Local Vegas! Is a subsidiary of Sin City Spooks, LLC.
+      University of Cebu - SHS Department.
         <br />© 2024, All Rights Reserved
       </div>
     </footer>
