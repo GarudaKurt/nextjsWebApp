@@ -28,7 +28,7 @@ const Register = () => {
       return;
     }
     await register(email, pass, name);
-    router.push("/")
+    router.push("/admin-page")
   };
 
   return (

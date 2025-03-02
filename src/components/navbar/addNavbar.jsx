@@ -2,10 +2,26 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useCartStore } from "@/app/zustand/zustand";
 
 const AddNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
+
+  const { isLoggedIn, userName, getUserName, logout } = useCartStore(
+    (state) => ({
+      isLoggedIn: state.isLoggedIn,
+      userName: state.userName,
+      getUserName: state.getUserName,
+      logout: state.logout,
+    })
+  );
+
+  useEffect(() => {
+    if (isLoggedIn && !userName) {
+      getUserName(); // Fetch user's name if logged in and userName not yet set
+    }
+  }, [isLoggedIn, userName, getUserName]);
 
   useEffect(() => {
     const updateTime = () => {
@@ -69,7 +85,42 @@ const AddNavbar = () => {
             {currentTime} {/* Real-time date and time update */}
           </Link>
         </div>
+        {isLoggedIn ? (
+            <div className="dropdown dropdown-hover dropdown-bottom md:dropdown-end">
+              <div
+                tabIndex={0}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <FaUserCircle className="text-white" />
+                <span className="text-white">Profile</span>
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow"
+              >
+                <li className="px-2 py-1 text-gray-800">
+                  Hello, {userName || "No Name"}!
+                </li>
+                <li>
+                  <button
+                    className="w-full text-left  px-2 py-1 rounded text-cancelRed"
+                    onClick={logout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <Link
+              href="/"
+              className="block px-2 py-2 text-white hover:text-clearGreen"
+            >
+              Logout
+            </Link>
+          )}
       </div>
+
     </nav>
   );
 };
