@@ -47,6 +47,8 @@ module.exports = {
         offBlack: "#1D1D1F",
         pendingYellow: "#DCB900",
         successGreen: "#0F7B13",
+        relaxBlue: "#292ABA",
+        relaxBrown: "#F3D2AC",
         cancelRed: "#CA0404",
       },
       steps: {

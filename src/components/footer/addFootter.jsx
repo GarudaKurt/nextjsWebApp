@@ -9,7 +9,7 @@ import {
 
 const AddFooter = () => {
   return (
-    <footer className="text-white bg-relaxBlack pt-8 pb-4 ">
+    <footer className="text-white bg-black pt-8 pb-4 ">
       <div className="container mx-auto px-4 md:flex md:justify-between">
         <div className="flex flex-col items-center mb-4 md:mb-0">
           <FaEnvelope className="mb-2 text-white" />

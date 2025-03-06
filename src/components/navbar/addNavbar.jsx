@@ -46,12 +46,12 @@ const AddNavbar = () => {
   }, []);
 
   return (
-    <nav className="fixed left-0 top-0 w-full pb-6 pt-8 z-10 bg-offGreen">
+    <nav className="fixed left-0 top-0 w-full pb-6 pt-8 z-10 bg-black">
       <div className="container mx-auto flex items-center justify-between px-4">
         {!isOpen && (
           <div className="flex items-center">
             <h2 className="font-yesteryear text-xl text-white">
-              University of Cebu
+             Hello, have a nice day!
             </h2>
           </div>
         )}
@@ -81,44 +81,10 @@ const AddNavbar = () => {
             isOpen ? "block" : "hidden"
           } w-full md:flex md:items-center md:w-auto md:space-x-8`}
         >
-          <Link href="/services" className="block px-2 py-2 text-white hover:text-clearGreen">
-            {currentTime} {/* Real-time date and time update */}
-          </Link>
+          <h2 className="text-2xl font-yesteryear block px-2 py-2 text-white hover:text-clearGreen">
+          {currentTime}
+          </h2>
         </div>
-        {isLoggedIn ? (
-            <div className="dropdown dropdown-hover dropdown-bottom md:dropdown-end">
-              <div
-                tabIndex={0}
-                className="flex items-center space-x-2 cursor-pointer"
-              >
-                <FaUserCircle className="text-white" />
-                <span className="text-white">Profile</span>
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow"
-              >
-                <li className="px-2 py-1 text-gray-800">
-                  Hello, {userName || "No Name"}!
-                </li>
-                <li>
-                  <button
-                    className="w-full text-left  px-2 py-1 rounded text-cancelRed"
-                    onClick={logout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
-          ) : (
-            <Link
-              href="/"
-              className="block px-2 py-2 text-white hover:text-clearGreen"
-            >
-              Logout
-            </Link>
-          )}
       </div>
 
     </nav>

@@ -11,230 +11,103 @@ import { ref, onValue } from "firebase/database";
 
 const Home = () => {
   const [currentImage, setCurrentImage] = useState(0);
-  const [tab_1, setTab_1] = useState("")
-  const [tab_2, setTab_2] = useState("")
-  const [tab_3, setTab_3] = useState("")
+  const [title, setTitle] = useState("Your Journey Starts Here!");
+  const [subTitle, setSubTitle] = useState("Unlock New Possibilities");
+  const [description, setDescription] = useState("Every great adventure begins with a single step. Take yours today!");
+  const [subDescription, setSubDescription] = useState("Stay inspired, stay motivated, and keep moving forward.");
+  const [btnTitle, setBtnTitle] = useState("Explore Now");
+  const [btnShow, setBtnShow] = useState(false);
 
-  const [selectedTab, setSelectedTab] = useState("");
-  const [tabs_description_1, settabs_description_1] = useState("")
-  const [tabs_description_2, settabs_description_2] = useState("")
-  const [tabs_description_3, settabs_description_3] = useState("")
-  const [title, setTitle] = useState("")
-  const [subTitle, setSubTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [subDescription, setSubDescription] = useState("")
-  const [btnTitle, setBtnTitle] = useState("")
-  const [btnShow, setBtnShow] = useState(false)
+  const router = useRouter();
 
-  const routes = useRouter();
+  // Array of background images
+  const backgroundDisplay = [
+    "/images/landing-page/bg_1.jpg",
+    "/images/landing-page/bg_2.jpg",
+    "/images/landing-page/bg_3.jpg",
+    "/images/landing-page/bg_4.jpg",
+    "/images/landing-page/bg_5.jpg",
+    "/images/landing-page/bg_6.jpg",
+    "/images/landing-page/bg_7.jpg",
+  ];
 
+  // Auto-change image every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % backgroundDisplay.length);
+    }, 5000);
 
-  
-  const formatDescription = (text, limit) => {
-    const words = text.split(" ");
-    let line = "";
-    let formattedText = [];
-  
-    words.forEach((word) => {
-      if ((line + word).length > limit) {
-        formattedText.push(line);
-        line = word;
-      } else {
-        line += (line ? " " : "") + word;
-      }
-    });
-  
-    if (line) formattedText.push(line);
-  
-    return formattedText.map((line, index) => (
-      <span key={index}>
-        {line}
-        <br />
-      </span>
-    ));
-  };
-
-  const formatDescription_Tabs = (text, limit) => {
-    const words = text.split(" ");
-    let line = "";
-    let formattedText = [];
-  
-    words.forEach((word) => {
-      if ((line + word).length > limit) {
-        formattedText.push(line);
-        line = word;
-      } else {
-        line += (line ? " " : "") + word;
-      }
-    });
-  
-    if (line) formattedText.push(line);
-  
-    return formattedText.map((line, index) => (
-      <span key={index}>
-        {line}
-        <br />
-        <br />
-      </span>
-    ));
-  };
-  
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const dataRef = ref(database, "monitoring");
 
-    // Fetch data
-    const unsubscribe = onValue(dataRef, async (snapshot) => {
+    // Fetch data from Firebase
+    const unsubscribe = onValue(dataRef, (snapshot) => {
       const fetchedData = snapshot.val();
       if (fetchedData) {
-        setTitle(fetchedData.title || "N/A");
-        setSubTitle(fetchedData.subTitle || "N/A")
-        setDescription(fetchedData.description);
-        setSubDescription(fetchedData.subDescription);
-        setBtnTitle(fetchedData.btnTitle || "N/A");
+        setTitle(fetchedData.title || "Your Journey Starts Here!");
+        setSubTitle(fetchedData.subTitle || "Unlock New Possibilities");
+        setDescription(fetchedData.description || "Every great adventure begins with a single step. Take yours today!");
+        setSubDescription(fetchedData.subDescription || "Stay inspired, stay motivated, and keep moving forward.");
+        setBtnTitle(fetchedData.btnTitle || "Explore Now");
         setBtnShow(fetchedData.addButton || false);
-  
-        setTab_1(fetchedData.tabs_1_title || "N/A")
-        setTab_2(fetchedData.tabs_2_title || "N/A")
-        setTab_3(fetchedData.tabs_3_title || "N/A")
-        setSelectedTab(fetchedData.tabs_1_title)
-        settabs_description_1(fetchedData.tabs_1_des || "N/A")
-        settabs_description_2(fetchedData.tabs_2_des || "N/A")
-        settabs_description_3(fetchedData.tabs_3_des || "N/A")
       }
     });
 
     return () => unsubscribe();
-  }, []); 
-
-  const tabs = [tab_1, tab_2, tab_3];
-  const renderTabContent = () => {
-    switch (selectedTab) {
-      case tab_1:
-        return (
-          <>
-            <form className="card bg-white shadow-md rounded-lg p-8 mb-1 mx-auto max-w-4xl">
-              <p className="text-base text-black leading-relaxed">
-              {formatDescription_Tabs(tabs_description_1, 52)}
-              </p>
-              <AddButton
-                align={"center"}
-                events={() => alert("Button Clicked!")}
-              >
-                Book Now
-              </AddButton>
-            </form>
-          </>
-        );
-      case tab_2:
-        return (
-          <>
-            <form className="card bg-white shadow-md rounded-lg p-8 mb-1 mx-auto max-w-4xl">
-              <p className="text-base text-black leading-relaxed">
-              {formatDescription_Tabs(tabs_description_2, 52)}
-              </p>
-              <AddButton
-                align={"center"}
-                events={() => alert("Button Clicked!")}
-              >
-                Book Now
-              </AddButton>
-            </form>
-          </>
-        );
-      case tab_3:
-        return (
-          <>
-            <form className="card bg-white shadow-md rounded-lg p-8 mb-4 mx-auto max-w-4xl">
-              <p className="text-base text-black leading-relaxed">
-              {formatDescription_Tabs(tabs_description_3, 52)}
-              </p>
-              <AddButton
-                align={"center"}
-                events={() => alert("Button Clicked!")}
-              >
-                Book Now
-              </AddButton>
-            </form>
-          </>
-        );
-      default:
-        return null;
-    }
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSelectedTab((prevTab) => {
-        const currentIndex = tabs.indexOf(prevTab);
-        const nextIndex = (currentIndex + 1) % tabs.length;
-        return tabs[nextIndex];
-      });
-    }, 10000); // Auto switch tabs every 10 seconds
-  
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, [tabs]);
-  
+  }, []);
 
   return (
-    <div className=" text-white min-h-screen bg-white ">
+    <div className="text-white min-h-screen bg-black">
       <Layout>
         <div className="container mx-auto text-white mt-20 flex flex-col md:flex-row items-center">
-          <div className="ml-5 md:ml-20 ">
-            <h1 className="text-5xl font-sans font-bold leading-tight tracking-wide text-clearGreen">
-              {title} <br /> {/**I want to append my title here */}
-              {subTitle} {/**I want to append my subtitle here */}
-              <br />
-            </h1>
-            <p className="text-md font-sans text-xl mt-2 mb-2 font-semibold leading-tight tracking-wide text-gray-700">
-            {formatDescription(description, 50)}
-          </p>
+          <div className="ml-5 md:ml-20">
+            <Image
+              className="w-32 md:w-48 lg:w-64 h-auto bg-fixed rounded relative"
+              src="/images/landing-page/logo.png"
+              width={200}
+              height={200}
+              alt="logo"
+            />
+            <h1 className="text-5xl font-sans font-bold leading-tight tracking-wide text-relaxBlue">{title}</h1>
+            <h2 className="text-3xl font-sans font-bold leading-tight tracking-wide text-relaxBrown">{subTitle}</h2>
+            <p className="text-md font-sans text-xl mt-2 mb-2 font-semibold leading-tight tracking-wide text-white">
+              {description}
+            </p>
+            <p className="text-md font-sans text-xl mt-2 mb-2 font-semibold leading-tight tracking-wide text-white">
+              {subDescription}
+            </p>
 
-            
             {btnShow && (
-              <AddButton
-                bcolor={"bg-clearGreen"}
-                events={() => routes.push("/bookings")}
-              >
-                {btnTitle} {/* Dynamically set button title */}
+              <AddButton bcolor={"bg-clearGreen"} events={() => router.push("/bookings")}>
+                {btnTitle}
               </AddButton>
             )}
           </div>
-          <div className="mt-8 ml-auto mr-auto md:mr-40 relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
-            <div className="relative">
-              <Image
-                className="bg-fixed  rounded relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src={"/images/landing-page/bg.jpg"}
-                layout="responsive"
-                width={350}
-                height={350}
-                alt={"profile"}
-              />
-            </div>
-          </div>
-        </div>
 
-        <div className="bg-relaxGreen">
-          <div className="container mx-auto mt-8 text-lg flex justify-center">
-            <div className="tabs tabs-boxed bg-white rounded-lg shadow-md">
-              {tabs.map((tab, index) => (
-                <button
-                  key={index}
-                  className={`tab ${
-                    selectedTab === tab
-                      ? "tab-active text-blue-400"
-                      : "text-gray-400"
-                  }`}
-                  onClick={() => setSelectedTab(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
+          <div className="mt-8 ml-auto mr-auto md:mr-40 relative w-[500px] h-[500px]">
+            <div className="relative w-full h-full">
+              <div className="carousel w-full h-full relative">
+                {backgroundDisplay.map((img, index) => (
+                  <div
+                    key={index}
+                    className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                      index === currentImage ? "opacity-100 z-10" : "opacity-0"
+                    }`}
+                  >
+                    <Image
+                      className="rounded w-full h-full object-cover"
+                      src={img}
+                      width={500} 
+                      height={500} 
+                      alt={`Slide ${index + 1}`}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-
-          <div className="w-full px-4  p-2 text-center">
-            {renderTabContent()}
           </div>
         </div>
       </Layout>
