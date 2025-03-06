@@ -11,16 +11,16 @@ const Admin = () => {
   const router = useRouter();
 
   // Updated state names based on fetchedData
-  const [tabs_1_title, setTab_1] = useState("");
-  const [tabs_2_title, setTab_2] = useState("");
-  const [tabs_3_title, setTab_3] = useState("");
-  const [tabs_1_des, settabs_description_1] = useState("");
-  const [tabs_2_des, settabs_description_2] = useState("");
-  const [tabs_3_des, settabs_description_3] = useState("");
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
   const [description, setDescription] = useState("");
   const [subDescription, setSubDescription] = useState("");
+  const [subDescription1, setSubDescription_1] = useState("");
+  const [subDescription2, setSubDescription_2] = useState("");
+  const [subDescription3, setSubDescription_3] = useState("");
+  const [subDescription4, setSubDescription_4] = useState("");
+  const [subDescription5, setSubDescription_5] = useState("");
+
   const [btnTitle, setBtnTitle] = useState("");
   const [addButton, setBtnShow] = useState(false);
 
@@ -34,32 +34,30 @@ const Admin = () => {
       subTitle,
       description,
       subDescription,
-      tabs_1_title,
-      tabs_2_title,
-      tabs_3_title,
-      tabs_1_des,
-      tabs_2_des,
-      tabs_3_des,
+      subDescription1,
+      subDescription2,
+      subDescription3,
+      subDescription4,
+      subDescription5,
       btnTitle,
       addButton,
     };
 
     set(monitoringRef, formData)
       .then(() => {
-        console.log("Data saved successfully");
+        alert("Data saved successfully");
         setTitle("");
         setSubTitle("");
         setDescription("");
         setSubDescription("");
-        setTab_1("");
-        setTab_2("");
-        setTab_3("");
-        settabs_description_1("");
-        settabs_description_2("");
-        settabs_description_3("");
+        setSubDescription_1("");
+        setSubDescription_2("");
+        setSubDescription_3("");
+        setSubDescription_4("");
+        setSubDescription_5("");
         setBtnTitle("");
         setBtnShow(false);
-        router.push("/landing-page");
+        
       })
       .catch((error) => console.error("Error saving data:", error));
   };
@@ -67,9 +65,9 @@ const Admin = () => {
   return (
     <>
       <div className="bg-white md:px-8 w-full py-8">
-        <p className="px-8 text-gray-500 text-sm font-sans">
+        <h2 className="px-8 text-gray-500 text-lg font-sans">
           Please enter your event info.
-        </p>
+        </h2>
         <div className="divider"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-8">
           <div className="form-control">
@@ -130,43 +128,15 @@ const Admin = () => {
 
           <div className="form-control">
             <label className="label">
-              <span className="label-text">First tab title</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Enter your event sub title"
-              className="input input-bordered w-full"
-              required
-              value={tabs_1_title}
-              onChange={(e) => setTab_1(e.target.value)}
-            />
-          </div>
-
-          <div className="form-control">
-            <label className="label">
               <span className="label-text">Sub description first label</span>
             </label>
             <textarea
               placeholder="Enter your tabs name"
               className="textarea textarea-bordered w-full"
               required
-              value={tabs_1_des}
-              onChange={(e) => settabs_description_1(e.target.value)}
+              value={subDescription1}
+              onChange={(e) => setSubDescription_1(e.target.value)}
             ></textarea>
-          </div>
-
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Second tab title</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Enter your event sub title"
-              className="input input-bordered w-full"
-              required
-              value={tabs_2_title}
-              onChange={(e) => setTab_2(e.target.value)}
-            />
           </div>
 
           <div className="form-control">
@@ -177,23 +147,9 @@ const Admin = () => {
               placeholder="Enter your tabs name"
               className="textarea textarea-bordered w-full"
               required
-              value={tabs_2_des}
-              onChange={(e) => settabs_description_2(e.target.value)}
+              value={subDescription2}
+              onChange={(e) => setSubDescription_2(e.target.value)}
             ></textarea>
-          </div>
-
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Third tab title</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Tab title"
-              className="input input-bordered w-full"
-              required
-              value={tabs_3_title}
-              onChange={(e) => setTab_3(e.target.value)}
-            />
           </div>
 
           <div className="form-control">
@@ -204,10 +160,37 @@ const Admin = () => {
               placeholder="Enter your tabs name"
               className="textarea textarea-bordered w-full"
               required
-              value={tabs_3_des}
-              onChange={(e) => settabs_description_3(e.target.value)}
+              value={subDescription3}
+              onChange={(e) => setSubDescription_3(e.target.value)}
             ></textarea>
           </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Sub description fourth label</span>
+            </label>
+            <textarea
+              placeholder="Enter your tabs name"
+              className="textarea textarea-bordered w-full"
+              required
+              value={subDescription4}
+              onChange={(e) => setSubDescription_4(e.target.value)}
+            ></textarea>
+          </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Sub description fifth label</span>
+            </label>
+            <textarea
+              placeholder="Enter your tabs name"
+              className="textarea textarea-bordered w-full"
+              required
+              value={subDescription5}
+              onChange={(e) => setSubDescription_5(e.target.value)}
+            ></textarea>
+          </div>
+
 
           <div className="form-control">
             <label className="label">
@@ -235,8 +218,8 @@ const Admin = () => {
               onChange={(e) => setBtnTitle(e.target.value)}
             />
           </div>
-
-          <div className="flex justify-start p-2">
+        </div>
+        <div className="flex justify-start p-10">
             <button
               className="btn bg-relaxGreen hover:bg-clearGreen text-white text-md w-full md:w-auto"
               onClick={handleSubmit}
@@ -244,7 +227,6 @@ const Admin = () => {
               Submit
             </button>
           </div>
-        </div>
       </div>
     </>
   );
