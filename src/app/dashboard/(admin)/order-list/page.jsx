@@ -1,180 +1,135 @@
 "use client";
 
-import { useState } from "react";
-import { FaTrash, FaCheckSquare, FaPlusCircle } from "react-icons/fa";
-import Layout from "../../_layout";
+import { useState, useEffect } from "react";
+import useOrderStore from "@/app/zustand/zustand";
 
 const OrderList = () => {
-  const mockData = [
-    {
-      name: "User 1",
-      phone: "+63 9082438802",
-      appointment: "13-Aug-2023 at 10:00 AM",
-      status: "Pending",
-    },
-    {
-      name: "User 2",
-      phone: "+63 9082438803",
-      appointment: "13-Aug-2023 at 11:00 AM",
-      status: "Approved",
-    },
-    {
-      name: "User 3",
-      phone: "+63 9082438803",
-      appointment: "13-Aug-2023 at 11:00 AM",
-      status: "Approved",
-    },
-    {
-      name: "User 4",
-      phone: "+63 9082438803",
-      appointment: "13-Aug-2023 at 11:00 AM",
-      status: "Approved",
-    },
-    {
-      name: "User 5",
-      phone: "+63 9082438803",
-      appointment: "13-Aug-2023 at 11:00 AM",
-      status: "Approved",
-    },
-    {
-      name: "User 6",
-      phone: "+63 9082438803",
-      appointment: "13-Aug-2023 at 11:00 AM",
-      status: "Approved",
-    },
-    // Additional data as needed...
+  const prodImage = [
+    { id: 1001, name: "Hot Air Gun", filePath: "/images/equipments/airgun.png" },
+    { id: 1002, name: "Analog Multi Meter", filePath: "/images/equipments/analog-multimeter.png" },
+    { id: 1003, name: "Digital Multi Meter", filePath: "/images/equipments/digital-multimeter.png" },
+    { id: 1004, name: "Combination Pliers", filePath: "/images/equipments/combination-pliers.png" },
+    { id: 1005, name: "Cutter Pliers", filePath: "/images/equipments/cutter-pliers.png" },
+    { id: 1006, name: "Flat Screw", filePath: "/images/equipments/flat-screw.png" },
+    { id: 1007, name: "Phillips Screw", filePath: "/images/equipments/phillips-screw.png" },
+    { id: 1008, name: "Toolbox Set", filePath: "/images/equipments/toolbox.png" },
   ];
 
+  const [studentId, setStudentId] = useState("");
+  const [searchId, setSearchId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [date, setDate] = useState("");
 
-  // Calculate the range of items to display
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentData = mockData.slice(indexOfFirstItem, indexOfLastItem);
+  useEffect(() => {
+    setDate(new Date().toLocaleString());
+  }, []);
+  const ordersPerPage = 5;
 
-  // Determine the total number of pages
-  const totalPages = Math.ceil(mockData.length / itemsPerPage);
+  const { orders, addOrder, removeSettledOrders } = useOrderStore();
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const currentOrders = orders.slice(indexOfLastOrder - ordersPerPage, indexOfLastOrder);
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (typeof window !== "undefined") {
+        removeSettledOrders();
+      }
+    }, 5000);
+  
+    return () => clearInterval(interval);
+  }, [orders]);  // Ensure useEffect listens to `orders` state changes
+
+  const handleSearch = () => {
+    if (!studentId.trim()) return alert("Please enter a Student ID first.");
+
+    const product = prodImage.find((item) => item.id.toString() === searchId.trim());
+    if (!product) return alert("Product not found.");
+
+    addOrder({
+      studentId,
+      product,
+      qty: 1,
+      status: "Pending",
+      date
+    });
+
+    setSearchId("");
   };
 
   return (
-    <>
-      <Layout>
-        <div className="p-5">
-          <h1 className="text-2xl font-bold mb-4 text-relaxBlack">
-            Manage Order
-          </h1>
-          <div className="flex items-center justify-between mb-4">
-            <input
-              type="text"
-              placeholder="Search"
-              className="input input-bordered w-1/3 max-w-xs bg-gray-100 text-gray-700"
-            />
-            <button className="btn bg-chillGreen text-white hover:bg-offGreen">
-              <span>
-                <FaPlusCircle />
-              </span>{" "}
-              Add Order
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full border rounded-lg">
-              <thead>
-                <tr className="bg-gray-100 text-gray-700">
-                  <th className="py-2 px-4">Client Name</th>
-                  <th className="py-2 px-4">Phone Number</th>
-                  <th className="py-2 px-4">Appointment Date & Time</th>
-                  <th className="py-2 px-4">Status</th>
-                  <th className="py-2 px-4">Action</th>
+    <div className="p-5 bg-white">
+      <h1 className="text-2xl font-bold mb-4 text-relaxBlack">Manage Order</h1>
+
+      <div className="flex items-center gap-4 mb-4">
+        <input
+          type="text"
+          placeholder="Enter Student ID"
+          value={studentId}
+          onChange={(e) => setStudentId(e.target.value)}
+          className="input input-bordered w-1/3 max-w-xs bg-gray-100 text-gray-700"
+        />
+        <input
+          type="text"
+          placeholder="Enter Product ID"
+          value={searchId}
+          onChange={(e) => setSearchId(e.target.value)}
+          className="input input-bordered w-1/3 max-w-xs bg-gray-100 text-gray-700"
+        />
+        <button onClick={handleSearch} className="btn bg-chillGreen text-white hover:bg-offGreen">Search</button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="table-auto w-full border rounded-lg">
+          <thead>
+            <tr className="bg-gray-100 text-gray-700">
+              <th className="py-2 px-4">Student ID</th>
+              <th className="py-2 px-4">Product ID</th>
+              <th className="py-2 px-4">Product Name</th>
+              <th className="py-2 px-4">Image</th>
+              <th className="py-2 px-4">QTY</th>
+              <th className="py-2 px-4">Status</th>
+              <th className="py-2 px-4">Date & Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentOrders.length > 0 ? (
+              currentOrders.map((order, index) => (
+                <tr key={index} className="bg-white text-center border-b hover:bg-gray-50">
+                  <td className="py-3 px-4 text-relaxBlack">{order.studentId}</td>
+                  <td className="py-3 px-4 text-relaxBlack">{order.product.id}</td>
+                  <td className="py-3 px-4 text-relaxBlack">{order.product.name}</td>
+                  <td className="py-3 px-4">
+                    <img src={order.product.filePath} alt={order.product.name} className="w-16 h-16 object-cover" />
+                  </td>
+                  <td className="py-3 px-4 text-relaxBlack">{order.qty}</td>
+                  <td className="py-3 px-4 text-relaxBlack">{order.status}</td>
+                  <td className="py-3 px-4 text-relaxBlack">{order.date}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {currentData.map((appointment, index) => (
-                  <tr
-                    key={index}
-                    className="bg-white border-b hover:bg-gray-50"
-                  >
-                    <td className="py-3 px-4 text-relaxBlack">
-                      {appointment.name}
-                    </td>
-                    <td className="py-3 px-4 text-relaxBlack">
-                      {appointment.phone}
-                    </td>
-                    <td className="py-3 px-4 text-relaxBlack">
-                      {appointment.appointment}
-                    </td>
-                    <td className="py-3 px-4 text-relaxBlack">
-                      <span
-                        className={`px-3 py-1 rounded-full ${
-                          appointment.status === "Pending"
-                            ? "bg-orange-500 text-white"
-                            : "bg-green-100 text-green-700"
-                        }`}
-                      >
-                        {appointment.status}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 space-x-2">
-                      <button className="btn btn-sm bg-cancelRed hover:bg-red-700 text-white">
-                        <FaTrash />
-                      </button>
-                      <button className="btn btn-sm bg-green-700 hover:bg-relaxGreen text-white">
-                        <FaCheckSquare />
-                      </button>
-                      <button className="btn btn-sm bg-gray-300 text-gray-700">
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex justify-end mt-4">
-            <div className="join">
-              <button
-                className="join-item btn"
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              {[...Array(totalPages)].map((_, pageIndex) => (
-                <button
-                  key={pageIndex}
-                  className={`join-item btn ${
-                    currentPage === pageIndex + 1
-                      ? "btn-active bg-blue-700 text-white"
-                      : ""
-                  }`}
-                  onClick={() => setCurrentPage(pageIndex + 1)}
-                >
-                  {pageIndex + 1}
-                </button>
-              ))}
-              <button
-                className="join-item btn"
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
-      </Layout>
-    </>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="py-3 px-4 text-center text-gray-500">No orders yet.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-end mt-4 gap-2">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => paginate(index + 1)}
+            className={`px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-chillGreen text-white' : 'bg-gray-300 hover:bg-gray-400'}`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 };
 
