@@ -11,28 +11,27 @@ const useOrderStore = create(
           const existingOrder = state.orders.find(
             (order) => order.studentId === newOrder.studentId && order.product.id === newOrder.product.id
           );
-
+      
           if (existingOrder) {
-            // Mark order as Settled
             const updatedOrders = state.orders.map((order) =>
               order.studentId === newOrder.studentId && order.product.id === newOrder.product.id
                 ? { ...order, status: "Settled" }
                 : order
             );
-
-            // Schedule removal of settled orders
+      
             setTimeout(() => {
               set((state) => ({
                 orders: state.orders.filter((order) => order.status !== "Settled"),
               }));
             }, 5000);
-
+      
             return { orders: updatedOrders };
           }
-
+      
           return { orders: [...state.orders, newOrder] };
         });
       },
+      
 
       updateOrderStatus: (studentId, productId, status) => {
         set((state) => ({
