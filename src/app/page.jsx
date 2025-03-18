@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import useOrderStore from "@/app/zustand/zustand";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:3002"); // ✅ Connect to the Express WebSocket server
 
 const OrderList = () => {
   const prodImage = [
@@ -19,13 +22,13 @@ const OrderList = () => {
   const [searchId, setSearchId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [date, setDate] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setDate(new Date().toLocaleString());
   }, []);
 
   const ordersPerPage = 5;
-
   const { orders, borrowed, addOrder, removeSettledOrders } = useOrderStore();
 
   // Paginate orders
@@ -44,11 +47,35 @@ const OrderList = () => {
     return () => clearInterval(interval);
   }, [orders]);
 
+  useEffect(() => {
+      socket.on("connect", () => {
+          console.log("Connected to WebSocket Server");
+      });
+
+      socket.on("productId", (data) => {
+          console.log("Received Product ID:", data);
+          setSearchId(data);
+      });
+
+      return () => {
+          socket.off("productId");
+          socket.disconnect();
+      };
+  }, []);
+
+
   const handleSearch = () => {
     if (!studentId.trim()) return alert("Please enter a Student ID first.");
 
     const product = prodImage.find((item) => item.id.toString() === searchId.trim());
     if (!product) return alert("Product not found.");
+
+    const remaining = product.qty - (borrowed[product.id] || 0);
+    if (remaining <= 0) {
+      setShowModal(true);
+      setTimeout(() => setShowModal(false), 5000);
+      return;
+    }
 
     addOrder({
       studentId,
@@ -146,6 +173,16 @@ const OrderList = () => {
           Next
         </button>
       </div>
+
+      {/* Out of Stock Modal */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold text-red-600">Product Not Available</h2>
+            <p className="text-gray-700">The selected product is out of stock.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
