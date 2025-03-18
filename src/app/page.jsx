@@ -5,14 +5,14 @@ import useOrderStore from "@/app/zustand/zustand";
 
 const OrderList = () => {
   const prodImage = [
-    { id: 1001, name: "Hot Air Gun", filePath: "/images/equipments/airgun.png" },
-    { id: 1002, name: "Analog Multi Meter", filePath: "/images/equipments/analog-multimeter.png" },
-    { id: 1003, name: "Digital Multi Meter", filePath: "/images/equipments/digital-multimeter.png" },
-    { id: 1004, name: "Combination Pliers", filePath: "/images/equipments/combination-pliers.png" },
-    { id: 1005, name: "Cutter Pliers", filePath: "/images/equipments/cutter-pliers.png" },
-    { id: 1006, name: "Flat Screw", filePath: "/images/equipments/flat-screw.png" },
-    { id: 1007, name: "Phillips Screw", filePath: "/images/equipments/phillips-screw.png" },
-    { id: 1008, name: "Toolbox Set", filePath: "/images/equipments/toolbox.png" },
+    { id: 1001, name: "Hot Air Gun", qty: 10, filePath: "/images/equipments/airgun.png" },
+    { id: 1002, name: "Analog Multi Meter", qty: 10, filePath: "/images/equipments/analog-multimeter.png" },
+    { id: 1003, name: "Digital Multi Meter", qty: 10, filePath: "/images/equipments/digital-multimeter.png" },
+    { id: 1004, name: "Combination Pliers", qty: 10, filePath: "/images/equipments/combination-pliers.png" },
+    { id: 1005, name: "Cutter Pliers", qty: 10, filePath: "/images/equipments/cutter-pliers.png" },
+    { id: 1006, name: "Flat Screw", qty: 10, filePath: "/images/equipments/flat-screw.png" },
+    { id: 1007, name: "Phillips Screw", qty: 10, filePath: "/images/equipments/phillips-screw.png" },
+    { id: 1008, name: "Toolbox Set", qty: 10, filePath: "/images/equipments/toolbox.png" },
   ];
 
   const [studentId, setStudentId] = useState("");
@@ -23,15 +23,16 @@ const OrderList = () => {
   useEffect(() => {
     setDate(new Date().toLocaleString());
   }, []);
+
   const ordersPerPage = 5;
 
-  const { orders, addOrder, removeSettledOrders } = useOrderStore();
+  const { orders, borrowed, addOrder, removeSettledOrders } = useOrderStore();
 
+  // Paginate orders
   const indexOfLastOrder = currentPage * ordersPerPage;
-  const currentOrders = orders.slice(indexOfLastOrder - ordersPerPage, indexOfLastOrder);
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
   const totalPages = Math.ceil(orders.length / ordersPerPage);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,9 +40,9 @@ const OrderList = () => {
         removeSettledOrders();
       }
     }, 5000);
-  
+
     return () => clearInterval(interval);
-  }, [orders]);  // Ensure useEffect listens to `orders` state changes
+  }, [orders]);
 
   const handleSearch = () => {
     if (!studentId.trim()) return alert("Please enter a Student ID first.");
@@ -54,7 +55,7 @@ const OrderList = () => {
       product,
       qty: 1,
       status: "Pending",
-      date
+      date,
     });
 
     setSearchId("");
@@ -79,7 +80,9 @@ const OrderList = () => {
           onChange={(e) => setSearchId(e.target.value)}
           className="input input-bordered w-1/3 max-w-xs bg-gray-100 text-gray-700"
         />
-        <button onClick={handleSearch} className="btn bg-chillGreen text-white hover:bg-offGreen">Search</button>
+        <button onClick={handleSearch} className="btn bg-chillGreen text-white hover:bg-offGreen">
+          Search
+        </button>
       </div>
 
       <div className="overflow-x-auto">
@@ -91,6 +94,7 @@ const OrderList = () => {
               <th className="py-2 px-4">Product Name</th>
               <th className="py-2 px-4">Image</th>
               <th className="py-2 px-4">QTY</th>
+              <th className="py-2 px-4">Remaining</th>
               <th className="py-2 px-4">Status</th>
               <th className="py-2 px-4">Date & Time</th>
             </tr>
@@ -106,28 +110,41 @@ const OrderList = () => {
                     <img src={order.product.filePath} alt={order.product.name} className="w-16 h-16 object-cover" />
                   </td>
                   <td className="py-3 px-4 text-relaxBlack">{order.qty}</td>
+                  <td className="py-3 px-4 text-relaxBlack">{order.product.qty - (borrowed[order.product.id] || 0)}</td>
                   <td className="py-3 px-4 text-relaxBlack">{order.status}</td>
                   <td className="py-3 px-4 text-relaxBlack">{order.date}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="py-3 px-4 text-center text-gray-500">No orders yet.</td>
+                <td colSpan="8" className="py-3 px-4 text-center text-gray-500">
+                  No orders yet.
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-      <div className="flex justify-end mt-4 gap-2">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => paginate(index + 1)}
-            className={`px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-chillGreen text-white' : 'bg-gray-300 hover:bg-gray-400'}`}
-          >
-            {index + 1}
-          </button>
-        ))}
+
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className={`btn px-4 py-2 mx-1 ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-chillGreen text-white hover:bg-offGreen"}`}
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2 text-gray-700">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className={`btn px-4 py-2 mx-1 ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-chillGreen text-white hover:bg-offGreen"}`}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
