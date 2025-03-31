@@ -23,6 +23,9 @@ const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [date, setDate] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [productId, setProductId] = useState("");
+  const [productName, setProductName] = useState("");
+  const [totalQty, setTotalQty] = useState("");
 
   useEffect(() => {
     setDate(new Date().toLocaleString());
@@ -67,15 +70,18 @@ const OrderList = () => {
     console.log("Updated searchId:", searchId);
   }, [searchId]);  // ✅ Log every time searchId changes
   
-  
-  
-
+  useEffect(() => {
+    if (searchId) {
+      console.log("🔍 Auto-searching for Product ID:", searchId);
+      handleSearch(); // ✅ Automatically triggers search
+    }
+  }, [searchId]);
 
   const handleSearch = () => {
-    if (!studentId.trim()) return alert("Please enter a Student ID first.");
+    if (!studentId.trim()) return console.error("Please enter a Student ID first.");
 
     const product = prodImage.find((item) => item.id.toString() === searchId.trim());
-    if (!product) return alert("Product not found.");
+    if (!product) return console.error("Product not found.");
 
     const remaining = product.qty - (borrowed[product.id] || 0);
     if (remaining <= 0) {
@@ -114,8 +120,8 @@ const OrderList = () => {
           onChange={(e) => setSearchId(e.target.value)}
           className="input input-bordered w-1/3 max-w-xs bg-gray-100 text-gray-700"
         />
-        <button onClick={handleSearch} className="btn bg-chillGreen text-white hover:bg-offGreen">
-          Search
+        <button onClick={() => setShowModal(true)} className="btn bg-chillGreen text-white hover:bg-offGreen">
+          New Order
         </button>
       </div>
 
@@ -181,12 +187,49 @@ const OrderList = () => {
         </button>
       </div>
 
-      {/* Out of Stock Modal */}
+      {/* Out of Stock Modal
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold text-red-600">Product Not Available</h2>
             <p className="text-gray-700">The selected product is out of stock.</p>
+          </div>
+        </div>
+      )} */}
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-lg">
+            <h2 className="text-xl text-relaxBlack mb-4">New Order</h2>
+            <input
+              type="text"
+              placeholder="Product ID"
+              value={productId}
+              onChange={(e) => setProductId(e.target.value)}
+              className="input input-bordered w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Product Name"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              className="input input-bordered w-full mb-2"
+            />
+            <input
+              type="number"
+              placeholder="Total QTY"
+              value={totalQty}
+              onChange={(e) => setTotalQty(e.target.value)}
+              className="input input-bordered w-full mb-2"
+            />
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={() => setShowModal(false)} className="btn bg-gray-300 text-black hover:bg-gray-400">
+                Cancel
+              </button>
+              <button onClick={() => setShowModal(false)} className="btn bg-chillGreen text-white hover:bg-offGreen">
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       )}
