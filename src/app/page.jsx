@@ -4,19 +4,9 @@ import { useState, useEffect } from "react";
 import useOrderStore from "@/app/zustand/zustand";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3001"); // ✅ Connect to the Express WebSocket server
+const socket = io("http://localhost:3001");
 
-const OrderList = () => {
-  const prodImage = [
-    { id: 1001, name: "Hot Air Gun", qty: 10, filePath: "/images/equipments/airgun.png" },
-    { id: 1002, name: "Analog Multi Meter", qty: 10, filePath: "/images/equipments/analog-multimeter.png" },
-    { id: 1003, name: "Digital Multi Meter", qty: 10, filePath: "/images/equipments/digital-multimeter.png" },
-    { id: 1004, name: "Combination Pliers", qty: 10, filePath: "/images/equipments/combination-pliers.png" },
-    { id: 1005, name: "Cutter Pliers", qty: 10, filePath: "/images/equipments/cutter-pliers.png" },
-    { id: 1006, name: "Flat Screw", qty: 10, filePath: "/images/equipments/flat-screw.png" },
-    { id: 1007, name: "Phillips Screw", qty: 10, filePath: "/images/equipments/phillips-screw.png" },
-    { id: 1008, name: "Toolbox Set", qty: 10, filePath: "/images/equipments/toolbox.png" },
-  ];
+const OrderList = () => { 
 
   const [studentId, setStudentId] = useState("");
   const [searchId, setSearchId] = useState("");
@@ -32,13 +22,35 @@ const OrderList = () => {
   }, []);
 
   const ordersPerPage = 5;
-  const { orders, borrowed, addOrder, removeSettledOrders } = useOrderStore();
+  const { orders, borrowed, addOrder, removeSettledOrders, inventoryStocks, addNewProduct } = useOrderStore();
 
   // Paginate orders
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
+  const totalPages = Math.ceil(orders.length / ordersPerPage);  
+
+  const saveNewProduct = () => {
+    if (!productId || !productName || !totalQty) {
+      console.error("All fields are required!");
+      return;
+    }
+  
+    const newlyProduct = {
+      id: parseInt(productId, 10),
+      name: productName,
+      qty: parseInt(totalQty, 10),
+      filePath: "/images/equipments/default.png",
+    };
+  
+    addNewProduct(newlyProduct);
+  
+    setProductId("");
+    setProductName("");
+    setTotalQty("");
+    setShowModal(false);
+  };
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -57,39 +69,39 @@ const OrderList = () => {
   
     socket.on("productId", (data) => {
       console.log("Received Product ID:", data);
-      setSearchId(data);  // ✅ Updates searchId state
+      setSearchId(data);
     });
   
     return () => {
       socket.off("productId");
-      //socket.disconnect();
     };
   }, []);
   
   useEffect(() => {
     console.log("Updated searchId:", searchId);
-  }, [searchId]);  // ✅ Log every time searchId changes
+  }, [searchId]);
   
   useEffect(() => {
     if (searchId) {
       console.log("🔍 Auto-searching for Product ID:", searchId);
-      handleSearch(); // ✅ Automatically triggers search
+      handleSearch();
     }
   }, [searchId]);
 
   const handleSearch = () => {
     if (!studentId.trim()) return console.error("Please enter a Student ID first.");
-
-    const product = prodImage.find((item) => item.id.toString() === searchId.trim());
+    if (!inventoryStocks || inventoryStocks.length === 0) return console.error("Inventory is empty or not loaded.");
+  
+    const product = inventoryStocks.find((item) => item.id.toString() === searchId.trim());
     if (!product) return console.error("Product not found.");
-
+  
     const remaining = product.qty - (borrowed[product.id] || 0);
     if (remaining <= 0) {
       setShowModal(true);
       setTimeout(() => setShowModal(false), 5000);
       return;
     }
-
+  
     addOrder({
       studentId,
       product,
@@ -97,9 +109,10 @@ const OrderList = () => {
       status: "Pending",
       date,
     });
-
+  
     setSearchId("");
   };
+  
 
   return (
     <div className="p-5 bg-white">
@@ -226,7 +239,7 @@ const OrderList = () => {
               <button onClick={() => setShowModal(false)} className="btn bg-gray-300 text-black hover:bg-gray-400">
                 Cancel
               </button>
-              <button onClick={() => setShowModal(false)} className="btn bg-chillGreen text-white hover:bg-offGreen">
+              <button onClick={saveNewProduct} className="btn bg-chillGreen text-white hover:bg-offGreen">
                 Submit
               </button>
             </div>
