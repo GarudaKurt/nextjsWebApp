@@ -1,29 +1,30 @@
-import express from "express";
 import http from "http";
-import { Server } from "socket.io";
+import { Server } from "socket.io";  // ✅ Use import, not require
+import express from "express";
 import cors from "cors";
-import { SerialPort } from "serialport"; // ✅ Import correctly
-import { ReadlineParser } from "@serialport/parser-readline"; // ✅ Updated parser import
+import { SerialPort } from "serialport";
+import { ReadlineParser } from "@serialport/parser-readline";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"]
     }
 });
 
-// ✅ Replace with your actual Arduino port (check `ls /dev/tty*` or Device Manager)
-const portPath = "COM4"; // Change this to your actual port (e.g., "/dev/ttyUSB0" on Linux)
-
-const port = new SerialPort({ path: "COM4", baudRate: 9600 });
+// ✅ Ensure correct serial port path
+const port = new SerialPort({ path: "COM7", baudRate: 9600 });
 const parser = port.pipe(new ReadlineParser({ delimiter: "\n" }));
 
 parser.on("data", (data) => {
+    console.log("Raw data received from Arduino:", JSON.stringify(data));
     const productId = data.trim();
-    console.log(`Received productId from Arduino: ${productId}`);
-    io.emit("productId", productId);
+    if (productId) {
+        io.emit("productId", productId);
+        console.log("Trimmed Product ID:", productId);
+    }
 });
 
 io.on("connection", (socket) => {
@@ -35,7 +36,7 @@ io.on("connection", (socket) => {
 });
 
 // Start the server
-const PORT = 3002;
+const PORT = 3001;
 server.listen(PORT, () => {
     console.log(`WebSocket server running on port ${PORT}`);
 });

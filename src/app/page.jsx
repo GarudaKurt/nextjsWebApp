@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import useOrderStore from "@/app/zustand/zustand";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3002"); // ✅ Connect to the Express WebSocket server
+const socket = io("http://localhost:3001"); // ✅ Connect to the Express WebSocket server
 
 const OrderList = () => {
   const prodImage = [
@@ -48,20 +48,27 @@ const OrderList = () => {
   }, [orders]);
 
   useEffect(() => {
-      socket.on("connect", () => {
-          console.log("Connected to WebSocket Server");
-      });
-
-      socket.on("productId", (data) => {
-          console.log("Received Product ID:", data);
-          setSearchId(data);
-      });
-
-      return () => {
-          socket.off("productId");
-          socket.disconnect();
-      };
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket Server");
+    });
+  
+    socket.on("productId", (data) => {
+      console.log("Received Product ID:", data);
+      setSearchId(data);  // ✅ Updates searchId state
+    });
+  
+    return () => {
+      socket.off("productId");
+      socket.disconnect();
+    };
   }, []);
+  
+  useEffect(() => {
+    console.log("Updated searchId:", searchId);
+  }, [searchId]);  // ✅ Log every time searchId changes
+  
+  
+  
 
 
   const handleSearch = () => {
