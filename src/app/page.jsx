@@ -59,7 +59,7 @@ const OrderList = () => {
   
     return () => {
       socket.off("productId");
-      socket.disconnect();
+      //socket.disconnect();
     };
   }, []);
   

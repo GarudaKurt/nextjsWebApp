@@ -1,5 +1,5 @@
 import http from "http";
-import { Server } from "socket.io";  // ✅ Use import, not require
+import { Server } from "socket.io";
 import express from "express";
 import cors from "cors";
 import { SerialPort } from "serialport";
@@ -9,12 +9,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"]
+        origin: "*",  // ✅ Allow all origins temporarily for debugging
+        methods: ["GET", "POST"],
+        allowedHeaders: ["Content-Type"],
+        credentials: true,
     }
 });
 
-// ✅ Ensure correct serial port path
 const port = new SerialPort({ path: "COM7", baudRate: 9600 });
 const parser = port.pipe(new ReadlineParser({ delimiter: "\n" }));
 
@@ -23,20 +24,24 @@ parser.on("data", (data) => {
     const productId = data.trim();
     if (productId) {
         io.emit("productId", productId);
-        console.log("Trimmed Product ID:", productId);
+        console.log("✅ Emitted Product ID:", productId);
     }
 });
 
 io.on("connection", (socket) => {
-    console.log("A client connected");
+    console.log(`✅ Client Connected: ${socket.id}`);
 
     socket.on("disconnect", () => {
-        console.log("A client disconnected");
+        console.log(`❌ Client Disconnected: ${socket.id}`);
+    });
+
+    socket.on("productId", (data) => {
+        console.log(`🔁 Received & Emitting Product ID: ${data}`);
+        io.emit("productId", data);
     });
 });
 
-// Start the server
 const PORT = 3001;
 server.listen(PORT, () => {
-    console.log(`WebSocket server running on port ${PORT}`);
+    console.log(`🚀 WebSocket server running on port ${PORT}`);
 });
