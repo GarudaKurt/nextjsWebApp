@@ -1,9 +1,8 @@
 #include "display.h"
 #include <LiquidCrystal_I2C.h>
 
-LiquidCrystal_I2C lcd(0x27, 20, 4);  // I2C LCD address
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
-// Corrected struct: qty is an integer, not a pointer
 struct ProductItem {
   const char *ID;
   const char *name;
