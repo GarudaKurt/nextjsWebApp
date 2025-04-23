@@ -6,6 +6,16 @@ const useOrderStore = create(
     (set, get) => ({
       orders: [],
       borrowed: {}, // Track borrowed items
+      inventoryStocks: [
+        { id: 1001, name: "Hot Air Gun", qty: 10, filePath: "/images/equipments/airgun.png" },
+        { id: 1002, name: "Analog Multi Meter", qty: 10, filePath: "/images/equipments/analog-multimeter.png" },
+        { id: 1003, name: "Digital Multi Meter", qty: 10, filePath: "/images/equipments/digital-multimeter.png" },
+        { id: 1004, name: "Combination Pliers", qty: 10, filePath: "/images/equipments/combination-pliers.png" },
+        { id: 1005, name: "Cutter Pliers", qty: 10, filePath: "/images/equipments/cutter-pliers.png" },
+        { id: 1006, name: "Flat Screw", qty: 10, filePath: "/images/equipments/flat-screw.png" },
+        { id: 1007, name: "Phillips Screw", qty: 10, filePath: "/images/equipments/phillips-screw.png" },
+        { id: 1008, name: "Toolbox Set", qty: 10, filePath: "/images/equipments/toolbox.png" },
+      ],
 
       addOrder: (newOrder) => {
         set((state) => {
@@ -63,6 +73,22 @@ const useOrderStore = create(
       },
 
       clearOrders: () => set({ orders: [] }),
+
+      addNewProduct: (newProduct) => {
+        set((state) => {
+          const existingIndex = state.inventoryStocks.findIndex((p) => p.id === newProduct.id);
+      
+          if (existingIndex !== -1) {
+            // Update existing product
+            const updatedStocks = [...state.inventoryStocks];
+            updatedStocks[existingIndex] = newProduct;
+            return { inventoryStocks: updatedStocks };
+          }
+      
+          // Add new product
+          return { inventoryStocks: [...state.inventoryStocks, newProduct] };
+        });
+      },       
     }),
     {
       name: "order-storage",
