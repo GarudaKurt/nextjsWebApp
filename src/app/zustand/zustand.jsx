@@ -5,7 +5,9 @@ const useOrderStore = create(
   persist(
     (set, get) => ({
       orders: [],
-      borrowed: {}, // Track borrowed items
+      history: [],
+      borrowed: {},
+
       inventoryStocks: [
         { id: 1001, name: "Hot Air Gun", qty: 10, filePath: "/images/equipments/airgun.png" },
         { id: 1002, name: "Analog Multi Meter", qty: 10, filePath: "/images/equipments/analog-multimeter.png" },
@@ -22,14 +24,20 @@ const useOrderStore = create(
           const existingOrder = state.orders.find(
             (order) => order.studentId === newOrder.studentId && order.product.id === newOrder.product.id
           );
-
+      
           if (existingOrder) {
             const updatedOrders = state.orders.map((order) =>
               order.studentId === newOrder.studentId && order.product.id === newOrder.product.id
                 ? { ...order, status: "Settled" }
                 : order
             );
-
+      
+            const settledOrder = {
+              ...existingOrder,
+              status: "Settled",
+              date: new Date().toLocaleString(),
+            };
+      
             setTimeout(() => {
               set((state) => {
                 const productId = newOrder.product.id;
@@ -42,12 +50,21 @@ const useOrderStore = create(
                 };
               });
             }, 5000);
-
-            return { orders: updatedOrders };
+      
+            return {
+              orders: updatedOrders,
+              history: [...state.history, settledOrder],
+            };
           }
-
+      
+          const newEntry = {
+            ...newOrder,
+            date: new Date().toLocaleString(),
+          };
+      
           return {
             orders: [...state.orders, newOrder],
+            history: [...state.history, newEntry],
             borrowed: {
               ...state.borrowed,
               [newOrder.product.id]: (state.borrowed[newOrder.product.id] || 0) + 1,
@@ -55,6 +72,7 @@ const useOrderStore = create(
           };
         });
       },
+      
 
       updateOrderStatus: (studentId, productId, status) => {
         set((state) => ({
@@ -77,18 +95,33 @@ const useOrderStore = create(
       addNewProduct: (newProduct) => {
         set((state) => {
           const existingIndex = state.inventoryStocks.findIndex((p) => p.id === newProduct.id);
-      
+
           if (existingIndex !== -1) {
-            // Update existing product
             const updatedStocks = [...state.inventoryStocks];
             updatedStocks[existingIndex] = newProduct;
             return { inventoryStocks: updatedStocks };
           }
-      
-          // Add new product
+
           return { inventoryStocks: [...state.inventoryStocks, newProduct] };
         });
-      },       
+      },
+
+      saveOrdersToHistory: () => {
+        set((state) => {
+          const newHistoryEntries = state.orders.filter((order) => {
+            return !state.history.some(
+              (hist) =>
+                hist.studentId === order.studentId &&
+                hist.product.id === order.product.id &&
+                hist.status === order.status
+            );
+          });
+
+          return {
+            history: [...state.history, ...newHistoryEntries],
+          };
+        });
+      },
     }),
     {
       name: "order-storage",

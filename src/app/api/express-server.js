@@ -24,24 +24,24 @@ parser.on("data", (data) => {
     const productId = data.trim();
     if (productId) {
         io.emit("productId", productId);
-        console.log("✅ Emitted Product ID:", productId);
+        console.log(`✅ Emitted Product ID: ${productId}`);
     }
 });
 
 io.on("connection", (socket) => {
-    console.log(✅ Client Connected: ${socket.id});
+    console.log(`✅ Client Connected: ${socket.id}`);
 
     socket.on("disconnect", () => {
-        console.log(❌ Client Disconnected: ${socket.id});
+        console.log(`❌ Client Disconnected: ${socket.id}`);
     });
 
     socket.on("productId", (data) => {
-        console.log(🔁 Received & Emitting Product ID: ${data});
+        console.log(`🔁 Received & Emitting Product ID: ${data}`);
         io.emit("productId", data);
     });
 });
 
 const PORT = 3001;
 server.listen(PORT, () => {
-    console.log(🚀 WebSocket server running on port ${PORT});
+    console.log(`🚀 WebSocket server running on port ${PORT}`);
 });

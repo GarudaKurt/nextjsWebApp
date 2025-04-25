@@ -4,7 +4,7 @@ import { useState } from "react";
 import Layout from "../_layout";
 import useOrderStore from "@/app/zustand/zustand";
 
-const OrderList = () => {
+const Inventory = () => {
   const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
   const [totalQty, setTotalQty] = useState("");
@@ -184,4 +184,4 @@ const OrderList = () => {
   );
 };
 
-export default OrderList;
+export default Inventory;

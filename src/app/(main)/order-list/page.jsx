@@ -14,8 +14,6 @@ const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [date, setDate] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [productId, setProductId] = useState("");
-  const [productName, setProductName] = useState("");
   const [totalQty, setTotalQty] = useState("");
 
   useEffect(() => {
@@ -23,7 +21,7 @@ const OrderList = () => {
   }, []);
 
   const ordersPerPage = 5;
-  const { orders, borrowed, addOrder, removeSettledOrders, inventoryStocks, addNewProduct } = useOrderStore();
+  const { orders, borrowed, addOrder, removeSettledOrders, inventoryStocks } = useOrderStore();
 
   // Paginate orders
   const indexOfLastOrder = currentPage * ordersPerPage;
@@ -75,7 +73,7 @@ const OrderList = () => {
     if (!product) return console.error("Product not found.");
   
     const remaining = product.qty - (borrowed[product.id] || 0);
-    if (remaining <= 0) {
+    if (remaining <= 0 || (Number(totalQty) > remaining)) {
       setShowModal(true);
       setTimeout(() => setShowModal(false), 5000);
       return;
@@ -84,12 +82,13 @@ const OrderList = () => {
     addOrder({
       studentId,
       product,
-      qty: 1,
+      qty: Number(totalQty) || 1,
       status: "Pending",
       date,
     });
   
     setSearchId("");
+    setTotalQty("");
   };
   
 
@@ -104,6 +103,13 @@ const OrderList = () => {
                 placeholder="Enter Student ID"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
+                className="input input-bordered w-1/3 max-w-xs bg-gray-100 text-gray-700"
+                />
+                <input
+                type="number"
+                placeholder="Total QTY"
+                value={totalQty}
+                onChange={(e) => setTotalQty(e.target.value)}
                 className="input input-bordered w-1/3 max-w-xs bg-gray-100 text-gray-700"
                 />
                 <input
@@ -122,7 +128,6 @@ const OrderList = () => {
                     <th className="py-2 px-4">Student ID</th>
                     <th className="py-2 px-4">Product ID</th>
                     <th className="py-2 px-4">Product Name</th>
-                    <th className="py-2 px-4">Image</th>
                     <th className="py-2 px-4">QTY</th>
                     <th className="py-2 px-4">Remaining</th>
                     <th className="py-2 px-4">Status</th>
@@ -136,9 +141,6 @@ const OrderList = () => {
                         <td className="py-3 px-4 text-relaxBlack">{order.studentId}</td>
                         <td className="py-3 px-4 text-relaxBlack">{order.product.id}</td>
                         <td className="py-3 px-4 text-relaxBlack">{order.product.name}</td>
-                        <td className="py-3 px-4">
-                            <img src={order.product.filePath} alt={order.product.name} className="w-16 h-16 object-cover" />
-                        </td>
                         <td className="py-3 px-4 text-relaxBlack">{order.qty}</td>
                         <td className="py-3 px-4 text-relaxBlack">{order.product.qty - (borrowed[order.product.id] || 0)}</td>
                         <td className="py-3 px-4 text-relaxBlack">{order.status}</td>
