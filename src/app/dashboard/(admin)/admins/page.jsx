@@ -7,7 +7,6 @@ import Layout from "../../_layout";
 const Summary = () => {
   return (
     <Layout>
-      {/* Main Content with Cards */}
       <div className="flex flex-col md:flex-row flex-grow justify-start items-center md:items-start pt-10 space-y-2 md:space-y-0 md:space-x-2 mr-4">
         <div className="card bg-white text-black w-full max-w-xs md:w-75 h-48 shadow-lg">
           <div className="card-body">

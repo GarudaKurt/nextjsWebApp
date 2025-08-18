@@ -28,7 +28,7 @@ const Billings = () => {
     setAddress(billingData.address || "");
     setPhone(billingData.phone || "");
     setCity(billingData.city || "");
-  }, []); // Only include essential dependencies
+  }, [billingData.address, billingData.phone, billingData.city]); // Only include essential dependencies
 
   const handleSubmit = () => {
     if (!name || !phone || !address || !city) {

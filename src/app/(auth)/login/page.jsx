@@ -102,7 +102,7 @@ const SignIn = () => {
                 href="/create-account"
                 className="label-text-alt link link-hover text-forestGreen"
               >
-                Don't have account yet? Create One!
+                Don&apos;t have account yet? Create One!
               </Link>
             </label>
           </form>

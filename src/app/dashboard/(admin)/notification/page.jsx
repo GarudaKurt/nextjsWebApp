@@ -42,18 +42,15 @@ const Reports = () => {
       appointment: "13-Aug-2023 at 11:00 AM",
       status: "Approved",
     },
-    // Additional data as needed...
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Calculate the range of items to display
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentData = mockData.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Determine the total number of pages
   const totalPages = Math.ceil(mockData.length / itemsPerPage);
 
   const handleNextPage = () => {
@@ -116,11 +113,10 @@ const Reports = () => {
                     </td>
                     <td className="py-3 px-4 text-relaxBlack">
                       <span
-                        className={`px-3 py-1 rounded-full ${
-                          appointment.status === "Pending"
+                        className={`px-3 py-1 rounded-full ${appointment.status === "Pending"
                             ? "bg-orange-500 text-white"
                             : "bg-green-100 text-green-700"
-                        }`}
+                          }`}
                       >
                         {appointment.status}
                       </span>
@@ -153,11 +149,10 @@ const Reports = () => {
               {[...Array(totalPages)].map((_, pageIndex) => (
                 <button
                   key={pageIndex}
-                  className={`join-item btn ${
-                    currentPage === pageIndex + 1
+                  className={`join-item btn ${currentPage === pageIndex + 1
                       ? "btn-active bg-blue-700 text-white"
                       : ""
-                  }`}
+                    }`}
                   onClick={() => setCurrentPage(pageIndex + 1)}
                 >
                   {pageIndex + 1}

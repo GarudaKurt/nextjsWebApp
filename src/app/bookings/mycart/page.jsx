@@ -19,7 +19,7 @@ const MyCart = () => {
   const [updateMessage, setUpdateMessage] = useState('')
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  
+
   const router = useRouter();
 
   const imagesLoad = [
@@ -46,8 +46,8 @@ const MyCart = () => {
   );
 
   const carts = useCartStore((state) => state.userData?.myCart || []);
-    useEffect(() => {
-      setCart(carts); // Update local state when Zustand's state changes
+  useEffect(() => {
+    setCart(carts); // Update local state when Zustand's state changes
   }, [carts]);
 
   const handleCancel = () => {
@@ -60,12 +60,12 @@ const MyCart = () => {
     setShowModal(false);
   };
 
-  
+
 
   useEffect(() => {
     const fetchCartData = async () => {
-      await getForm(); // Fetch the cart data
-      setCart(useCartStore.getState().userData?.myCart || []); // Update the local state with cart data
+      await getForm();
+      setCart(useCartStore.getState().userData?.myCart || []);
       let orderStatus = useCartStore.getState().userData?.orderStatus || false;
       console.log("Status: ", orderStatus);
       setCartStatus(orderStatus);
@@ -103,72 +103,71 @@ const MyCart = () => {
   const handleRateChange = (e, index) => {
     const selectedRate = e.target.value;
     const updatedCart = [...cart];
-  
+
     updatedCart[index].rate = selectedRate;
-  
+
     const total = calculateTotal(
       updatedCart[index].qty,
       selectedRate,
       updatedCart[index].equipment_title
     );
-  
+
     updatedCart[index].total = total;
-  
+
     updateCart(index, updatedCart[index]);
     updateMyCarts();
-    setCart(updatedCart); // Ensure state is updated
+    setCart(updatedCart);
   };
-  
+
 
   const handleIncrement = (index) => {
     const updatedCart = [...cart];
-  
+
     updatedCart[index].qty += 1;
-  
+
     const total = calculateTotal(
       updatedCart[index].qty,
       updatedCart[index].rate,
       updatedCart[index].equipment_title
     );
-  
+
     updatedCart[index].total = total;
-  
+
     updateCart(index, updatedCart[index]);
     updateMyCarts();
-    setCart(updatedCart); // Ensure state is updated
+    setCart(updatedCart);
     setUpdateMessage(`You have updated the quantity to ${updatedCart[index].qty}`);
   };
-  
+
 
   const handleDecrement = (index) => {
     const updatedCart = [...cart];
-  
+
     if (updatedCart[index].qty > 1) {
       updatedCart[index].qty -= 1;
-  
+
       const total = calculateTotal(
         updatedCart[index].qty,
         updatedCart[index].rate,
         updatedCart[index].equipment_title
       );
-  
+
       updatedCart[index].total = total;
-  
+
       updateCart(index, updatedCart[index]);
       updateMyCarts();
-      setCart(updatedCart); // Ensure state is updated
+      setCart(updatedCart);
       setUpdateMessage(`You have updated the quantity to ${updatedCart[index].qty}`);
     } else {
-      // Remove item completely if quantity is 1
       updatedCart.splice(index, 1);
-      updateCart(index, null); // Remove the item from the store
-      deleteCart(index); // Ensure deletion logic updates the cart in Firestore
+      updateCart(index, null);
+      deleteCart(index);
       updateMyCarts();
-      setCart(updatedCart); // Ensure state is updated
+      setCart(updatedCart);
       setUpdateMessage(`Item removed from the cart.`);
     }
   };
-  
+
 
   const displayCart = () => {
     if (cart.length === 0) {
@@ -279,11 +278,11 @@ const MyCart = () => {
         You have {cart.length} items in your cart
       </p>
       {isSmallScreen && cart.length > 0 && (
-        <AddSteps alignment={false} hidden={true} cartPage={"step-success"} billPage={"step-success"} infoPage={"step-success"} confirmPage={"step-success"}/>
+        <AddSteps alignment={false} hidden={true} cartPage={"step-success"} billPage={"step-success"} infoPage={"step-success"} confirmPage={"step-success"} />
       )}
       <div className="flex flex-col md:flex-row md:space-x-4 items-start">
         {!isSmallScreen && cart.length > 0 && (
-          <AddSteps alignment={true} hidden={true} cartPage={"step-success"} billPage={"step-success"} infoPage={"step-success"} confirmPage={"step-success"}/>
+          <AddSteps alignment={true} hidden={true} cartPage={"step-success"} billPage={"step-success"} infoPage={"step-success"} confirmPage={"step-success"} />
         )}
         <div className="border border-base-300 mb-2 bg-white w-full rounded-md md:w-1/2 mt-5">
           <h2 className="text-sm md:text-xl mb-2 p-2 font-semibold text-gray-600">
@@ -297,29 +296,29 @@ const MyCart = () => {
           <div className="flex justify-start p-2">
             <button
               className="btn bg-offWhite hover:bg-white text-relaxBlack text-md"
-              onClick={()=>{handleCancel()}}
+              onClick={() => { handleCancel() }}
             >
               Cancel order
             </button>
           </div>
           <div className={`modal ${showModal ? "modal-open" : ""}`}>
-          <div className="modal-box">
-            <p className="text-center">{modalMessage}</p>
-            <div className="modal-action flex justify-center">
-              <button className="btn text-white bg-cancelRed hover:bg-cancelRed mx-2" onClick={confirmCancel}>
-                Yes
-              </button>
-              <button className="btn bg-offWhite mx-2" onClick={() => setShowModal(false)}>
-                No
-              </button>
+            <div className="modal-box">
+              <p className="text-center">{modalMessage}</p>
+              <div className="modal-action flex justify-center">
+                <button className="btn text-white bg-cancelRed hover:bg-cancelRed mx-2" onClick={confirmCancel}>
+                  Yes
+                </button>
+                <button className="btn bg-offWhite mx-2" onClick={() => setShowModal(false)}>
+                  No
+                </button>
+              </div>
             </div>
           </div>
+          <p className="text-xs px-5 md:text-sm text-gray-500 m-3">
+            {updateMessage}
+          </p>
         </div>
-        <p className="text-xs px-5 md:text-sm text-gray-500 m-3">
-          {updateMessage}
-        </p>
-        </div>
-        
+
         {cart.length > 0 && (
           <div className="flex items-center justify-start pt-4">
             <h3 className="px-8 text-lg md:text-xl font-bold text-gray-500">

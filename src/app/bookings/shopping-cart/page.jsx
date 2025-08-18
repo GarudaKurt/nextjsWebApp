@@ -5,8 +5,6 @@ import {
   FaTrash,
   FaArrowLeft,
   FaPlus,
-  FaClock,
-  FaCheckCircle,
 } from "react-icons/fa";
 import AddSteps from "@/components/steps/page";
 import { useRouter } from "next/navigation";
@@ -14,7 +12,7 @@ import { useCartStore } from "@/app/zustand/zustand";
 
 const ShoppingCart = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [cart, setCart] = useState([]); // State to track cart data
+  const [cart, setCart] = useState([]);
   const [cartStatus, setCartStatus] = useState(false);
   const router = useRouter();
 
@@ -30,7 +28,6 @@ const ShoppingCart = () => {
     "/images/bookings/rods.png",
   ];
 
-  // Get cart data from store
   const { updateCart, deleteCart, getForm, getOrderStatus } = useCartStore(
     (state) => ({
       updateCart: state.updateCart,
@@ -42,8 +39,8 @@ const ShoppingCart = () => {
 
   useEffect(() => {
     const fetchCartData = async () => {
-      await getForm(); // Fetch the cart data
-      setCart(useCartStore.getState().userData?.myCart || []); // Update the local state with cart data
+      await getForm();
+      setCart(useCartStore.getState().userData?.myCart || []);
       let orderStatus = useCartStore.getState().userData?.orderStatus || false;
       console.log("Status: ", orderStatus);
       setCartStatus(orderStatus);

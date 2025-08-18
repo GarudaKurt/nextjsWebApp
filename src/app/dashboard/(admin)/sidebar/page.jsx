@@ -1,5 +1,3 @@
-// pages/dashboard.jsx
-
 "use client";
 
 import {
@@ -35,9 +33,8 @@ const Sidebar = () => {
       <div className="flex flex-grow">
         {/* Sidebar */}
         <div
-          className={`fixed md:static min-h-full w-60 bg-chillGreen transform ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 transition-transform duration-200 ease-in-out z-10`}
+          className={`fixed md:static min-h-full w-60 bg-chillGreen transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+            } md:translate-x-0 transition-transform duration-200 ease-in-out z-10`}
         >
           {/* Close button inside the sidebar */}
           <div className="flex justify-end p-4 md:hidden">

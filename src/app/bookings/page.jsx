@@ -10,13 +10,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useCartStore } from "../zustand/zustand";
 import {
   FaTimes,
-  FaCalendar,
   FaMapMarker,
   FaMoneyBill,
   FaHome,
   FaCarAlt,
   FaUserCheck,
 } from "react-icons/fa";
+import Image from "next/image";
 
 const AddBooking = () => {
   const [selectedTab, setSelectedTab] = useState("Rent Scooters");
@@ -182,7 +182,7 @@ const AddBooking = () => {
             </div>
             <div className="modal-action">
               <button
-                type="submit" // Ensure the button submits the form
+                type="submit"
                 className="btn text-white bg-offGreen btn-block"
               >
                 Submit
@@ -253,10 +253,16 @@ const AddBooking = () => {
         return (
           <>
             <div className="hero bg-white">
-              <img
-                className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[100vh] object-contains"
-                src="/images/bookings/ghost_bg.png"
-              />
+              <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[100vh]">
+                <Image
+                  src="/images/bookings/ghost_bg.png"
+                  alt="Ghost Tour Background"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+
               <div className="hero-content text-neutral-content text-center bg-offWhite rounded-md">
                 <div className="max-w-md">
                   <h1 className="mb-3 text-offBlack text-5xl font-semibold">
@@ -343,10 +349,16 @@ const AddBooking = () => {
         return (
           <>
             <div className="hero bg-white">
-              <img
-                className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[100vh] object-contains"
-                src="/images/bookings/vegas-bg.png"
-              />
+              <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[100vh]">
+                <Image
+                  src="/images/bookings/ghost_bg.png"
+                  alt="Ghost Tour Background"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+
               <div className="hero-content text-neutral-content text-center bg-offWhite rounded-md">
                 <div className="max-w-md">
                   <h1 className="mb-3 text-offBlack text-5xl font-semibold">
@@ -474,11 +486,10 @@ const AddBooking = () => {
               {tabs.map((tab, index) => (
                 <button
                   key={index}
-                  className={`tab text-sm ${
-                    selectedTab === tab
-                      ? "lg:tab-active md:tab-active sm:tab-active text-blue-400"
-                      : "text-gray-400"
-                  }`}
+                  className={`tab text-sm ${selectedTab === tab
+                    ? "lg:tab-active md:tab-active sm:tab-active text-blue-400"
+                    : "text-gray-400"
+                    }`}
                   onClick={() => setSelectedTab(tab)}
                 >
                   {tab}

@@ -4,13 +4,13 @@ import Layout from "@/components/layout";
 import AddButton from "@/components/buttons/addButton";
 
 const Gallery = () => {
-  // Array of images for the Ghost Tour carousel
   const ghostTourImages = [
-    "/images/tour/me.png",
-    "/images/tour/pic_1.png",
-    "/images/tour/pic_2.png",
-    "/images/tour/pic_3.png",
-    "/images/tour/pic_4.png",
+    "/images/experience/img1.png",
+    "/images/experience/img2.png",
+    "/images/experience/img3.png",
+    "/images/experience/img4.png",
+    "/images/experience/img5.png",
+    "/images/experience/img6.png",
   ];
 
   return (

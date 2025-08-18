@@ -61,7 +61,7 @@ const Home = () => {
                 <br />
                 <br />
                 Our gear is meticulously tested to ensure reliability and
-                effectiveness in the most challenging conditions. Whether you're
+                effectiveness in the most challenging conditions. Whether you&pos;re
                 a seasoned ghost hunter or a curious beginner, our selection of
                 hunt gear will support you in your quest to uncover the unknown.
               </p>
@@ -153,11 +153,10 @@ const Home = () => {
               {tabs.map((tab, index) => (
                 <button
                   key={index}
-                  className={`tab ${
-                    selectedTab === tab
+                  className={`tab ${selectedTab === tab
                       ? "tab-active text-blue-400"
                       : "text-gray-400"
-                  }`}
+                    }`}
                   onClick={() => setSelectedTab(tab)}
                 >
                   {tab}
